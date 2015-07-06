@@ -1,0 +1,27 @@
+#Mapping taken from https://dvcs.w3.org/hg/gamepad/raw-file/default/gamepad.html#remapping
+
+B1=CROSS
+B2=CIRCLE
+B3=SQUARE
+B4=TRIANGLE
+B5=L1
+B6=R1
+B7=L2
+B8=R2
+B9=SELECT_SHARE
+B10=START_OPTIONS
+B11=L3
+B12=R3
+B13=PS
+PU=UP
+PD=DOWN
+PL=LEFT
+PR=RIGHT
+AX=LX
+AY=LY
+AZ=RX
+ARX=RY
+ARY=
+ARZ=
+ASL0=
+ASL1=
