@@ -94,6 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceManagement.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="DisableHardware.cs" />
     <Compile Include="DXinputLocker.cs" />

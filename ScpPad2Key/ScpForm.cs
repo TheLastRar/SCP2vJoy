@@ -17,6 +17,7 @@ namespace ScpPad2vJoy
         protected String m_Active;
         protected PadSettings config;
         protected bool[] selectedPads = new bool[] {true,false,false,false};
+        protected DeviceManagement devManLevel = DeviceManagement.vJoy_Config | DeviceManagement.vJoy_Device | DeviceManagement.Xinput_DX;
 
         public ScpForm() 
         {
@@ -71,10 +72,13 @@ namespace ScpPad2vJoy
             if (scpProxy.Start())
             {
                 cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = btnStart.Enabled = false;
-                if (vJP.Start(selectedPads,config))
+                if (vJP.Start(selectedPads, config, devManLevel))
                 {
                     gps = new DXPadState(vJP,config);
-                    dxLocker.LockDevices();
+                    if ((devManLevel & DeviceManagement.Xinput_DX) == DeviceManagement.Xinput_DX)
+                    {
+                        dxLocker.LockDevices();
+                    }
 
                     btnStop.Enabled = true;  
                 }
@@ -96,7 +100,7 @@ namespace ScpPad2vJoy
             btnStop.Enabled = false;            
 
             scpProxy.Stop();
-            vJP.Stop(selectedPads);
+            vJP.Stop(selectedPads, devManLevel);
             dxLocker.UnlockDevices();
 
             cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = true;

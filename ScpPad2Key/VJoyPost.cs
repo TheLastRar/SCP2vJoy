@@ -25,11 +25,18 @@ namespace ScpPad2vJoy
         protected const Int32 AXIS_SCALE = (MAX_VJOY_AXIS + 1) / (MAX_SCP_AXIS+1); //(+1 the max values to give interger scale)
         protected const Int32 AXIS_SCALE_OFFSET = AXIS_SCALE / 2; //Offset needs to be applied to account for us (adding 1 the max values)
 
-        public bool Start(bool[] parSelectedPads,PadSettings config)
+        public bool Start(bool[] parSelectedPads, PadSettings config, DeviceManagement devManLevel)
         {
-            EnableVJoy(false);
-            SetupVjoy(parSelectedPads, config);
-            EnableVJoy(true);
+            if ((devManLevel & DeviceManagement.vJoy_Config) == DeviceManagement.vJoy_Config)
+            {
+                EnableVJoy(false);
+                SetupVjoy(parSelectedPads, config);
+                EnableVJoy(true);
+            }
+            else if ((devManLevel & DeviceManagement.vJoy_Device) == DeviceManagement.vJoy_Device)
+            {
+                EnableVJoy(true);
+            }
 
             joystick = new vJoy();
 
@@ -52,8 +59,8 @@ namespace ScpPad2vJoy
                     Console.WriteLine("Version of Driver Matches DLL Version ({0:X})\n", DllVer);
                 else
                 {
-                    Console.WriteLine("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n",
-                    DrvVer, DllVer);
+                    Console.WriteLine("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer);
+                    Stop(parSelectedPads, devManLevel);
                     return false;
                 }
                 //MinVersion Check
@@ -61,6 +68,7 @@ namespace ScpPad2vJoy
                 if (vJoyVersion < MIN_VER)
                 {
                     Console.WriteLine("vJoy version less than required: Aborting\n");
+                    Stop(parSelectedPads, devManLevel);
                     return false;
                 }
             }
@@ -76,7 +84,7 @@ namespace ScpPad2vJoy
                     if ((status == VjdStat.VJD_STAT_OWN) || ((status == VjdStat.VJD_STAT_FREE) && (!joystick.AcquireVJD(id))))
                     {
                         Console.WriteLine(String.Format("Failed to acquire vJoy device number {0}.", id));
-                        Stop(parSelectedPads);
+                        Stop(parSelectedPads, devManLevel);
                         return false;
                     }
                     else
@@ -93,7 +101,7 @@ namespace ScpPad2vJoy
             return true;
         }
 
-        public void Stop(bool[] parSelectedPads)
+        public void Stop(bool[] parSelectedPads, DeviceManagement devManLevel)
         {
             for (uint dsID=1; dsID <= 4; dsID++)
             {
@@ -111,7 +119,10 @@ namespace ScpPad2vJoy
                     }
                 }
             }
-            EnableVJoy(false);
+            if ((devManLevel & DeviceManagement.vJoy_Device) == DeviceManagement.vJoy_Device)
+            {
+                EnableVJoy(false);
+            }
         }
 
         public uint GetvjFromDS(uint parDSid)
@@ -204,7 +215,7 @@ namespace ScpPad2vJoy
         {
             VJoyConf VJC = new VJoyConf();
             //Clear out old configs
-            VJC.DeleteHidReportDescFromReg(0);
+            VJC.DeleteHidReportDescFromReg(0); //TODO, Respect DevManagement levels
             //create needed pads
             byte dpads = 0;
             if (config.dpad) { dpads = 1; }

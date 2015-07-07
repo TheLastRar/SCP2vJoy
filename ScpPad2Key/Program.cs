@@ -31,7 +31,8 @@ namespace ScpPad2vJoy
         static string GetvJoyPath()
         {
             string file = "";
-            RegistryKey _regKey = Registry.LocalMachine.OpenSubKey(VJOYKEY_PATH,false);
+            RegistryKey _baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey _regKey = _baseKey.OpenSubKey(VJOYKEY_PATH, false);
             if (_regKey != null)
             {
                 
@@ -45,6 +46,8 @@ namespace ScpPad2vJoy
                     file = (string)_regKey.GetValue("DllX86Location");
                 }
             }
+            _regKey.Close();
+            _baseKey.Close();
             return file;
         }
 

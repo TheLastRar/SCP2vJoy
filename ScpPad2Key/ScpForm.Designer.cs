@@ -158,7 +158,7 @@
             this.MaximumSize = new System.Drawing.Size(800, 360);
             this.MinimumSize = new System.Drawing.Size(320, 38);
             this.Name = "ScpForm";
-            this.Text = "Vjoy Mapper - v1.2";
+            this.Text = "Vjoy Mapper - v1.3";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Close);
             this.Load += new System.EventHandler(this.Form_Load);
             this.gbX.ResumeLayout(false);
