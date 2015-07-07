@@ -3,60 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace ScpPad2vJoy
 {
     static class Program
     {
+        const string VJOYKEY_PATH = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1";
+        
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Boolean is64 = Environment.Is64BitProcess;
-            string file = "";
-            if (is64 == true)
-            {
-                file = "x64\\vJoyInterface.dll";
-            } 
-            else
-            {
-                file = "x86\\vJoyInterface.dll";
-            }
-            if (!IsRightFile(file))
-            {
-                System.IO.File.Copy(file, "vJoyInterface.dll", true);
-            }
+            string file = GetvJoyPath();
+
+            ClearFromOldInstall();
+            SetDllDirectory(file);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ScpForm());
         }
 
-        static Boolean IsRightFile(string file)
+        static string GetvJoyPath()
         {
-            //check file exists
-            if (!System.IO.File.Exists("vJoyInterface.dll"))
+            string file = "";
+            RegistryKey _regKey = Registry.LocalMachine.OpenSubKey(VJOYKEY_PATH,false);
+            if (_regKey != null)
             {
-                return false;
+                
+                Boolean is64 = Environment.Is64BitProcess;
+                if (is64 == true)
+                {
+                    file = (string)_regKey.GetValue("DllX64Location");
+                }
+                else
+                {
+                    file = (string)_regKey.GetValue("DllX86Location");
+                }
             }
+            return file;
+        }
 
-            //check file same size
-            System.IO.FileInfo fi_existing = new System.IO.FileInfo("vJoyInterface.dll");
-            System.IO.FileInfo fi_using = new System.IO.FileInfo(file);
-            if (fi_existing.Length != fi_using.Length)
-            {
-                return false;
-            }
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool SetDllDirectory(string lpPathName);
 
-            //check file same data
-            byte[] by_existing = System.IO.File.ReadAllBytes("vJoyInterface.dll");
-            byte[] by_using = System.IO.File.ReadAllBytes(file);
-            if (!by_existing.SequenceEqual(by_using))
+        static void ClearFromOldInstall()
+        {
+            //The dll search path searches the application directory 1st
+            //before searching the directory specified in SetDllDirectory
+            //To ensure we get the vJoyInterface that matches the installed
+            //driver, we delete the vJoyInterface.dll that was bundled in 
+            //older versions
+            if (System.IO.File.Exists("vJoyInterface.dll"))
             {
-                return false;
+                System.IO.File.Delete("vJoyInterface.dll");
             }
-            return true;
         }
     }
 }

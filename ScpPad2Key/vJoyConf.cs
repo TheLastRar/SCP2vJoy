@@ -202,11 +202,21 @@ namespace ScpPad2vJoy
             }
             for (; i <= max; i++)
             {
+                RegistryKey targetKey = _regKey.OpenSubKey(string.Format("Device{0:D2}", i));
+                if (targetKey == null)
+                {
+                    continue;
+                }
+                targetKey.Close();
+
                 try
                 {
                     _regKey.DeleteSubKey(string.Format("Device{0:D2}", i));
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Caught Exception :" + e.Message + " @ " + e.StackTrace);
+                }
             }
         }
     }

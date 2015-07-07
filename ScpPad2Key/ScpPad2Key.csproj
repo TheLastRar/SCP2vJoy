@@ -138,12 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Scp_All.ico" />
-    <Content Include="x64\vJoyInterface.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\vJoyInterface.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\W3C.txt" />
   </ItemGroup>
   <ItemGroup>
