@@ -81,7 +81,7 @@ namespace ScpPad2vJoy
                             if (CheckDpadDs3AxisAsButton(Data, config.aPLeft)) { DSPov = DSPov | Direction.Left; }
                             if (CheckDpadDs3AxisAsButton(Data, config.aPRight)) { DSPov = DSPov | Direction.Right; }
 
-                            vJPad.JoyPov(DSPov, dsID);
+                            vJPad.JoyPov(config.useDiscretePOV, DSPov, dsID);
                             #endregion
                         }
                         break;
@@ -137,7 +137,7 @@ namespace ScpPad2vJoy
                             if (CheckDpadDs4AxisAsButton(Data, config.aPLeft)) { DSPov = DSPov | Direction.Left; }
                             if (CheckDpadDs4AxisAsButton(Data, config.aPRight)) { DSPov = DSPov | Direction.Right; }
 
-                            vJPad.JoyPov(DSPov, dsID);
+                            vJPad.JoyPov(config.useDiscretePOV, DSPov, dsID);
                             #endregion
                         }
                         break;

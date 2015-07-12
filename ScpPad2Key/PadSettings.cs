@@ -58,6 +58,7 @@ namespace ScpPad2vJoy
         protected bool[] m_EnabledAxis = new bool[] {false,false,false,false,false,false,false,false};
         protected byte m_nButtons = 0;
         protected bool m_dpad = false;
+        protected bool m_dpad_disc = false;
         //Axis
         protected HID_USAGES m_AxisL2 = 0;
         protected HID_USAGES m_AxisR2 = 0;
@@ -122,6 +123,16 @@ namespace ScpPad2vJoy
                 string[] Setting = SettingsFile[Line].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                 if (Setting.Length == 2)
                 {
+                    #region MiscSettings
+                    switch (Setting[0])
+                    {
+                        case "USE_DISC_POV":
+                            {
+                                m_dpad_disc = (Setting[1] == "TRUE");
+                            }
+                            break;
+                    }
+                    #endregion
                     switch (Setting[1])
                     {
                         #region Triggers
@@ -270,45 +281,45 @@ namespace ScpPad2vJoy
                             break;
                         #endregion
                         #region AxisAsButton
-                            //TODO: Enable AxisAsButtons to work on dpad
+                        //TODO: Enable AxisAsButtons to work on dpad
                         case "LS_UP":
                             {
-                                AssignAxisButton(ref m_aLUp, new DSAxis(Ds3Axis.LY, Ds4Axis.LY,false), Setting[0]);
+                                AssignAxisButton(ref m_aLUp, new DSAxis(Ds3Axis.LY, Ds4Axis.LY, false), Setting[0]);
                             }
                             break;
                         case "LS_DOWN":
                             {
-                                AssignAxisButton(ref m_aLDown, new DSAxis(Ds3Axis.LY, Ds4Axis.LY,true), Setting[0]);
+                                AssignAxisButton(ref m_aLDown, new DSAxis(Ds3Axis.LY, Ds4Axis.LY, true), Setting[0]);
                             }
                             break;
                         case "LS_LEFT":
                             {
-                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.LX, Ds4Axis.LX,false), Setting[0]);
+                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.LX, Ds4Axis.LX, false), Setting[0]);
                             }
                             break;
                         case "LS_RIGHT":
                             {
-                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.LX, Ds4Axis.LX,true), Setting[0]);
+                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.LX, Ds4Axis.LX, true), Setting[0]);
                             }
                             break;
                         case "RS_UP":
                             {
-                                AssignAxisButton(ref m_aRUp, new DSAxis(Ds3Axis.RY, Ds4Axis.RY,false), Setting[0]);
+                                AssignAxisButton(ref m_aRUp, new DSAxis(Ds3Axis.RY, Ds4Axis.RY, false), Setting[0]);
                             }
                             break;
                         case "RS_DOWN":
                             {
-                                AssignAxisButton(ref m_aRDown, new DSAxis(Ds3Axis.RY, Ds4Axis.RY,true), Setting[0]);
+                                AssignAxisButton(ref m_aRDown, new DSAxis(Ds3Axis.RY, Ds4Axis.RY, true), Setting[0]);
                             }
                             break;
                         case "RS_LEFT":
                             {
-                                AssignAxisButton(ref m_aRLeft, new DSAxis(Ds3Axis.RX, Ds4Axis.RX,false), Setting[0]);
+                                AssignAxisButton(ref m_aRLeft, new DSAxis(Ds3Axis.RX, Ds4Axis.RX, false), Setting[0]);
                             }
                             break;
                         case "RS_RIGHT":
                             {
-                                AssignAxisButton(ref m_aRRight, new DSAxis(Ds3Axis.RX, Ds4Axis.RX,true), Setting[0]);
+                                AssignAxisButton(ref m_aRRight, new DSAxis(Ds3Axis.RX, Ds4Axis.RX, true), Setting[0]);
                             }
                             break;
                         #endregion
@@ -457,6 +468,7 @@ namespace ScpPad2vJoy
         public bool[] enabledAxis { get { return m_EnabledAxis; } }
         public byte nButtons { get { return m_nButtons; } }
         public bool dpad { get { return m_dpad; } }
+        public bool useDiscretePOV { get { return m_dpad_disc; } }
 
         //Axis
         public HID_USAGES axisL2 { get { return m_AxisL2; } }

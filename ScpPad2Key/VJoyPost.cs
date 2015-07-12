@@ -152,38 +152,62 @@ namespace ScpPad2vJoy
             }
         }
 
-        public void JoyPov(Direction parPOV,uint parDSid)
+        public void JoyPov(bool parIsDisc, Direction parPOV,uint parDSid)
         {
             uint id = GetvjFromDS(parDSid);
-            switch (parPOV)
+            if (parIsDisc == false)
             {
-                case Direction.UpLeft:
-                    joystick.SetContPov(31500, id, 1);
-                    break;
-                case Direction.UpRight:
-                    joystick.SetContPov(4500, id, 1);
-                    break;
-                case Direction.DownLeft:
-                    joystick.SetContPov(22500, id, 1);
-                    break;
-                case Direction.DownRight:
-                    joystick.SetContPov(13500, id, 1);
-                    break;
-                case Direction.Up:
-                    joystick.SetContPov(0, id, 1);
-                    break;
-                case Direction.Down:
-                    joystick.SetContPov(18000, id, 1);
-                    break;
-                case Direction.Left:
-                    joystick.SetContPov(27000, id, 1);
-                    break;
-                case Direction.Right:
-                    joystick.SetContPov(9000, id, 1);
-                    break;
-                default:
-                    joystick.SetContPov(-1, id, 1);
-                    break;
+                switch (parPOV)
+                {
+                    case Direction.UpLeft:
+                        joystick.SetContPov(31500, id, 1);
+                        break;
+                    case Direction.UpRight:
+                        joystick.SetContPov(4500, id, 1);
+                        break;
+                    case Direction.DownLeft:
+                        joystick.SetContPov(22500, id, 1);
+                        break;
+                    case Direction.DownRight:
+                        joystick.SetContPov(13500, id, 1);
+                        break;
+                    case Direction.Up:
+                        joystick.SetContPov(0, id, 1);
+                        break;
+                    case Direction.Down:
+                        joystick.SetContPov(18000, id, 1);
+                        break;
+                    case Direction.Left:
+                        joystick.SetContPov(27000, id, 1);
+                        break;
+                    case Direction.Right:
+                        joystick.SetContPov(9000, id, 1);
+                        break;
+                    default:
+                        joystick.SetContPov(-1, id, 1);
+                        break;
+                }
+            }
+            else
+            {
+                switch (parPOV)
+                {
+                    case Direction.Up:
+                        joystick.SetDiscPov(0, id, 1);
+                        break;
+                    case Direction.Down:
+                        joystick.SetDiscPov(2, id, 1);
+                        break;
+                    case Direction.Left:
+                        joystick.SetContPov(3, id, 1);
+                        break;
+                    case Direction.Right:
+                        joystick.SetContPov(1, id, 1);
+                        break;
+                    default:
+                        joystick.SetContPov(-1, id, 1);
+                        break;
+                }
             }
         }
 
@@ -224,7 +248,15 @@ namespace ScpPad2vJoy
                 if (parSelectedPads[dsID - 1])
                 {
                     uint id = GetvjFromDS(dsID);
-                    byte[] PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, dpads, 0, config.nButtons);
+                    byte[] PadConfig;
+                    if (config.useDiscretePOV == false)
+                    {
+                        PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, dpads, 0, config.nButtons);
+                    }
+                    else
+                    {
+                        PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, 0, dpads, config.nButtons);
+                    }
                     VJC.WriteHidReportDescToReg((int)id, PadConfig);
                 }
             }
