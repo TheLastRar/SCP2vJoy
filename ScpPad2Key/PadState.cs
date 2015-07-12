@@ -3,10 +3,11 @@
 using ScpControl;
 
 using vJoyInterfaceWrap;
+using ScpPad2vJoy.VjoyEffect;
 
 namespace ScpPad2vJoy
 {
-    public class DXPadState
+    class DXPadState
     {
         protected ScpProxy m_VibProxy = null;
 
@@ -16,6 +17,7 @@ namespace ScpPad2vJoy
         {
             vJPad = parVJoyPad;
             config = parConfig;
+            vJPad.VibrationCommand += Rumble;
         }
 
         //AxisAsButton
@@ -251,12 +253,40 @@ namespace ScpPad2vJoy
             get { return m_VibProxy; }
             set { m_VibProxy = value;}
         }
-        //protected void Rumble(Byte Large, Byte Small)
-        //{
-        //    if (Proxy != null)
-        //    {
-        //        Proxy.Rumble(Pad, Large, Small); //large moter + small moter
-        //    }
-        //}
+        protected void Rumble(uint parDsID, EffectReturnValue e)
+        {
+            if (m_VibProxy != null)
+            {
+                Proxy.Rumble((DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), 0); //large moter + small moter (Byte)e.MotorRight
+            }
+        }
+        protected Byte ScaleLargeMotor(float parLevel)
+        {
+            //Reflect negative values
+            if (parLevel < 0)
+            {
+                parLevel = -parLevel;
+            }
+
+            //Incomming range = 0-255
+            const float IN_MAX = 255;
+            const float IN_MIN = 0;
+            const float IN_RANGE = IN_MAX - IN_MIN;
+            //outgoing range = 0-255
+            const float OUT_MAX = 255;
+            const float OUT_MIN = 0;
+            const float OUT_RANGE = OUT_MAX - OUT_MIN;
+
+            //Clamp High Values
+            if (parLevel > IN_MAX)
+            {
+                parLevel = IN_MAX;
+            }
+
+            float verIn = parLevel / IN_RANGE;
+            float ret = (OUT_MIN + verIn * OUT_RANGE);
+
+            return (Byte)ret;
+        }
     }
 }

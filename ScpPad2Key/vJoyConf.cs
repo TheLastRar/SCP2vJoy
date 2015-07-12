@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 //TakenFrom https://github.com/Swizzy/vJoyConfNet/blob/master/vJoyConfNet/VJoyConf.cs
 
@@ -215,7 +216,7 @@ namespace ScpPad2vJoy
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Caught Exception :" + e.Message + " @ " + e.StackTrace);
+                    Trace.WriteLine("Caught Exception :" + e.Message + " @ " + e.StackTrace);
                 }
             }
         }

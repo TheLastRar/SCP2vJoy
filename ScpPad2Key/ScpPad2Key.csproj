@@ -110,7 +110,19 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="vJoyConf.cs" />
+    <Compile Include="VjoyEffect\ConstEffectBlock.cs" />
+    <Compile Include="VjoyEffect\BaseEffectBlock.cs" />
+    <Compile Include="VjoyEffect\EffectReturnValue.cs" />
+    <Compile Include="VjoyEffect\EnverlopeCabableBaseEffectBlack.cs" />
+    <Compile Include="VjoyEffect\FFBDevice.cs" />
+    <Compile Include="VjoyEffect\FFB_EFF_CONSTANT.cs" />
+    <Compile Include="VjoyEffect\PeriodBaseEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SawDownEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SawUpEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SineEffectBlock.cs" />
+    <Compile Include="VjoyEffect\TrangleEffectBlock.cs" />
     <Compile Include="VJoyPost.cs" />
+    <Compile Include="vJoyVibrate.cs" />
     <EmbeddedResource Include="ScpForm.resx">
       <DependentUpon>ScpForm.cs</DependentUpon>
     </EmbeddedResource>

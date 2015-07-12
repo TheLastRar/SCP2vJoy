@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using vJoyInterfaceWrap;
+
+namespace ScpPad2vJoy.VjoyEffect
+{
+    abstract class PeriodBaseEffectBlock : EnverlopeCabableBaseEffectBlack
+    {
+        protected vJoy.FFB_EFF_PERIOD periodEffect;
+        public override void PrimaryEffectData(object eff)
+        {
+            periodEffect = (vJoy.FFB_EFF_PERIOD)eff;
+        }
+        protected override sealed float ComputeEffect()
+        {
+            //Enverlope is applied before offset is
+            //according to the documents(?)
+            float UnitForce = (ApplyEnverlope() * gain);
+
+            //Phase offset as a unit of time
+            Double effectTime = ((Double)periodEffect.Phase / 255.0) * periodEffect.Period;
+            //When current cycle started
+            long effectBaseTime = runTime / (long)periodEffect.Period;
+            //Phase offset + time since current cycle started
+            effectTime += runTime - effectBaseTime;
+            //wrap around phase time
+            //incase of large Phase + 
+            //large time since current cycle started
+            if (effectTime > periodEffect.Period)
+            {
+                effectTime -= (Double)periodEffect.Period;
+            }
+            //Get Periodic effect value
+            UnitForce *= ComputePeriodicEffectMult(effectTime);
+            //Offset is a signed value
+            float offsetValue = ((float)((SByte)periodEffect.Offset)) * 2.0f + 0.5f;
+            UnitForce += offsetValue;
+            return UnitForce;
+        }
+        protected abstract float ComputePeriodicEffectMult(Double phaseTime);
+
+        protected override Byte Magnitude()
+        {
+            return periodEffect.Magnitude;
+        }
+    }
+}

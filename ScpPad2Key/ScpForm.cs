@@ -8,7 +8,7 @@ using vJoyInterfaceWrap;
 
 namespace ScpPad2vJoy 
 {
-    public partial class ScpForm : Form 
+    partial class ScpForm : Form 
     {
         protected DXPadState gps;
 
@@ -17,7 +17,8 @@ namespace ScpPad2vJoy
         protected String m_Active;
         protected PadSettings config;
         protected bool[] selectedPads = new bool[] {true,false,false,false};
-        protected DeviceManagement devManLevel = DeviceManagement.vJoy_Config | DeviceManagement.vJoy_Device | DeviceManagement.Xinput_DX;
+        //protected DeviceManagement devManLevel = DeviceManagement.vJoy_Config | DeviceManagement.vJoy_Device | DeviceManagement.Xinput_DX;
+        protected DeviceManagement devManLevel = DeviceManagement.Xinput_DX;
 
         public ScpForm() 
         {
@@ -67,6 +68,11 @@ namespace ScpPad2vJoy
             }
         }
 
+        protected void onVib(object sender, EventArgs e)
+        {
+            scpProxy.Rumble(DsPadId.One, 100, 100);
+        }
+
         protected void btnStart_Click(object sender, EventArgs e) 
         {
             if (scpProxy.Start())
@@ -74,7 +80,14 @@ namespace ScpPad2vJoy
                 cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = btnStart.Enabled = false;
                 if (vJP.Start(selectedPads, config, devManLevel))
                 {
+                    //vJP.Vibrate += onVib;
+                    //scpProxy.Rumble(DsPadId.One, 255, 0); //Left
+                    //System.Threading.Thread.Sleep(5000);
+                    //scpProxy.Rumble(DsPadId.One, 0, 255); //Right
+                    //System.Threading.Thread.Sleep(5000);
+                    //scpProxy.Rumble(DsPadId.One, 0, 0);
                     gps = new DXPadState(vJP,config);
+                    gps.Proxy = scpProxy;
                     if ((devManLevel & DeviceManagement.Xinput_DX) == DeviceManagement.Xinput_DX)
                     {
                         dxLocker.LockDevices();
@@ -97,8 +110,9 @@ namespace ScpPad2vJoy
 
         protected void btnStop_Click(object sender, EventArgs e) 
         {
-            btnStop.Enabled = false;            
+            btnStop.Enabled = false;
 
+            scpProxy.Rumble(DsPadId.All, 0, 0);
             scpProxy.Stop();
             vJP.Stop(selectedPads, devManLevel);
             dxLocker.UnlockDevices();

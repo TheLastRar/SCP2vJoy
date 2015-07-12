@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.IO;
 
 namespace ScpPad2vJoy
 {
@@ -18,6 +20,7 @@ namespace ScpPad2vJoy
         [STAThread]
         static void Main()
         {
+            SetupLoggin();
             string file = GetvJoyPath();
 
             ClearFromOldInstall();
@@ -61,10 +64,34 @@ namespace ScpPad2vJoy
             //To ensure we get the vJoyInterface that matches the installed
             //driver, we delete the vJoyInterface.dll that was bundled in 
             //older versions
-            if (System.IO.File.Exists("vJoyInterface.dll"))
+            if (File.Exists("vJoyInterface.dll"))
             {
-                System.IO.File.Delete("vJoyInterface.dll");
+                File.Delete("vJoyInterface.dll");
             }
+        }
+
+        static void SetupLoggin()
+        {
+            if (File.Exists("Pad2vJoy.log"))
+            {
+                File.Delete("Pad2vJoy.log");
+            }
+
+            Trace.Listeners.Clear();
+
+            TextWriterTraceListener twtl = new TextWriterTraceListener("Pad2vJoy.log");
+            twtl.Writer.NewLine = "\n";
+            twtl.Name = "TextLogger";
+            twtl.TraceOutputOptions = TraceOptions.ThreadId | TraceOptions.DateTime;
+
+            ConsoleTraceListener ctl = new ConsoleTraceListener(false);
+            ctl.TraceOutputOptions = TraceOptions.DateTime;
+
+            //Trace.Listeners.Add(twtl);
+            Trace.Listeners.Add(ctl);
+            Trace.AutoFlush = true;
+
+            Trace.WriteLine("Trace Active");
         }
     }
 }
