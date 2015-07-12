@@ -4,6 +4,7 @@ using ScpControl;
 
 using vJoyInterfaceWrap;
 using ScpPad2vJoy.VjoyEffect;
+using System.Diagnostics;
 
 namespace ScpPad2vJoy
 {
@@ -258,6 +259,7 @@ namespace ScpPad2vJoy
             if (m_VibProxy != null)
             {
                 Proxy.Rumble((DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), 0); //large moter + small moter (Byte)e.MotorRight
+                //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + e.MotorLeft);
             }
         }
         protected Byte ScaleLargeMotor(float parLevel)

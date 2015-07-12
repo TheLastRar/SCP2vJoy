@@ -112,9 +112,8 @@ namespace ScpPad2vJoy
         {
             btnStop.Enabled = false;
 
-            scpProxy.Rumble(DsPadId.All, 0, 0);
-            scpProxy.Stop();
             vJP.Stop(selectedPads, devManLevel);
+            scpProxy.Stop();
             dxLocker.UnlockDevices();
 
             cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = true;

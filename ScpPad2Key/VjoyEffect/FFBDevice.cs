@@ -8,12 +8,18 @@ namespace ScpPad2vJoy.VjoyEffect
 {
     class FFBDevice
     {
-        public volatile Boolean DeviceActive = false;
+        public enum DeviceState
+        {
+            Deactivated,
+            AwaitingDeactivation,
+            Active
+        }
+
+        public volatile DeviceState DeviceActive = DeviceState.Deactivated;
         public Dictionary<Byte, BaseEffectBlock> EffectBlocks = new Dictionary<Byte, BaseEffectBlock>();
         public volatile Single DeviceGain = 1.0F;
         public volatile Boolean DevicePaused = false;
         public Boolean[] LoadedBlocks = new Boolean[255];
-        public Stopwatch timer = new Stopwatch();
         //Block ID Managment
         #region "BlockManagement"
         public void AddBlock(Byte index, BaseEffectBlock anObj)
