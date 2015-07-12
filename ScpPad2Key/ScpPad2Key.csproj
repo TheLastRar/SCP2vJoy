@@ -120,6 +120,7 @@
     <Compile Include="VjoyEffect\SawDownEffectBlock.cs" />
     <Compile Include="VjoyEffect\SawUpEffectBlock.cs" />
     <Compile Include="VjoyEffect\SineEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SquareEffectBlock.cs" />
     <Compile Include="VjoyEffect\TrangleEffectBlock.cs" />
     <Compile Include="VJoyPost.cs" />
     <Compile Include="vJoyVibrate.cs" />

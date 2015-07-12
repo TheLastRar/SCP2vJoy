@@ -284,7 +284,9 @@ namespace ScpPad2vJoy
                                 newBlock = new ConstEffectBlock();
                                 break;
                                 //ET_RAMP
-                                //ET_SQR (Square)
+                            case FFBEType.ET_SQR:
+                                newBlock = new SquareEffectBlock();
+                                break;
                             case FFBEType.ET_SINE:
                                 newBlock = new SineEffectBlock();
                                 break;

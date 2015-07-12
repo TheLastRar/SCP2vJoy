@@ -24,7 +24,7 @@ namespace ScpPad2vJoy.VjoyEffect
             //When current cycle started
             long effectBaseTime = runTime / (long)periodEffect.Period;
             //Phase offset + time since current cycle started
-            effectTime += runTime - effectBaseTime;
+            effectTime += runTime - (effectBaseTime * (long)periodEffect.Period);
             //wrap around phase time
             //incase of large Phase + 
             //large time since current cycle started

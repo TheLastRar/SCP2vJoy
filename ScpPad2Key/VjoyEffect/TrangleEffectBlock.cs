@@ -12,17 +12,17 @@ namespace ScpPad2vJoy.VjoyEffect
             //Effect starts at +Magnitude
             //reaches -Magnitude by half phase
             //returns back up to +Magnitude by phase end
-            Double riseRate = (Double)(4 * periodEffect.Magnitude) / (Double)periodEffect.Period;
+            Double riseRate = (4.0) / (Double)periodEffect.Period;
             if (phaseTime < ((Double)periodEffect.Period / 2.0))
             {
                 //+Mag to -Mag
-                return (float)((Double)periodEffect.Magnitude - (phaseTime * riseRate));
+                return (float)(1.0 - (phaseTime * riseRate));
             } 
             else 
             {
                 //-Mag to +Mag
                 phaseTime -= ((Double)periodEffect.Period / 2.0);
-                return (float)((phaseTime * riseRate) - (Double)periodEffect.Magnitude);
+                return (float)((phaseTime * riseRate) - 1.0);
             }
         }
     }

@@ -12,8 +12,8 @@ namespace ScpPad2vJoy.VjoyEffect
             //Effect starts at +Magnitude
             //And rises over the whole period
             //to - Magnitude
-            Double riseRate = -(Double)(2 * periodEffect.Magnitude) / (Double)periodEffect.Period;
-            return (float)((phaseTime * riseRate) + (Double)periodEffect.Magnitude);
+            Double riseRate = -(2.0) / (Double)periodEffect.Period;
+            return (float)((phaseTime * riseRate) + 1.0);
         }
     }
 }
