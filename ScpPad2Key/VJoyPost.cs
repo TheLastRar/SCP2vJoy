@@ -258,15 +258,7 @@ namespace ScpPad2vJoy
                 if (parSelectedPads[dsID - 1])
                 {
                     uint id = GetvjFromDS(dsID);
-                    byte[] PadConfig;
-                    if (config.useDiscretePOV == false)
-                    {
-                        PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, dpads, 0, config.nButtons);
-                    }
-                    else
-                    {
-                        PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, 0, dpads, config.nButtons);
-                    }
+                    byte[] PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, dpads, 0, config.nButtons);
                     VJC.WriteHidReportDescToReg((int)id, PadConfig);
                 }
             }
