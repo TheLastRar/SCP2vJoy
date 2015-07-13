@@ -10,12 +10,13 @@ namespace ScpPad2vJoy.VjoyEffect
     abstract class BaseEffectBlock
     { 
         private Boolean m_isPaused = true;
-        private Byte loopCount = 1;
+        private Byte maxLoopCount = 1;
         protected vJoy.FFB_EFF_CONST m_ffbHeader;
         protected Single gain = 1.0F;
         public FFBEType m_effectType;
 
         protected long m_runTime = 0;
+        private long m_runLoops = 0;
         private Stopwatch effectTimer = new Stopwatch();
 
         #region "Props"
@@ -65,9 +66,10 @@ namespace ScpPad2vJoy.VjoyEffect
 
         public void Start(Byte parLoopCount)
         {
-            loopCount = (Byte)(parLoopCount - 1);
+            maxLoopCount = parLoopCount;
             effectTimer.Restart();
             m_runTime = 0;
+            m_runLoops = 0;
             m_isPaused = false;
         }
         public void Stop()
@@ -104,30 +106,33 @@ namespace ScpPad2vJoy.VjoyEffect
 
         private Boolean Tick()
         {
-            m_runTime += effectTimer.ElapsedMilliseconds;
-            effectTimer.Restart();
             if (m_ffbHeader.Duration != 0xFFFF)
             {
                 return OverTick();
             }
-            return true;
+            else
+            {
+                m_runTime = effectTimer.ElapsedMilliseconds;
+                return true;
+            }
         }
 
-        private Boolean OverTick() //Check if we run though multiple iterations in a timestep
+        //Check if we have compleated a loop
+        //Set runtime to amount of time spent
+        //in current loop
+        private Boolean OverTick()
         {
-            while (runTime > m_ffbHeader.Duration)
+            long currRunTime = effectTimer.ElapsedMilliseconds;
+            while (currRunTime > ((long)m_ffbHeader.Duration * (m_runLoops+1)))
             {
-                if (loopCount == 0)
+                m_runLoops += 1;
+                if (maxLoopCount != 255 && maxLoopCount - m_runLoops == 0)
                 {
                     m_isPaused = true;
                     return false;
                 }
-                m_runTime = m_runTime - m_ffbHeader.Duration;
-                if (loopCount != 254)
-                {
-                    loopCount -= 1;
-                }
             }
+            m_runTime = currRunTime - ((long)m_ffbHeader.Duration * m_runLoops);
             return true;
         }
     }
