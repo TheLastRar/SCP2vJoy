@@ -94,7 +94,7 @@ namespace ScpPad2vJoy
                 });
 
                 // Insert 1-4 5-state POVs
-                for (var i = 0; i < nPovHatsDir; i++)
+                for (var i = 1; i <= nPovHatsDir; i++)
                 {
                     ret.AddRange(new byte[] {
                         0x09, 0x39, //USAGE(Hat switch)
@@ -116,7 +116,7 @@ namespace ScpPad2vJoy
                     0x35, 0x00, //PHYSICAL_MINIMUM(0)
                     0x47, 0x3c, 0x8c, 0x00, 0x00,//PHYSICAL_MAXIMUM_4byte(35900)
                     0x65, 0x14, //UNIT (Eng Rot:Angular Pos)
-                    // One 4-bit data  + 31 4-bit padding
+                    //
                     0x75, 0x20, //REPORT_SIZE(32)
                     0x95, 0x01, //REPORT_COUNT(1)
                 });
@@ -129,10 +129,13 @@ namespace ScpPad2vJoy
                     });
                 }
                 // Insert 1-3 continuous POV place holders
-                ret.AddRange(new byte[] {
+                if (nPovHatsCont < 4)
+                {
+                    ret.AddRange(new byte[] {
                     0x95, (byte)(0x04-nPovHatsCont), //REPORT_COUNT(3)
                     0x81, 0x01  //INPUT(Cnst,Ary,Abs)
                 });
+                }
             }
             else
             {

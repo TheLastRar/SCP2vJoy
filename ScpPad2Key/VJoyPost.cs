@@ -192,9 +192,13 @@ namespace ScpPad2vJoy
             {
                 switch (parPOV)
                 {
+                    case Direction.UpLeft:
+                    case Direction.UpRight:
                     case Direction.Up:
                         joystick.SetDiscPov(0, id, 1);
                         break;
+                    case Direction.DownLeft:
+                    case Direction.DownRight:
                     case Direction.Down:
                         joystick.SetDiscPov(2, id, 1);
                         break;
