@@ -193,65 +193,65 @@ namespace ScpPad2vJoy
                 case Direction.UpLeft:
                     value = 31500;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.UpRight:
                     value = 4500;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.DownLeft:
                     value = 22500;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.DownRight:
                     value = 13500;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Up:
                     value = 0;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Down:
                     value = 18000;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Left:
                     value = 27000;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Right:
                     value = 9000;
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 default:
                     value = unchecked((uint)-1);
                     joyReport[parDSid - 1].bHats = value;
-                    //tarReport.bHatsEx1 = value;
-                    //tarReport.bHatsEx2 = value;
-                    //tarReport.bHatsEx3 = value;
+                    //joyReport[parDSid - 1].bHatsEx1 = value;
+                    //joyReport[parDSid - 1].bHatsEx2 = value;
+                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
             }
         }
