@@ -143,6 +143,7 @@ namespace ScpPad2vJoy
                         break;
                     #endregion
                 }
+                vJPad.JoySubmit(dsID);
             }
         }
 

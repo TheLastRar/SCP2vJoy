@@ -15,6 +15,7 @@ namespace ScpPad2vJoy
     public class VJoyPost
     {
         protected vJoy joystick;
+        protected vJoy.JoystickState[] joyReport = new vJoy.JoystickState[4];
         protected UInt32 vJoyVersion = 0;
 
         //vJoy
@@ -134,8 +135,10 @@ namespace ScpPad2vJoy
         {
             if (parButtonID != 0)
             {
-                uint id = GetvjFromDS(parDSid);
-                joystick.SetBtn(parDown, id, parButtonID);
+                if (parDown)
+                {
+                    joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID-1));
+                }
             }
         }
 
@@ -143,48 +146,121 @@ namespace ScpPad2vJoy
         {
             if (parAxis != 0)
             {
-                uint id = GetvjFromDS(parDSid);
                 //bunch of offset correction nonsense, may need reevaluation
                 //Seems to be very close, Constant offset of 0.5 seems to be present
                 //Also Scaled values cannot get within 64 of vJoy limits
                 //this gives pratical limits of (64-32704)
-                joystick.SetAxis((int)((parValue + 1) * AXIS_SCALE) - AXIS_SCALE_OFFSET, id, parAxis);
+                int JoyValue = (int)((parValue + 1) * AXIS_SCALE) - AXIS_SCALE_OFFSET;
+
+                switch (parAxis)
+                {
+                    case HID_USAGES.HID_USAGE_X:
+                        joyReport[parDSid - 1].AxisX = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_Y:
+                        joyReport[parDSid - 1].AxisY = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_Z:
+                        joyReport[parDSid - 1].AxisZ = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_RX:
+                        joyReport[parDSid - 1].AxisXRot = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_RY:
+                        joyReport[parDSid - 1].AxisYRot = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_RZ:
+                        joyReport[parDSid - 1].AxisZRot = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_SL0:
+                        joyReport[parDSid - 1].Slider = JoyValue;
+                    break;
+                    case HID_USAGES.HID_USAGE_SL1:
+                        joyReport[parDSid - 1].Dial = JoyValue; //I don't know, we'll just go with it.
+                    break;
+                    case HID_USAGES.HID_USAGE_WHL:
+                        joyReport[parDSid - 1].Wheel = JoyValue;
+                    break;
+                }
             }
         }
 
-        public void JoyPov(Direction parPOV,uint parDSid)
+        public void JoyPov(Direction parPOV, uint parDSid)
         {
-            uint id = GetvjFromDS(parDSid);
+            uint value = 0;
             switch (parPOV)
             {
                 case Direction.UpLeft:
-                    joystick.SetContPov(31500, id, 1);
+                    value = 31500;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.UpRight:
-                    joystick.SetContPov(4500, id, 1);
+                    value = 4500;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.DownLeft:
-                    joystick.SetContPov(22500, id, 1);
+                    value = 22500;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.DownRight:
-                    joystick.SetContPov(13500, id, 1);
+                    value = 13500;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.Up:
-                    joystick.SetContPov(0, id, 1);
+                    value = 0;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.Down:
-                    joystick.SetContPov(18000, id, 1);
+                    value = 18000;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.Left:
-                    joystick.SetContPov(27000, id, 1);
+                    value = 27000;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 case Direction.Right:
-                    joystick.SetContPov(9000, id, 1);
+                    value = 9000;
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
                 default:
-                    joystick.SetContPov(-1, id, 1);
+                    value = unchecked((uint)-1);
+                    joyReport[parDSid - 1].bHats = value;
+                    //tarReport.bHatsEx1 = value;
+                    //tarReport.bHatsEx2 = value;
+                    //tarReport.bHatsEx3 = value;
                     break;
             }
+        }
+
+        public void JoySubmit(uint parDSid)
+        {
+            uint id = GetvjFromDS(parDSid);
+            joystick.UpdateVJD(id, ref joyReport[parDSid-1]);
+            joyReport[parDSid - 1].Buttons = 0;
         }
 
         public void EnableVJoy(bool enable)
