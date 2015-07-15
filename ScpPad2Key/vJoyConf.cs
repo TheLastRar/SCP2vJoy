@@ -154,7 +154,7 @@ namespace ScpPad2vJoy
                 0x55, 0x00, //UNIT_EXPONENT(0)
                 0x65, 0x00, //UNIT (None)
                 0x19, 0x01, //USAGE_MINIMUM(1)
-                0x29, nButtons,//USAGE_MAXIMUM(nButtons)
+                0x29, nButtons, //USAGE_MAXIMUM(nButtons)
                 0x75, 0x01, //REPORT_SIZE(1)
                 0x95, nButtons, //REPORT_COUNT(nButtons)
                 0x81, 0x02 //INPUT(Data,Var,Abs)

@@ -137,7 +137,22 @@ namespace ScpPad2vJoy
             {
                 if (parDown)
                 {
-                    joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID-1));
+                    if (parButtonID < 33) //1-32
+                    {
+                        joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID - 1));
+                    }
+                    else if (parButtonID < 65) //33-64
+                    {
+                        joyReport[parDSid - 1].ButtonsEx1 |= (uint)(0x1 << (int)(parButtonID - 33));
+                    }
+                    else if (parButtonID < 97) //65-96
+                    {
+                        joyReport[parDSid - 1].ButtonsEx2 |= (uint)(0x1 << (int)(parButtonID - 65));
+                    }
+                    else //97-128
+                    {
+                        joyReport[parDSid - 1].ButtonsEx3 |= (uint)(0x1 << (int)(parButtonID - 97));
+                    }
                 }
             }
         }
@@ -261,6 +276,9 @@ namespace ScpPad2vJoy
             uint id = GetvjFromDS(parDSid);
             joystick.UpdateVJD(id, ref joyReport[parDSid-1]);
             joyReport[parDSid - 1].Buttons = 0;
+            joyReport[parDSid - 1].ButtonsEx1 = 0;
+            joyReport[parDSid - 1].ButtonsEx2 = 0;
+            joyReport[parDSid - 1].ButtonsEx3 = 0;
         }
 
         public void EnableVJoy(bool enable)
