@@ -191,10 +191,7 @@ namespace ScpPad2vJoy
                         joyReport[parDSid - 1].Slider = JoyValue;
                     break;
                     case HID_USAGES.HID_USAGE_SL1:
-                        joyReport[parDSid - 1].Dial = JoyValue; //I don't know, we'll just go with it.
-                    break;
-                    case HID_USAGES.HID_USAGE_WHL:
-                        joyReport[parDSid - 1].Wheel = JoyValue;
+                        joyReport[parDSid - 1].Dial = JoyValue;
                     break;
                 }
             }
