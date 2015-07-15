@@ -170,11 +170,16 @@ namespace DisableDevice
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct PropertyChangeParameters
+    internal struct ClassInstallHeader
     {
         public int Size;
-        // part of header. It's flattened out into 1 structure.
-        public DiFunction DiFunction;
+        public DiFunction DiFunction; //(ClassInstallHeader)
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PropertyChangeParameters
+    {
+        public ClassInstallHeader ClassInstallHeader;
         public StateChangeAction StateChange;
         public Scopes Scope;
         public int HwProfile;
@@ -241,7 +246,6 @@ ref int requiredSize);
             [In()] ref DeviceInfoData deviceInfoData,
             [In()] ref PropertyChangeParameters classInstallParams, 
             int classInstallParamsSize);
-
     }
 
     internal class SafeDeviceInfoSetHandle : SafeHandleZeroOrMinusOneIsInvalid
@@ -273,14 +277,21 @@ ref int requiredSize);
         /// <param name="instanceId">The device instance id of the device. Available in the device manager.</param>
         /// <param name="enable">True to enable, False to disable.</param>
         /// <remarks>Will throw an exception if the device is not Disableable.</remarks>
-        public static void SetDeviceEnabled(Guid classGuid, string instanceId, bool enable)
+        public static void SetDeviceEnabled(Guid classGuid, string instanceId, bool enable, bool searchOnlyPresent = true)
         {
             SafeDeviceInfoSetHandle diSetHandle = null;
             try
             {
                 // Get the handle to a device information set for all devices matching classGuid that are present on the 
                 // system.
-                diSetHandle = NativeMethods.SetupDiGetClassDevs(ref classGuid, null, IntPtr.Zero, SetupDiGetClassDevsFlags.Present);
+                if (searchOnlyPresent)
+                {
+                    diSetHandle = NativeMethods.SetupDiGetClassDevs(ref classGuid, null, IntPtr.Zero, SetupDiGetClassDevsFlags.Present);
+                }
+                else
+                {
+                    diSetHandle = NativeMethods.SetupDiGetClassDevs(ref classGuid, null, IntPtr.Zero, SetupDiGetClassDevsFlags.AllClasses);
+                }
                 // Get the device information data for each matching device.
                 DeviceInfoData[] diData = GetDeviceInfoData(diSetHandle);
                 // Find the index of our instance. i.e. the touchpad mouse - I have 3 mice attached...
@@ -349,8 +360,8 @@ ref int requiredSize);
             PropertyChangeParameters @params = new PropertyChangeParameters();
             // The size is just the size of the header, but we've flattened the structure.
             // The header comprises the first two fields, both integer.
-            @params.Size = 8;
-            @params.DiFunction = DiFunction.PropertyChange;
+            @params.ClassInstallHeader.Size = Marshal.SizeOf(typeof(ClassInstallHeader));
+            @params.ClassInstallHeader.DiFunction = DiFunction.PropertyChange;
             @params.Scope = Scopes.Global;
             if (enable)
             {
