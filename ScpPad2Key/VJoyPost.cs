@@ -22,6 +22,7 @@ namespace ScpPad2vJoy
         protected const UInt32 MIN_VER = 0x205;
         //Axis
         protected const Int32 MAX_VJOY_AXIS = 32767; //Max vJoy value (0-32767)
+        protected const Int32 HALF_VJOY_AXIS = MAX_VJOY_AXIS / 2;
         protected const Int32 MAX_SCP_AXIS = 255; //Max SCP value (0-255)
         protected const Int32 AXIS_SCALE = (MAX_VJOY_AXIS + 1) / (MAX_SCP_AXIS+1); //(+1 the max values to give interger scale)
         protected const Int32 AXIS_SCALE_OFFSET = AXIS_SCALE / 2; //Offset needs to be applied to account for us (adding 1 the max values)
@@ -97,6 +98,15 @@ namespace ScpPad2vJoy
                     Console.WriteLine(String.Format("ContPov : {0}.", joystick.GetVJDContPovNumber(id)));
                     // Reset this device to default values
                     joystick.ResetVJD(id);
+                    //Set Axis to mid value
+                    joyReport[dsID - 1].AxisX = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].AxisY = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].AxisZ = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].AxisXRot = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].AxisYRot = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].AxisZRot = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].Slider = HALF_VJOY_AXIS;
+                    joyReport[dsID - 1].Dial = HALF_VJOY_AXIS;
                 }
             }
             return true;
@@ -276,6 +286,16 @@ namespace ScpPad2vJoy
             joyReport[parDSid - 1].ButtonsEx1 = 0;
             joyReport[parDSid - 1].ButtonsEx2 = 0;
             joyReport[parDSid - 1].ButtonsEx3 = 0;
+            //Set Axis to mid value
+            //Needed as ButtonsAsAxis don't reset to axis
+            joyReport[parDSid - 1].AxisX = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].AxisY = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].AxisZ = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].AxisXRot = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].AxisYRot = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].AxisZRot = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].Slider = HALF_VJOY_AXIS;
+            joyReport[parDSid - 1].Dial = HALF_VJOY_AXIS;
         }
 
         public void EnableVJoy(bool enable)
