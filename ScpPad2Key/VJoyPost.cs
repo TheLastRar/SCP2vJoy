@@ -186,7 +186,7 @@ namespace ScpPad2vJoy
             }
         }
 
-        public void JoyPov(Direction parPOV ,uint parDSid)
+        public void JoyPov(Direction parPOV, uint parDSid)
         {
             uint id = GetvjFromDS(parDSid);
             switch (parPOV)
