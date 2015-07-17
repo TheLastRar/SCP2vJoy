@@ -415,13 +415,17 @@ namespace ScpPad2vJoy
                 //Button As Axis
                 uint axisCode = 0;
                 string[] Setting = parTargetButton.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
-                if (Setting[1] == "HI")
+                if (Setting[1] == "UL")
+                {
+                    axisCode = 1000;
+                }
+                else if (Setting[1] == "DR")
                 {
                     axisCode = 2000;
                 }
                 else
                 {
-                    axisCode = 1000;
+                    return;
                 }
                 HID_USAGES TargetAxis = 0;
                 AssignAxis(ref TargetAxis, Setting[0]);
