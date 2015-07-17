@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Management;
 using SharpDX.DirectInput;
+using System.ServiceProcess;
 using DisableDevice;
 
 namespace ScpPad2vJoy
 {
-    public class DXinputLocker
+    public class X360_InputLocker
     {
         private Control parentForm;
         protected List<DeviceID> lockedDevices = new List<DeviceID>();
@@ -23,11 +25,52 @@ namespace ScpPad2vJoy
         }
         const string XINPUT_NAME = "Controller (XBOX 360 For Windows)";
 
-        public DXinputLocker(Control parParentForm)
+        public X360_InputLocker(Control parParentForm)
         {
             parentForm = parParentForm;
         }
-        public void LockDevices()//Disable all dinput devices for xinput controllers
+        public void Lock_XI_Devices()//Disable all Xinput controllers presented by SCP
+        {
+            string strClassGUID = "{d61ca365-5af4-4486-998b-9db4734c6ca3}";
+            Guid ClassGUID = new Guid(strClassGUID);
+            //find all "Xbox 360 Controller for Windows" pads and disable them
+            ManagementObjectSearcher objSearcher = new ManagementObjectSearcher("Select * from Win32_PnPSignedDriver WHERE ClassGuid = '" + strClassGUID + "' AND DeviceName = 'Xbox 360 Controller for Windows'");
+
+            ManagementObjectCollection objCollection = objSearcher.Get();
+
+            List<String> objdeviceids = new List<String>();
+            foreach (ManagementObject cobj in objCollection)
+            {
+                string Local = (string)cobj["Location"];
+                //Dealing with X360 controllers outside of
+                //SCP is untested and might cause a crash
+                if (Local.Contains("SCP Virtual X360 Bus"))
+                    objdeviceids.Add((string)cobj["DeviceID"]);
+            }
+
+            //Stop Service to allow us to disable needed X360 controllers
+            //Stopping the service effectivly unplugs the emulated X360
+            //controller, but we can still disable and re-enable it
+            //If we do this while the service is running, the program will
+            //crash
+            ServiceController sc = new ServiceController("SCP DS3 Service");
+            sc.Stop();
+            sc.WaitForStatus(ServiceControllerStatus.Stopped);
+
+            foreach (String objdeviceid in objdeviceids)
+            {
+                if (objdeviceid != "")
+                {
+                    lockedDevices.Add(new DeviceID(ClassGUID, objdeviceid));
+                    DeviceHelper.SetDeviceEnabled(ClassGUID, objdeviceid, false, false);
+                }
+            }
+
+            //Restart service
+            sc.Start();
+            sc.WaitForStatus(ServiceControllerStatus.Running);
+        }
+        public void Lock_DX_Devices()//Disable all dinput devices for xinput controllers
         {
             var directInput = new DirectInput();
 
@@ -55,7 +98,7 @@ namespace ScpPad2vJoy
         {
             foreach (DeviceID deviceid in lockedDevices)
             {
-                DeviceHelper.SetDeviceEnabled(deviceid.classGUID, deviceid.instancePath, true);
+                DeviceHelper.SetDeviceEnabled(deviceid.classGUID, deviceid.instancePath, true, false);
             }
             lockedDevices.Clear();
         }

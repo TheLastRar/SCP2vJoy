@@ -409,6 +409,24 @@ namespace ScpPad2vJoy
                         }
                         break;
                 }
+            } 
+            else if (parTargetButton.StartsWith("A"))
+            {
+                //Button As Axis
+                uint axisCode = 0;
+                string[] Setting = parTargetButton.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+                if (Setting[1] == "HI")
+                {
+                    axisCode = 2000;
+                }
+                else
+                {
+                    axisCode = 1000;
+                }
+                HID_USAGES TargetAxis = 0;
+                AssignAxis(ref TargetAxis, Setting[0]);
+                axisCode += (uint)TargetAxis;
+                parSourceButton = axisCode;
             }
 
         }

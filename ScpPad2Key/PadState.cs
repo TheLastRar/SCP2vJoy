@@ -46,24 +46,24 @@ namespace ScpPad2vJoy
                             SetAxis(Data.Axis(Ds3Axis.RY), config.axisRY, config.invertRY, dsID);
                             #endregion
                             #region Buttons
-                            vJPad.JoyButton(config.cross, Data.Button(Ds3Button.Cross), dsID);
-                            vJPad.JoyButton(config.circle, Data.Button(Ds3Button.Circle), dsID);
-                            vJPad.JoyButton(config.square, Data.Button(Ds3Button.Square), dsID);
-                            vJPad.JoyButton(config.triangle, Data.Button(Ds3Button.Triangle), dsID);
-                            vJPad.JoyButton(config.l1, Data.Button(Ds3Button.L1), dsID);
-                            vJPad.JoyButton(config.r1, Data.Button(Ds3Button.R1), dsID);
-                            vJPad.JoyButton(config.l2, Data.Button(Ds3Button.L2), dsID);
-                            vJPad.JoyButton(config.r2, Data.Button(Ds3Button.R2), dsID);
-                            vJPad.JoyButton(config.select_share, Data.Button(Ds3Button.Select), dsID);
-                            vJPad.JoyButton(config.start_options, Data.Button(Ds3Button.Start), dsID);
-                            vJPad.JoyButton(config.l3, Data.Button(Ds3Button.L3), dsID);
-                            vJPad.JoyButton(config.r3, Data.Button(Ds3Button.R3), dsID);
-                            vJPad.JoyButton(config.ps, Data.Button(Ds3Button.PS), dsID);
+                            SetButton(Data.Button(Ds3Button.Cross), config.cross, dsID);
+                            SetButton(Data.Button(Ds3Button.Circle), config.circle, dsID);
+                            SetButton(Data.Button(Ds3Button.Square), config.square, dsID);
+                            SetButton(Data.Button(Ds3Button.Triangle), config.triangle, dsID);
+                            SetButton(Data.Button(Ds3Button.L1), config.l1, dsID);
+                            SetButton(Data.Button(Ds3Button.R1), config.r1, dsID);
+                            SetButton(Data.Button(Ds3Button.L2), config.l2, dsID);
+                            SetButton(Data.Button(Ds3Button.R2), config.r2, dsID);
+                            SetButton(Data.Button(Ds3Button.Select), config.select_share, dsID);
+                            SetButton(Data.Button(Ds3Button.Start), config.start_options, dsID);
+                            SetButton(Data.Button(Ds3Button.L3), config.l3, dsID);
+                            SetButton(Data.Button(Ds3Button.R3), config.r3, dsID);
+                            SetButton(Data.Button(Ds3Button.PS), config.ps, dsID);
                             //Dpad as button
-                            vJPad.JoyButton(config.up, Data.Button(Ds3Button.Up), dsID);
-                            vJPad.JoyButton(config.down, Data.Button(Ds3Button.Down), dsID);
-                            vJPad.JoyButton(config.left, Data.Button(Ds3Button.Left), dsID);
-                            vJPad.JoyButton(config.right, Data.Button(Ds3Button.Right), dsID);
+                            SetButton(Data.Button(Ds3Button.Up), config.up, dsID);
+                            SetButton(Data.Button(Ds3Button.Down), config.down, dsID);
+                            SetButton(Data.Button(Ds3Button.Left), config.left, dsID);
+                            SetButton(Data.Button(Ds3Button.Right), config.right, dsID);
                             //AxisAsButton
                             SetAxisAsButton(Data.Axis(Ds3Axis.LX), config.aLRight, config.aLLeft, dsID);
                             SetAxisAsButton(Data.Axis(Ds3Axis.LY), config.aLDown, config.aLUp, dsID);
@@ -103,24 +103,24 @@ namespace ScpPad2vJoy
                             SetAxis(Data.Axis(Ds4Axis.RY), config.axisRY, config.invertRY, dsID);
                             #endregion
                             #region Buttons
-                            vJPad.JoyButton(config.cross, Data.Button(Ds4Button.Cross), dsID);
-                            vJPad.JoyButton(config.circle, Data.Button(Ds4Button.Circle), dsID);
-                            vJPad.JoyButton(config.square, Data.Button(Ds4Button.Square), dsID);
-                            vJPad.JoyButton(config.triangle, Data.Button(Ds4Button.Triangle), dsID);
-                            vJPad.JoyButton(config.l1, Data.Button(Ds4Button.L1), dsID);
-                            vJPad.JoyButton(config.r1, Data.Button(Ds4Button.R1), dsID);
-                            vJPad.JoyButton(config.l2, Data.Button(Ds4Button.L2), dsID);
-                            vJPad.JoyButton(config.r2, Data.Button(Ds4Button.R2), dsID);
-                            vJPad.JoyButton(config.select_share, Data.Button(Ds4Button.Share), dsID);
-                            vJPad.JoyButton(config.start_options, Data.Button(Ds4Button.Options), dsID);
-                            vJPad.JoyButton(config.l3, Data.Button(Ds4Button.L3), dsID);
-                            vJPad.JoyButton(config.r3, Data.Button(Ds4Button.R3), dsID);
-                            vJPad.JoyButton(config.ps, Data.Button(Ds4Button.PS), dsID);
+                            SetButton(Data.Button(Ds4Button.Cross), config.cross, dsID);
+                            SetButton(Data.Button(Ds4Button.Circle), config.circle, dsID);
+                            SetButton(Data.Button(Ds4Button.Square), config.square, dsID);
+                            SetButton(Data.Button(Ds4Button.Triangle), config.triangle, dsID);
+                            SetButton(Data.Button(Ds4Button.L1), config.l1, dsID);
+                            SetButton(Data.Button(Ds4Button.R1), config.r1, dsID);
+                            SetButton(Data.Button(Ds4Button.L2), config.l2, dsID);
+                            SetButton(Data.Button(Ds4Button.R2), config.r2, dsID);
+                            SetButton(Data.Button(Ds4Button.Share), config.select_share, dsID);
+                            SetButton(Data.Button(Ds4Button.Options), config.start_options, dsID);
+                            SetButton(Data.Button(Ds4Button.L3), config.l3, dsID);
+                            SetButton(Data.Button(Ds4Button.R3), config.r3, dsID);
+                            SetButton(Data.Button(Ds4Button.PS), config.ps, dsID);
                             //Dpad as button
-                            vJPad.JoyButton(config.up, Data.Button(Ds4Button.Up), dsID);
-                            vJPad.JoyButton(config.down, Data.Button(Ds4Button.Down), dsID);
-                            vJPad.JoyButton(config.left, Data.Button(Ds4Button.Left), dsID);
-                            vJPad.JoyButton(config.right, Data.Button(Ds4Button.Right), dsID);
+                            SetButton(Data.Button(Ds4Button.Up), config.up, dsID);
+                            SetButton(Data.Button(Ds4Button.Down), config.down, dsID);
+                            SetButton(Data.Button(Ds4Button.Left), config.left, dsID);
+                            SetButton(Data.Button(Ds4Button.Right), config.right, dsID);
                             //AxisAsButton
                             SetAxisAsButton(Data.Axis(Ds4Axis.LX), config.aLRight, config.aLLeft, dsID);
                             SetAxisAsButton(Data.Axis(Ds4Axis.LY), config.aLDown, config.aLUp, dsID);
@@ -146,14 +146,15 @@ namespace ScpPad2vJoy
                         break;
                     #endregion
                 }
+                vJPad.JoySubmit(dsID);
             }
         }
 
-        private void SetAxis(byte parAxisValue, HID_USAGES parTargetHID,bool parInverted, uint parDsID)
+        private void SetAxis(byte parAxisValue, HID_USAGES parTargetHID, bool parInverted, uint parDsID)
         {
             if (parInverted)
             {
-                vJPad.JoyAxis(parTargetHID, 255 - parAxisValue, parDsID); 
+                vJPad.JoyAxis(parTargetHID, 255 - parAxisValue, parDsID);
             }
             else
             {
@@ -175,6 +176,29 @@ namespace ScpPad2vJoy
             else
             {
                 vJPad.JoyButton(parHighId, false, parDsID); vJPad.JoyButton(parLowId, false, parDsID);
+            }
+        }
+        private void SetButton(bool parDown, uint parButtonID, uint parDsID)
+        { //Also deals with ButtonAsAixis
+            if (parButtonID < 1000)
+            {
+                vJPad.JoyButton(parButtonID, parDown, parDsID);
+            }
+            else if (parButtonID < 2000)
+            {
+                //LO
+                if (parDown)
+                {
+                    vJPad.JoyAxis((HID_USAGES)(parButtonID - 1000), 0, parDsID);
+                }
+            }
+            else
+            {
+                //HI
+                if (parDown)
+                {
+                    vJPad.JoyAxis((HID_USAGES)(parButtonID - 2000), 255, parDsID);
+                }
             }
         }
 
@@ -223,7 +247,7 @@ namespace ScpPad2vJoy
             }
         }
 
-        private bool CheckDpadAxisAsButton(byte parAxisValue,bool parTriggerHigh)
+        private bool CheckDpadAxisAsButton(byte parAxisValue, bool parTriggerHigh)
         {
             if (parTriggerHigh)
             {
