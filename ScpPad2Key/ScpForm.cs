@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using ScpControl;
 
 using vJoyInterfaceWrap;
+using System.Reflection;
 
 namespace ScpPad2vJoy 
 {
@@ -22,6 +23,8 @@ namespace ScpPad2vJoy
         public ScpForm() 
         {
             InitializeComponent();
+            Version ver =  Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text += ver.Major + "." + ver.Minor;
         }
 
         protected void Form_Load(object sender, EventArgs e) 
@@ -156,6 +159,13 @@ namespace ScpPad2vJoy
                 string[] configfile = System.IO.File.ReadAllLines(openFileDialog1.FileName);
                 config = new PadSettings(configfile);
             }
+        }
+
+        private void Help_Click(object sender, EventArgs e)
+        {
+            //Open Help Dialog (?)
+            AboutForm abt = new AboutForm();
+            abt.ShowDialog();
         }
     }
 }
