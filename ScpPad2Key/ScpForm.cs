@@ -163,9 +163,8 @@ namespace ScpPad2vJoy
 
         private void Help_Click(object sender, EventArgs e)
         {
-            //Open Help Dialog (?)
             AboutForm abt = new AboutForm();
-            abt.ShowDialog();
+            abt.Show();
         }
     }
 }

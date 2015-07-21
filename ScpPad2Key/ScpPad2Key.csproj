@@ -107,7 +107,6 @@
     <Compile Include="Direction.cs" />
     <Compile Include="DisableHardware.cs" />
     <Compile Include="DXinputLocker.cs" />
-    <Compile Include="SharedConstants.cs" />
     <Compile Include="PadSettings.cs" />
     <Compile Include="PadState.cs" />
     <Compile Include="Properties\CommonInfo.cs" />
