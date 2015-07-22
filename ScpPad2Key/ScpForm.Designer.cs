@@ -80,7 +80,7 @@
             this.gbX.Controls.Add(this.cbP1);
             this.gbX.Location = new System.Drawing.Point(12, 12);
             this.gbX.Name = "gbX";
-            this.gbX.Size = new System.Drawing.Size(288, 49);
+            this.gbX.Size = new System.Drawing.Size(278, 49);
             this.gbX.TabIndex = 10;
             this.gbX.TabStop = false;
             this.gbX.Text = "Capture Pads";
@@ -148,9 +148,9 @@
             // 
             // Help
             // 
-            this.Help.Location = new System.Drawing.Point(275, 77);
+            this.Help.Location = new System.Drawing.Point(255, 77);
             this.Help.Name = "Help";
-            this.Help.Size = new System.Drawing.Size(25, 23);
+            this.Help.Size = new System.Drawing.Size(37, 23);
             this.Help.TabIndex = 12;
             this.Help.Text = "?";
             this.Help.UseVisualStyleBackColor = true;
@@ -160,7 +160,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 112);
+            this.ClientSize = new System.Drawing.Size(304, 112);
             this.Controls.Add(this.Help);
             this.Controls.Add(this.btnLoadConfig);
             this.Controls.Add(this.gbX);
@@ -169,7 +169,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(800, 360);
-            this.MinimumSize = new System.Drawing.Size(320, 38);
+            this.MinimumSize = new System.Drawing.Size(310, 38);
             this.Name = "ScpForm";
             this.Text = "vJoy Mapper - V";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Close);
