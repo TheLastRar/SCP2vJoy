@@ -39,6 +39,7 @@
             this.cbP1 = new System.Windows.Forms.CheckBox();
             this.btnLoadConfig = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.Help = new System.Windows.Forms.Button();
             this.gbX.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +51,7 @@
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(217, 76);
+            this.btnStop.Location = new System.Drawing.Point(174, 77);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 8;
@@ -61,7 +62,7 @@
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStart.Location = new System.Drawing.Point(136, 76);
+            this.btnStart.Location = new System.Drawing.Point(93, 77);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 9;
@@ -133,7 +134,7 @@
             // btnLoadConfig
             // 
             this.btnLoadConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLoadConfig.Location = new System.Drawing.Point(55, 76);
+            this.btnLoadConfig.Location = new System.Drawing.Point(12, 77);
             this.btnLoadConfig.Name = "btnLoadConfig";
             this.btnLoadConfig.Size = new System.Drawing.Size(75, 23);
             this.btnLoadConfig.TabIndex = 11;
@@ -145,20 +146,32 @@
             // 
             this.openFileDialog1.FileName = "Config.txt";
             // 
+            // Help
+            // 
+            this.Help.Location = new System.Drawing.Point(255, 77);
+            this.Help.Name = "Help";
+            this.Help.Size = new System.Drawing.Size(37, 23);
+            this.Help.TabIndex = 12;
+            this.Help.Text = "?";
+            this.Help.UseVisualStyleBackColor = true;
+            this.Help.Click += new System.EventHandler(this.Help_Click);
+            // 
             // ScpForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 112);
+            this.Controls.Add(this.Help);
             this.Controls.Add(this.btnLoadConfig);
             this.Controls.Add(this.gbX);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.btnStop);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(800, 360);
-            this.MinimumSize = new System.Drawing.Size(320, 38);
+            this.MinimumSize = new System.Drawing.Size(310, 38);
             this.Name = "ScpForm";
-            this.Text = "Vjoy Mapper - v1.3";
+            this.Text = "vJoy Mapper - V";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Close);
             this.Load += new System.EventHandler(this.Form_Load);
             this.gbX.ResumeLayout(false);
@@ -179,6 +192,7 @@
         private System.Windows.Forms.CheckBox cbP1;
         private System.Windows.Forms.Button btnLoadConfig;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button Help;
     }
 }
 

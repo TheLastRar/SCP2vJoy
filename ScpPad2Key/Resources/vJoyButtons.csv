@@ -1,0 +1,20 @@
+B1,vJoy controllers can have upto 128 buttons (from B1 to B128). Any Button can be assigned to them.,Button
+B5,,Button
+B12,,Button
+PU,Dpad Up,Button
+PD,Dpad Down,Button
+PL,Dpad Left,Button
+PR,Dpad Right,Button
+AX,X-Axis. Left Stick (Left and Right),Axis
+AY,Y-Axis. Left Stick (Up and Down),Axis
+AZ,Z-Axis. Sometimes used for right stick,Axis
+ARX,X Rotation. Sometimes used for right stick,Axis
+ARY,Y Rotation. Sometimes used for right stick,Axis
+ARZ,Z Rotation,Axis
+ASL0,Slider,Axis
+ASL1,"Second Slider, Also known as a Dial",Axis
+AX_UL,Axis directions which can receive button commands. {NL}""*_UL"" is often Up or Left while ""*_DR"" is often Down or Right. The suffix ""_UL"" and ""_DR"" Can be applied to any of the 8 supported axes.,Button
+AX_DR,,Button
+AY_UL,,Button
+AY_DR,,Button
+ASL0_UL,,Button

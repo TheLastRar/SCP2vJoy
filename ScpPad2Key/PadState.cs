@@ -38,7 +38,6 @@ namespace ScpPad2vJoy
                             #region Axis
                             vJPad.JoyAxis(config.axisL2, Data.Axis(Ds3Axis.L2), dsID);
                             vJPad.JoyAxis(config.axisR2, Data.Axis(Ds3Axis.R2), dsID);
-
                             SetAxis(Data.Axis(Ds3Axis.LX), config.axisLX, config.invertLX, dsID);
                             SetAxis(Data.Axis(Ds3Axis.LY), config.axisLY, config.invertLY, dsID);
 

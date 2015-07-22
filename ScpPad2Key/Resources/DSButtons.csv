@@ -1,0 +1,29 @@
+CROSS,Face Buttons,Button
+CIRCLE,,Button
+SQUARE,,Button
+TRIANGLE,,Button
+L1,L1 and R1 Buttons,Button
+R1,,Button
+L2,"L2 and R2, These can be assigned to either an Axis or a Button",Button or Axis
+R2,,Button or Axis
+SELECT_SHARE,"Select on a DS3, Share on a DS4.",Button
+START_OPTIONS,"Start on a DS3, Options on a DS4",Button
+L3,Left stict click,Button
+R3,Right stick click,Button
+PS,Playstation home button,Button
+UP,Dpad buttons,Button
+DOWN,,Button
+LEFT,,Button
+RIGHT,,Button
+LX,Left stick Axis (Left and Right),Axis
+LY,Left stick Axis (Up and Down),Axis
+RX,Right stick Axis (Left and Right),Axis
+RY,Right stick Axis (Up and Down),Axis
+LS_UP,"Left stick directions, Allowing you to map left stick movements as if they where buttons",Button
+LS_DOWN,,Button
+LS_LEFT,,Button
+LS_RIGHT,,Button
+RS_UP,"Right stick directions, Allowing you to map right stick movements as if they where buttons",Button
+RS_DOWN,,Button
+RS_LEFT,,Button
+RS_RIGHT,,Button
