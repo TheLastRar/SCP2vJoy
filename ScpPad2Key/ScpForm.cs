@@ -18,7 +18,7 @@ namespace ScpPad2vJoy
         protected String m_Active;
         protected PadSettings config;
         protected bool[] selectedPads = new bool[] {true,false,false,false};
-        protected DeviceManagement devManLevel = /* DeviceManagement.vJoy_Config | DeviceManagement.vJoy_Device | */ DeviceManagement.Xinput_DX /*| DeviceManagement.Xinput_XI*/;
+        protected DeviceManagement devManLevel = DeviceManagement.vJoy_Config | DeviceManagement.vJoy_Device | DeviceManagement.Xinput_DX /*| DeviceManagement.Xinput_XI*/;
 
         public ScpForm() 
         {
