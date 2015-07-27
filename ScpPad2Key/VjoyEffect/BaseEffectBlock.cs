@@ -9,6 +9,8 @@ namespace ScpPad2vJoy.VjoyEffect
 {
     abstract class BaseEffectBlock
     { 
+        
+
         private Boolean m_isPaused = true;
         private Byte maxLoopCount = 1;
         protected vJoy.FFB_EFF_CONST m_ffbHeader;
@@ -48,11 +50,11 @@ namespace ScpPad2vJoy.VjoyEffect
                     Trace.WriteLine("WARN: Effect Type Missmatch");
                     Trace.WriteLine("WARN: Effect Change not applied");
                 }
-                if (m_ffbHeader.TrigerBtn != 255)
+                if (m_ffbHeader.TrigerBtn != vJoyConstants.EFFECT_NULL_TRIGGER_BTN)
                 {
                     Trace.WriteLine("TRIGGER BUTTON NOT SUPPORTED");
                 }
-                gain = value.Gain / 255.0F;
+                gain = value.Gain / vJoyConstants.EFFECT_MAX_VALUE;
             }
         }
         public Boolean isPaused
@@ -106,7 +108,7 @@ namespace ScpPad2vJoy.VjoyEffect
 
         private Boolean Tick()
         {
-            if (m_ffbHeader.Duration != 0xFFFF)
+            if (m_ffbHeader.Duration != vJoyConstants.EFFECT_INF_DURATION)
             {
                 return OverTick();
             }
@@ -126,7 +128,7 @@ namespace ScpPad2vJoy.VjoyEffect
             while (currRunTime > ((long)m_ffbHeader.Duration * (m_runLoops+1)))
             {
                 m_runLoops += 1;
-                if (maxLoopCount != 255 && maxLoopCount - m_runLoops == 0)
+                if (maxLoopCount != vJoyConstants.EFFECT_MAX_LOOP_COUNT && maxLoopCount - m_runLoops == 0)
                 {
                     m_isPaused = true;
                     return false;

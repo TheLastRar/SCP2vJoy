@@ -18,16 +18,12 @@ namespace ScpPad2vJoy
     {
         protected vJoy joystick;
         protected vJoyVibrate vibrationCore;
-        protected vJoy.JoystickState[] joyReport = new vJoy.JoystickState[4];
+        protected vJoy.JoystickState[] joyReport = new vJoy.JoystickState[SCPConstants.MAX_XINPUT_DEVICES];
         protected UInt32 vJoyVersion = 0;
 
-        //vJoy
-        protected const UInt32 MIN_VER = 0x205;
-        //Axis
-        protected const Int32 MAX_VJOY_AXIS = 32767; //Max vJoy value (0-32767)
-        protected const Int32 HALF_VJOY_AXIS = MAX_VJOY_AXIS / 2;
-        protected const Int32 MAX_SCP_AXIS = 255; //Max SCP value (0-255)
-        protected const Int32 AXIS_SCALE = (MAX_VJOY_AXIS + 1) / (MAX_SCP_AXIS+1); //(+1 the max values to give interger scale)
+
+        protected const Int32 HALF_VJOY_AXIS = vJoyConstants.MAX_AXIS_VALUE / 2;
+        protected const Int32 AXIS_SCALE = (vJoyConstants.MAX_AXIS_VALUE + 1) / (SCPConstants.MAX_SCP_AXIS + 1); //(+1 the max values to give interger scale)
         protected const Int32 AXIS_SCALE_OFFSET = AXIS_SCALE / 2; //Offset needs to be applied to account for us (adding 1 the max values)
 
         //Events
@@ -87,7 +83,7 @@ namespace ScpPad2vJoy
                 }
                 //MinVersion Check
                 vJoyVersion = DrvVer;
-                if (vJoyVersion < MIN_VER)
+                if (vJoyVersion < vJoyConstants.MIN_VER)
                 {
                     Trace.WriteLine("vJoy version less than required: Aborting\n");
                     Stop(parSelectedPads, devManLevel);
@@ -95,7 +91,7 @@ namespace ScpPad2vJoy
                 }
             }
 
-            for (uint dsID = 1; dsID <= 4; dsID++)
+            for (uint dsID = 1; dsID <= SCPConstants.MAX_XINPUT_DEVICES; dsID++)
             {
                 if (parSelectedPads[dsID - 1])
                 {
@@ -141,7 +137,7 @@ namespace ScpPad2vJoy
 
         public void Stop(bool[] parSelectedPads, DeviceManagement devManLevel)
         {
-            for (uint dsID=1; dsID <= 4; dsID++)
+            for (uint dsID=1; dsID <= SCPConstants.MAX_XINPUT_DEVICES; dsID++)
             {
                 if (parSelectedPads[dsID - 1])
                 {
@@ -181,21 +177,21 @@ namespace ScpPad2vJoy
             {
                 if (parDown)
                 {
-                    if (parButtonID < 33) //1-32
+                    if (parButtonID < vJoyConstants.BUTTON_EX1) //1-32
                     {
-                        joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID - 1));
+                        joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX0));
                     }
-                    else if (parButtonID < 65) //33-64
+                    else if (parButtonID < vJoyConstants.BUTTON_EX2) //33-64
                     {
-                        joyReport[parDSid - 1].ButtonsEx1 |= (uint)(0x1 << (int)(parButtonID - 33));
+                        joyReport[parDSid - 1].ButtonsEx1 |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX1));
                     }
-                    else if (parButtonID < 97) //65-96
+                    else if (parButtonID < vJoyConstants.BUTTON_EX3) //65-96
                     {
-                        joyReport[parDSid - 1].ButtonsEx2 |= (uint)(0x1 << (int)(parButtonID - 65));
+                        joyReport[parDSid - 1].ButtonsEx2 |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX2));
                     }
                     else //97-128
                     {
-                        joyReport[parDSid - 1].ButtonsEx3 |= (uint)(0x1 << (int)(parButtonID - 97));
+                        joyReport[parDSid - 1].ButtonsEx3 |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX3));
                     }
                 }
             }
@@ -249,65 +245,38 @@ namespace ScpPad2vJoy
                 case Direction.UpLeft:
                     value = 31500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.UpRight:
                     value = 4500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.DownLeft:
                     value = 22500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.DownRight:
                     value = 13500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Up:
                     value = 0;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Down:
                     value = 18000;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Left:
                     value = 27000;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Right:
                     value = 9000;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 default:
                     value = unchecked((uint)-1);
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
             }
         }
@@ -364,7 +333,7 @@ namespace ScpPad2vJoy
             //create needed pads
             byte dpads = 0;
             if (config.dpad) { dpads = 1; }
-            for (uint dsID = 1; dsID <= 4; dsID++)
+            for (uint dsID = 1; dsID <= SCPConstants.MAX_XINPUT_DEVICES; dsID++)
             {
                 if (parSelectedPads[dsID - 1])
                 {

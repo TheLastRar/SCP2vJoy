@@ -20,7 +20,7 @@ namespace ScpPad2vJoy.VjoyEffect
             float UnitForce = (ApplyEnverlope() * gain);
 
             //Phase offset as a unit of time
-            Double effectTime = ((Double)periodEffect.Phase / 255.0) * periodEffect.Period;
+            Double effectTime = ((Double)periodEffect.Phase / vJoyConstants.EFFECT_MAX_PHASE) * periodEffect.Period;
             //When current cycle started
             long effectBaseTime = runTime / (long)periodEffect.Period;
             //Phase offset + time since current cycle started

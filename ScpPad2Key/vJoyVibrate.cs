@@ -12,7 +12,7 @@ namespace ScpPad2vJoy
     class vJoyVibrate
     {
         protected vJoy joystick;
-        protected FFBDevice[] devices = new FFBDevice[4];
+        protected FFBDevice[] devices = new FFBDevice[SCPConstants.MAX_XINPUT_DEVICES];
 
         //Events
         public event VibrationEventHandler VibrationCommand;
@@ -26,7 +26,7 @@ namespace ScpPad2vJoy
         public vJoyVibrate(vJoy parVJoy)
         {
             joystick = parVJoy;
-            for (int x = 1; x <= 4; x++)
+            for (int x = 1; x <= SCPConstants.MAX_XINPUT_DEVICES; x++)
             {
                 devices[x - 1] = new FFBDevice();
                 devices[x - 1].ClearBlocks();
@@ -260,7 +260,7 @@ namespace ScpPad2vJoy
                         return;
                     }
                     Trace.WriteLine((String.Format("Gain Set : {0}", gain)));
-                    srcDevice.DeviceGain = (Single)gain / 255.0F;
+                    srcDevice.DeviceGain = (Single)gain / vJoyConstants.EFFECT_MAX_VALUE;
                     break;
 
                 case FFBPType.PT_SETCREP:
@@ -371,7 +371,7 @@ namespace ScpPad2vJoy
         {
             while (HaltVibThread == false)
             {
-                for (int x = 0; x < 4; x++)
+                for (int x = 0; x < SCPConstants.MAX_XINPUT_DEVICES; x++)
                 {
                     FFBDevice srcDevice = devices[x];
                     if (srcDevice.DeviceActive == FFBDevice.DeviceState.Deactivated || DeactivateIfNeeded((uint)x + 1))
@@ -411,7 +411,7 @@ namespace ScpPad2vJoy
                 System.Threading.Thread.Sleep(5);
             }
             
-            for (int x = 0; x < 4; x++)
+            for (int x = 0; x < SCPConstants.MAX_XINPUT_DEVICES; x++)
             {
                 DeactivateIfNeeded((uint)x + 1);
             }

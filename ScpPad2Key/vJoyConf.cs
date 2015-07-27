@@ -9,8 +9,6 @@ namespace ScpPad2vJoy
 {
     public class VJoyConf
     {
-        private const byte MaxButtons = 128;
-        private const byte MinAxes = 8;
         private readonly RegistryKey _regKey;
 
         public VJoyConf()
@@ -70,9 +68,9 @@ namespace ScpPad2vJoy
                     ret.Add(0x81); ret.Add(0x01); //INPUT(Cnst,Ary,Abs)
                 }
             }
-            if (axes.Length < MinAxes)
+            if (axes.Length < vJoyConstants.MAX_AXIS_COUNT)
             { // Assume the remaining axes are not implemented
-                for (var i = 0; i < MinAxes - axes.Length; i++)
+                for (var i = 0; i < vJoyConstants.MAX_AXIS_COUNT - axes.Length; i++)
                 {
                     ret.Add(0x81); ret.Add(0x01); //INPUT(Cnst,Ary,Abs)
                 }
@@ -161,10 +159,10 @@ namespace ScpPad2vJoy
                 0x81, 0x02 //INPUT(Data,Var,Abs)
             });
             // Padding, if there are less than 32 buttons
-            if (nButtons < MaxButtons)
+            if (nButtons < vJoyConstants.MAX_BUTTON_COUNT)
             {
                 ret.AddRange(new byte[] {
-                    0x75, (byte)(MaxButtons - nButtons), //REPORT_SIZE(x)
+                    0x75, (byte)(vJoyConstants.MAX_BUTTON_COUNT - nButtons), //REPORT_SIZE(x)
                     0x95, 0x01, //REPORT_COUNT(1)
                     0x81, 0x01, //INPUT(Cnst,Ary,Abs)
                 });

@@ -14,12 +14,13 @@ namespace ScpPad2vJoy.VjoyEffect
             AwaitingDeactivation,
             Active
         }
+        private const Byte MAX_BLOCKS = 255;
 
         public volatile DeviceState DeviceActive = DeviceState.Deactivated;
         public Dictionary<Byte, BaseEffectBlock> EffectBlocks = new Dictionary<Byte, BaseEffectBlock>();
         public volatile Single DeviceGain = 1.0F;
         public volatile Boolean DevicePaused = false;
-        public Boolean[] LoadedBlocks = new Boolean[255];
+        public Boolean[] LoadedBlocks = new Boolean[MAX_BLOCKS];
         //Block ID Managment
         #region "BlockManagement"
         public void AddBlock(Byte index, BaseEffectBlock anObj)
@@ -62,7 +63,7 @@ namespace ScpPad2vJoy.VjoyEffect
         public void ClearBlocks()
         {
             EffectBlocks.Clear();
-            LoadedBlocks = new Boolean[255];
+            LoadedBlocks = new Boolean[MAX_BLOCKS];
             LoadedBlocks[0] = true;
         }
         public byte NextKey()
@@ -70,7 +71,7 @@ namespace ScpPad2vJoy.VjoyEffect
             Trace.WriteLine("Hack, Setting Block to 1");
             return 1;
             Byte newKey = 0;
-            for (Byte i = 1; i < 255; i++)
+            for (Byte i = 1; i < MAX_BLOCKS; i++)
             {
                 if (!LoadedBlocks[i])
                 {

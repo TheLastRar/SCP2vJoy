@@ -153,7 +153,7 @@ namespace ScpPad2vJoy
         {
             if (parInverted)
             {
-                vJPad.JoyAxis(parTargetHID, 255 - parAxisValue, parDsID);
+                vJPad.JoyAxis(parTargetHID, SCPConstants.MAX_SCP_AXIS - parAxisValue, parDsID);
             }
             else
             {
@@ -196,7 +196,7 @@ namespace ScpPad2vJoy
                 //HI
                 if (parDown)
                 {
-                    vJPad.JoyAxis((HID_USAGES)(parButtonID - 2000), 255, parDsID);
+                    vJPad.JoyAxis((HID_USAGES)(parButtonID - 2000), SCPConstants.MAX_SCP_AXIS, parDsID);
                 }
             }
         }
@@ -293,22 +293,17 @@ namespace ScpPad2vJoy
                 parLevel = -parLevel;
             }
 
-            //Incomming range = 0-255
-            const float IN_MAX = 255;
-            const float IN_MIN = 0;
-            const float IN_RANGE = IN_MAX - IN_MIN;
-            //outgoing range = 0-255
-            const float OUT_MAX = 255;
+            const float OUT_MAX = SCPConstants.EFFECT_MAX_VALUE;
             const float OUT_MIN = 0;
             const float OUT_RANGE = OUT_MAX - OUT_MIN;
 
             //Clamp High Values
-            if (parLevel > IN_MAX)
+            if (parLevel > vJoyConstants.EFFECT_MAX_VALUE)
             {
-                parLevel = IN_MAX;
+                parLevel = vJoyConstants.EFFECT_MAX_VALUE;
             }
 
-            float verIn = parLevel / IN_RANGE;
+            float verIn = parLevel / vJoyConstants.EFFECT_MAX_VALUE;
             float ret = (OUT_MIN + verIn * OUT_RANGE);
 
             return (Byte)ret;
