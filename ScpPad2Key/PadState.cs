@@ -282,7 +282,7 @@ namespace ScpPad2vJoy
             if (m_VibProxy != null)
             {
                 Proxy.Rumble((DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), 0); //large moter + small moter (Byte)e.MotorRight
-                //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + e.MotorLeft);
+                //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + ScaleLargeMotor(e.MotorLeft));
             }
         }
         protected Byte ScaleLargeMotor(float parLevel)

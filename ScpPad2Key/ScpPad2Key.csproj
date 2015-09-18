@@ -91,9 +91,9 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="vJoyInterfaceWrap">
+    <Reference Include="vJoyInterfaceWrap, Version=0.2.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\vJoyInterfaceWrap.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -125,7 +125,6 @@
     <Compile Include="VjoyEffect\EffectReturnValue.cs" />
     <Compile Include="VjoyEffect\EnverlopeCabableBaseEffectBlack.cs" />
     <Compile Include="VjoyEffect\FFBDevice.cs" />
-    <Compile Include="VjoyEffect\FFB_EFF_CONSTANT.cs" />
     <Compile Include="VjoyEffect\PeriodBaseEffectBlock.cs" />
     <Compile Include="VjoyEffect\SawDownEffectBlock.cs" />
     <Compile Include="VjoyEffect\SawUpEffectBlock.cs" />
@@ -158,6 +157,7 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -193,7 +193,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -35,15 +35,15 @@ namespace ScpPad2vJoy.VjoyEffect
             //Get Periodic effect value
             UnitForce *= ComputePeriodicEffectMult(effectTime);
             //Offset is a signed value
-            float offsetValue = ((float)((SByte)periodEffect.Offset)) * 2.0f + 0.5f;
+            float offsetValue = (float)(periodEffect.Offset);
             UnitForce += offsetValue;
             return UnitForce;
         }
         protected abstract float ComputePeriodicEffectMult(Double phaseTime);
 
-        protected override Byte Magnitude()
+        protected override Int32 Magnitude()
         {
-            return periodEffect.Magnitude;
+            return (Int32)periodEffect.Magnitude;
         }
     }
 }

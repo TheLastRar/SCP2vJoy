@@ -23,7 +23,7 @@ namespace ScpPad2vJoy
             SetupLoggin();
             string file = GetvJoyPath();
 
-            ClearFromOldInstall();
+            //ClearFromOldInstall();
             SetDllDirectory(file);
 
             Application.EnableVisualStyles();

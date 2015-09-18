@@ -19,11 +19,12 @@ namespace ScpPad2vJoy
         public const uint BUTTON_EX2 = 65;
         public const uint BUTTON_EX3 = 97;
         //Vib
-        public const float EFFECT_MAX_VALUE = 255;
+        public const float EFFECT_MAX_VALUE = 10000;
+        public const float EFFECT_MAX_GAIN = 255;
         public const ushort EFFECT_INF_DURATION = 0xFFFF;
         public const Byte EFFECT_MAX_LOOP_COUNT = 255;
         public const Byte EFFECT_NULL_TRIGGER_BTN = 255;
-        public const Double EFFECT_MAX_PHASE = 255.0; 
+        public const Double EFFECT_MAX_PHASE = 35999 + 1; 
     }
     class SCPConstants
     {

@@ -4,11 +4,14 @@ using Microsoft.Win32;
 using System.Diagnostics;
 
 //TakenFrom https://github.com/Swizzy/vJoyConfNet/blob/master/vJoyConfNet/VJoyConf.cs
-
+//Taken from RC3 of vjoy 2.1.6
 namespace ScpPad2vJoy
 {
     public class VJoyConf
     {
+        #region FFBDefs
+        #endregion
+
         private readonly RegistryKey _regKey;
 
         public VJoyConf()
@@ -30,7 +33,7 @@ namespace ScpPad2vJoy
                 throw new InvalidOperationException();
         }
 
-        public byte[] CreateHidReportDesc(byte reportID, bool[] axes, byte nPovHatsCont, byte nPovHatsDir, byte nButtons)
+        public byte[] CreateHidReportDesc(byte nButtons, bool[] axes, byte nPovHatsCont, byte nPovHatsDir, byte reportID , bool ffb, uint ffbEffectMask)
         {
             var ret = new List<byte>();
 
@@ -167,9 +170,16 @@ namespace ScpPad2vJoy
                     0x81, 0x01, //INPUT(Cnst,Ary,Abs)
                 });
             }
-            ret.Add(0xC0); // End collection
             #endregion
 
+            #region ForceFeedBack
+            if (ffb)
+            {
+                throw new NotImplementedException("FFB Config");
+            }
+            #endregion
+
+            ret.Add(0xC0); // End collection
             return ret.ToArray();
         }
 
@@ -217,6 +227,35 @@ namespace ScpPad2vJoy
                     Trace.WriteLine("Caught Exception :" + e.Message + " @ " + e.StackTrace);
                 }
             }
+        }
+
+        private void CreateFfbDesc(List<byte> buffer, byte ReportId)
+        {
+            //byte[] vars = {
+            //    (byte)(0x02 + 0x10 * ReportId),           //  Report ID 2
+            //    (byte)(HID_ID_EFFREP + 0x10 * ReportId),  //  Report ID 1
+            //    (byte)(HID_ID_ENVREP + 0x10 * ReportId),  //  Report ID 2
+            //    (byte)(HID_ID_CONDREP + 0x10 * ReportId), //  Report ID 3
+            //    (byte)(HID_ID_PRIDREP + 0x10 * ReportId), //  Report ID 4
+            //    (byte)(HID_ID_CONSTREP + 0x10 * ReportId),//  Report ID 5
+            //    (byte)(HID_ID_RAMPREP + 0x10 * ReportId), //  Report ID 6
+            //    (byte)(HID_ID_CSTMREP + 0x10 * ReportId), //  Report ID 7
+            //    (byte)(HID_ID_SMPLREP + 0x10 * ReportId), //  Report ID 8
+            //    (byte)(HID_ID_EFOPREP + 0x10 * ReportId), //  Report ID Ah (10d)
+            //    (byte)(HID_ID_BLKFRREP + 0x10 * ReportId),//  Report ID Bh (11d)
+            //    (byte)(HID_ID_CTRLREP + 0x10 * ReportId), //  Report ID Ch (12d)
+            //    (byte)(HID_ID_GAINREP + 0x10 * ReportId), //  Report ID Dh (13d)
+            //    (byte)(HID_ID_SETCREP + 0x10 * ReportId), //  Report ID Eh (14d)
+            //    (byte)(HID_ID_NEWEFREP + 0x10 * ReportId),//  Report ID 1
+            //    (byte)(HID_ID_BLKLDREP + 0x10 * ReportId),//  Report ID 2
+            //    (byte)(HID_ID_POOLREP + 0x10 * ReportId), //  Report ID 3
+            //            };
+            //buffer.AddRange(FfbDescriptor[0]);
+            //for (uint i = 1; i < FfbDescriptor.Length; i++)
+            //{
+            //    FfbDescriptor[i][0] = vars[i - 1];
+            //    buffer.AddRange(FfbDescriptor[i]);
+            //}
         }
     }
 }

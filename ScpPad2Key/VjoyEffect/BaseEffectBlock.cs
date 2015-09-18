@@ -13,7 +13,7 @@ namespace ScpPad2vJoy.VjoyEffect
 
         private Boolean m_isPaused = true;
         private Byte maxLoopCount = 1;
-        protected vJoy.FFB_EFF_CONST m_ffbHeader;
+        protected vJoy.FFB_EFF_REPORT m_ffbHeader;
         protected Single gain = 1.0F;
         public FFBEType m_effectType;
 
@@ -29,7 +29,7 @@ namespace ScpPad2vJoy.VjoyEffect
                 return m_runTime;
             }
         }
-        public vJoy.FFB_EFF_CONST ffbHeader
+        public vJoy.FFB_EFF_REPORT ffbHeader
         {
             get { return m_ffbHeader; }
             set
@@ -54,7 +54,7 @@ namespace ScpPad2vJoy.VjoyEffect
                 {
                     Trace.WriteLine("TRIGGER BUTTON NOT SUPPORTED");
                 }
-                gain = value.Gain / vJoyConstants.EFFECT_MAX_VALUE;
+                gain = value.Gain / vJoyConstants.EFFECT_MAX_GAIN;
             }
         }
         public Boolean isPaused

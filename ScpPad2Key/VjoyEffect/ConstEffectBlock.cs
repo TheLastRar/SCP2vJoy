@@ -8,12 +8,12 @@ namespace ScpPad2vJoy.VjoyEffect
 {
     class ConstEffectBlock : EnverlopeCabableBaseEffectBlack
     {
-        private FFB_EFF_CONSTANT constEffect;
+        private vJoy.FFB_EFF_CONSTANT constEffect;
 
         public override void PrimaryEffectData(object eff)
         {
             base.PrimaryEffectData(eff);
-            constEffect = (FFB_EFF_CONSTANT)eff;
+            constEffect = (vJoy.FFB_EFF_CONSTANT)eff;
         }
 
         protected override float ComputeEffect()
@@ -23,7 +23,7 @@ namespace ScpPad2vJoy.VjoyEffect
             //then ComputeEffect() should return a float
             return UnitForce;
         }
-        protected override Byte Magnitude()
+        protected override Int32 Magnitude()
         {
             return constEffect.Magnitude;
         }

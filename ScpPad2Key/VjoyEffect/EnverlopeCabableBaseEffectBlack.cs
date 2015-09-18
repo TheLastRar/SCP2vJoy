@@ -29,7 +29,7 @@ namespace ScpPad2vJoy.VjoyEffect
         }
 
         //Sustain level
-        protected abstract Byte Magnitude();
+        protected abstract Int32 Magnitude();
 
         //Attack and fade level specified by envEffect
         //Sustain level specified by unmodified effect Peak Magnitude
@@ -42,7 +42,7 @@ namespace ScpPad2vJoy.VjoyEffect
             }
             float fadeStart = (m_ffbHeader.Duration - envEffect.FadeTime);
             if (envEffect.AttackTime <= runTime &
-                (runTime <= fadeStart | m_ffbHeader.Duration == 0xFFFF))
+                (runTime <= fadeStart | m_ffbHeader.Duration == vJoyConstants.EFFECT_INF_DURATION))
             {
                 return Magnitude();
             }
@@ -53,7 +53,7 @@ namespace ScpPad2vJoy.VjoyEffect
                 DeltaLevel = envEffect.AttackLevel - Magnitude();
                 percentTime = (float)(envEffect.AttackTime - runTime) / (float)envEffect.AttackTime;
             }
-            else if (m_ffbHeader.Duration != 0xFFFF)
+            else if (m_ffbHeader.Duration != vJoyConstants.EFFECT_INF_DURATION)
             {
                 DeltaLevel = envEffect.FadeLevel - Magnitude();
                 percentTime = (float)(runTime - fadeStart) / (float)envEffect.FadeTime;

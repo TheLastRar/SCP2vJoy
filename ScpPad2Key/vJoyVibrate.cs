@@ -38,9 +38,9 @@ namespace ScpPad2vJoy
         private void func_OnEffectObj(IntPtr data, object userData)
         {
 
-            //Trace.WriteLine("");
+            Trace.WriteLine("");
             const int ERROR_SUCCESS = 0;
-            //Trace.WriteLine(String.Format("Got FFB Packet"));
+            Trace.WriteLine(String.Format("Got FFB Packet"));
             int id = -1;
             FFBPType type = (FFBPType)0;
             Int32 effectBlockIndex = -1;
@@ -64,14 +64,14 @@ namespace ScpPad2vJoy
             switch (type)
             {
                 case FFBPType.PT_EFFREP:
-                    vJoy.FFB_EFF_CONST effectParam = new vJoy.FFB_EFF_CONST();
-                    if (joystick.Ffb_h_Eff_Const(data, ref effectParam) != ERROR_SUCCESS)
+                    vJoy.FFB_EFF_REPORT effectParam = new vJoy.FFB_EFF_REPORT();
+                    if (joystick.Ffb_h_Eff_Report(data, ref effectParam) != ERROR_SUCCESS)
                     {
                         Trace.WriteLine("Error: Unable read Effect Param");
                         return;
                     }
-                    //Trace.WriteLine(String.Format("Got Effect Param on EBI : {0}", effectBlockIndex));
-                    ////Trace.WriteLine(String.Format("EffectType: {0}", effectParam.EffectType.ToString()));
+                    Trace.WriteLine(String.Format("Got Effect Param on EBI: {0}", effectBlockIndex));
+                    //Trace.WriteLine(String.Format("EffectType: {0}", effectParam.EffectType.ToString()));
                     //Trace.WriteLine(String.Format("Duration  : {0}", effectParam.Duration));
                     //Trace.WriteLine(String.Format("TrigerRpt : {0}", effectParam.TrigerRpt));
                     //Trace.WriteLine(String.Format("SamplePrd : {0}", effectParam.SamplePrd));
@@ -97,7 +97,7 @@ namespace ScpPad2vJoy
                         return;
                     }
                     srcDevice.EffectBlocks[(Byte)effectBlockIndex].SecondaryEffectData(envEffect);
-                    //Trace.WriteLine(String.Format("Got Envelope Effect on EBI: {0}", effectBlockIndex));
+                    Trace.WriteLine(String.Format("Got Envelope Effect on EBI: {0}", effectBlockIndex));
                     //Trace.WriteLine(String.Format("Start : {0}", envEffect.AttackLevel));
                     //Trace.WriteLine(String.Format("STime : {0}", envEffect.AttackTime));
                     //Trace.WriteLine(String.Format("End   : {0}", envEffect.FadeLevel));
@@ -121,23 +121,23 @@ namespace ScpPad2vJoy
                         Trace.WriteLine("Error: Unable read Periodic Effect");
                         return;
                     }
-                    //Trace.WriteLine(String.Format("Got Periodic Effect on EBI (Not Supported): {0}", effectBlockIndex));
+                    Trace.WriteLine(String.Format("Got Periodic Effect on EBI: {0}", effectBlockIndex));
                     //Trace.WriteLine(String.Format("Magnitude : {0}", perEffect.Magnitude));
-                    //Trace.WriteLine(String.Format("Offset    : {0}", (SByte)perEffect.Offset));
+                    //Trace.WriteLine(String.Format("Offset    : {0}", perEffect.Offset));
                     //Trace.WriteLine(String.Format("Phase     : {0}", perEffect.Phase));
                     //Trace.WriteLine(String.Format("Period    : {0}", perEffect.Period));
                     srcDevice.EffectBlocks[(Byte)effectBlockIndex].PrimaryEffectData(perEffect);
                     break;
 
                 case FFBPType.PT_CONSTREP:
-                    FFB_EFF_CONSTANT constEffect = new FFB_EFF_CONSTANT();
-                    if (Ffb_h_Eff_Constant(data, ref constEffect) != ERROR_SUCCESS)
+                    vJoy.FFB_EFF_CONSTANT constEffect = new vJoy.FFB_EFF_CONSTANT();
+                    if (joystick.Ffb_h_Eff_Constant(data, ref constEffect) != ERROR_SUCCESS)
                     {
                         Trace.WriteLine("Error: Unable read Constant Effect");
                         return;
                     }
-                    //Trace.WriteLine(String.Format("Got Const Effect on EBI : {0}", effectBlockIndex));
-                    //Trace.WriteLine(String.Format("Magnitude : {0}", constEffect.Magnitude));
+                    Trace.WriteLine(String.Format("Got Const Effect on EBI : {0}", effectBlockIndex));
+                    Trace.WriteLine(String.Format("Magnitude : {0}", constEffect.Magnitude));
                     srcDevice.EffectBlocks[(Byte)effectBlockIndex].PrimaryEffectData(constEffect);
                     break;
 
@@ -149,8 +149,8 @@ namespace ScpPad2vJoy
                         return;
                     }
                     Trace.WriteLine(String.Format("Got Ramp Effect on EBI (Not Supported): {0}", effectBlockIndex));
-                    Trace.WriteLine(String.Format("Start : {0}", rampEffect.Start));
-                    Trace.WriteLine(String.Format("End   : {0}", rampEffect.End));
+                    //Trace.WriteLine(String.Format("Start : {0}", rampEffect.Start));
+                    //Trace.WriteLine(String.Format("End   : {0}", rampEffect.End));
                     break;
 
                 case FFBPType.PT_CSTMREP:
@@ -174,14 +174,14 @@ namespace ScpPad2vJoy
                         case FFBOP.EFF_START:
                             lock (vibThreadSentry)
                             {
-                                //Trace.WriteLine("Effect Start");
+                                Trace.WriteLine("Effect Start");
                                 srcDevice.EffectBlocks[(byte)effectBlockIndex].Start(effect_OP.LoopCount);
                             }
                             break;
                         case FFBOP.EFF_STOP:
                             lock (vibThreadSentry)
                             {
-                                //Trace.WriteLine("Effect Stop");
+                                Trace.WriteLine("Effect Stop");
                                 srcDevice.EffectBlocks[(byte)effectBlockIndex].Stop();
                             }
                             break;
@@ -260,7 +260,7 @@ namespace ScpPad2vJoy
                         return;
                     }
                     Trace.WriteLine((String.Format("Gain Set : {0}", gain)));
-                    srcDevice.DeviceGain = (Single)gain / vJoyConstants.EFFECT_MAX_VALUE;
+                    srcDevice.DeviceGain = (Single)gain / vJoyConstants.EFFECT_MAX_GAIN;
                     break;
 
                 case FFBPType.PT_SETCREP:
@@ -313,7 +313,7 @@ namespace ScpPad2vJoy
                         if (newBlock != null)
                         {
                             newBlock.m_effectType = nextEffect;
-                            //TODO, When Blockload support arrives
+                            //TODO, If Blockload support arrives
                             //Do AddBlock/ebi selection @ Blockload
                             lock (vibThreadSentry)
                             {
@@ -341,8 +341,8 @@ namespace ScpPad2vJoy
         public void FfbInterface(uint id)
         {
             // Start FFB Mechanism
-            if (!joystick.FfbStart(id))
-                throw new Exception(String.Format("Cannot start Forcefeedback on device {0}", id));
+            //if (!joystick.FfbStart(id))
+            //    throw new Exception(String.Format("Cannot start Forcefeedback on device {0}", id));
             // Register the callback function & pass the dialog box object
             OnEffectObj = new vJoy.FfbCbFunc(func_OnEffectObj);
             joystick.FfbRegisterGenCB(OnEffectObj, joystick);
@@ -358,7 +358,7 @@ namespace ScpPad2vJoy
         internal void FfbStop(uint id)
         {
             devices[id - 1].DeviceActive = FFBDevice.DeviceState.AwaitingDeactivation;
-            joystick.FfbStop(id);
+            //joystick.FfbStop(id);
             RefCounter -= 1;
             if (RefCounter == 0)
             {
@@ -430,20 +430,6 @@ namespace ScpPad2vJoy
                 }
             }
             return false;
-        }
-
-
-        public UInt32 Ffb_h_Eff_Constant(IntPtr data, ref FFB_EFF_CONSTANT Effect)
-        {
-            UInt32 command = 0;
-            Int32 len = 0;
-            byte[] rawData = new byte[0];
-            UInt32 ret = joystick.Ffb_h_Packet(data, ref command, ref len, ref rawData);
-            int index = 0;
-            ret = ret | joystick.Ffb_h_EBI(data, ref index);
-            Effect.EffectBlockIndex = (byte)index;
-            Effect.Magnitude = rawData[2];
-            return ret;
         }
     }
 }
