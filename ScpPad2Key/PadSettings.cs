@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ScpControl;
+using ScpControl.ScpCore;
 
 using vJoyInterfaceWrap;
 

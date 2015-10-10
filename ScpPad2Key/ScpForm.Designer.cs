@@ -45,7 +45,7 @@
             // 
             // scpProxy
             // 
-            this.scpProxy.Packet += new System.EventHandler<ScpControl.DsPacket>(this.Parse);
+            this.scpProxy.NativeFeedReceived += new System.EventHandler<ScpControl.ScpCore.DsPacket>(this.Parse);
             // 
             // btnStop
             // 

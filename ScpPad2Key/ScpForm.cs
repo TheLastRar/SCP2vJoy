@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 using System.Runtime.InteropServices;
 using ScpControl;
+using ScpControl.ScpCore;
 
 using vJoyInterfaceWrap;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace ScpPad2vJoy
 
         protected VJoyPost vJP = new VJoyPost();
         protected X360_InputLocker dxLocker;
-        protected String m_Active;
+
         protected PadSettings config;
         protected bool[] selectedPads = new bool[] {true,false,false,false};
         protected DeviceManagement devManLevel = /*DeviceManagement.vJoy_Config |*/ DeviceManagement.vJoy_Device | DeviceManagement.Xinput_DX /*| DeviceManagement.Xinput_XI*/;
@@ -40,10 +41,11 @@ namespace ScpPad2vJoy
             {//No Default config, use our own
                 config = new PadSettings(Properties.Resources.W3C.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None));
             }
-            if (scpProxy.Load())
-            {
-                m_Active = scpProxy.Active;
-            }
+            //No Load Call anymore
+            //if (scpProxy.Start())
+            //{
+            //    m_Active = scpProxy.IsActive;
+            //}
 
             //cbPad.SelectedIndex = (Int32) m_Pad;
 
@@ -95,7 +97,7 @@ namespace ScpPad2vJoy
                         this.components.Remove(scpProxy);
                         dxLocker.Lock_XI_Devices();
                         scpProxy = new ScpProxy(this.components);
-                        this.scpProxy.Packet += new System.EventHandler<ScpControl.DsPacket>(this.Parse);
+                        this.scpProxy.NativeFeedReceived += new System.EventHandler<DsPacket>(this.Parse);
                         if (!scpProxy.Start())
                         {
                             //error

@@ -1,6 +1,7 @@
 ﻿using System;
 
 using ScpControl;
+using ScpControl.ScpCore;
 
 using vJoyInterfaceWrap;
 using ScpPad2vJoy.VjoyEffect;
