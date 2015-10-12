@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ScpPad2vJoy
 {
     class vJoyConstants
     {
         //vJoy
-        public const UInt32 MIN_VER = 0x205;
+        public const UInt32 MIN_VER = 0x216;
         //Axis
         public const byte MAX_AXIS_COUNT = 8;
         public const Int32 MAX_AXIS_VALUE = 32767; //Max vJoy value (0-32767)
@@ -24,7 +21,9 @@ namespace ScpPad2vJoy
         public const ushort EFFECT_INF_DURATION = 0xFFFF;
         public const Byte EFFECT_MAX_LOOP_COUNT = 255;
         public const Byte EFFECT_NULL_TRIGGER_BTN = 255;
-        public const Double EFFECT_MAX_PHASE = 35999 + 1; 
+        public const Double EFFECT_MAX_PHASE = 35999 + 1;
+
+        public const Double EFFECT_DIRECTION_MAX_VALUE = 255;
     }
     class SCPConstants
     {

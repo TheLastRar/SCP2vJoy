@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace ScpPad2vJoy.VjoyEffect
@@ -25,7 +23,6 @@ namespace ScpPad2vJoy.VjoyEffect
         #region "BlockManagement"
         public void AddBlock(Byte index, BaseEffectBlock anObj)
         {
-            Trace.WriteLine("Hack, Block at 1");
             if (EffectBlocks.ContainsKey(1))
             {
                 Trace.WriteLine("HACK, EFFECT OVERWRITTEN");

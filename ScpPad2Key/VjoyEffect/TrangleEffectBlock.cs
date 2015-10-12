@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ScpPad2vJoy.VjoyEffect
 {
@@ -17,8 +14,8 @@ namespace ScpPad2vJoy.VjoyEffect
             {
                 //+Mag to -Mag
                 return (float)(1.0 - (phaseTime * riseRate));
-            } 
-            else 
+            }
+            else
             {
                 //-Mag to +Mag
                 phaseTime -= ((Double)periodEffect.Period / 2.0);

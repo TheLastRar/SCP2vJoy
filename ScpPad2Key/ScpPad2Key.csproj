@@ -130,6 +130,13 @@
     <Compile Include="Direction.cs" />
     <Compile Include="DisableHardware.cs" />
     <Compile Include="DXinputLocker.cs" />
+    <Compile Include="HidFfbEffects.cs" />
+    <Compile Include="HidReportDescFfb.cs" />
+    <Compile Include="HidToken.cs" />
+    <Compile Include="HidUsage.cs" />
+    <Compile Include="MouseTransparentTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PadSettings.cs" />
     <Compile Include="PadState.cs" />
     <Compile Include="Properties\CommonInfo.cs" />
@@ -147,13 +154,15 @@
     <Compile Include="VjoyEffect\EffectReturnValue.cs" />
     <Compile Include="VjoyEffect\EnverlopeCabableBaseEffectBlack.cs" />
     <Compile Include="VjoyEffect\FFBDevice.cs" />
+    <Compile Include="VjoyEffect\NullEffectBlock.cs" />
     <Compile Include="VjoyEffect\PeriodBaseEffectBlock.cs" />
+    <Compile Include="VjoyEffect\RampEffectBlock.cs" />
     <Compile Include="VjoyEffect\SawDownEffectBlock.cs" />
     <Compile Include="VjoyEffect\SawUpEffectBlock.cs" />
     <Compile Include="VjoyEffect\SineEffectBlock.cs" />
     <Compile Include="VjoyEffect\SquareEffectBlock.cs" />
     <Compile Include="VjoyEffect\TrangleEffectBlock.cs" />
-    <Compile Include="VJoyPost.cs" />
+    <Compile Include="vJoyPost.cs" />
     <Compile Include="vJoyVibrate.cs" />
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>

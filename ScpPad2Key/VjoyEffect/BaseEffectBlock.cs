@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using vJoyInterfaceWrap;
 using System.Diagnostics;
+using vJoyInterfaceWrap;
 
 namespace ScpPad2vJoy.VjoyEffect
 {
     abstract class BaseEffectBlock
-    { 
-        
-
+    {
         private Boolean m_isPaused = true;
         private Byte maxLoopCount = 1;
         protected vJoy.FFB_EFF_REPORT m_ffbHeader;
@@ -88,7 +83,10 @@ namespace ScpPad2vJoy.VjoyEffect
         }
         public void DevResume()
         {
-            effectTimer.Start();
+            if (!m_isPaused)
+            {
+                effectTimer.Start();
+            }
         }
 
         public abstract void PrimaryEffectData(object eff);
@@ -101,8 +99,33 @@ namespace ScpPad2vJoy.VjoyEffect
                 return new EffectReturnValue(0, 0);
             }
             //Handle Direction (?)
+
             float effValue = ComputeEffect();
-            return new EffectReturnValue(effValue, 0);
+            //Found someting that supports direction
+
+            float DirXMult = 0;
+            float DirYMult = 1;
+
+            if (m_ffbHeader.Polar)
+            {
+                Double angleRad = ((Double)m_ffbHeader.Direction / vJoyConstants.EFFECT_DIRECTION_MAX_VALUE) * (2 * Math.PI);
+                //Up(X) = 0/255
+                //Right(Y) = ~63
+
+                Double h = 1.0;
+
+                DirXMult = (float)(h * Math.Cos(angleRad));
+                DirYMult = (float)(h * Math.Sin(angleRad));
+            }
+            //Trace.WriteLine("Writing Direction");
+            //Trace.WriteLine(m_ffbHeader.Polar);
+            //Trace.WriteLine(m_ffbHeader.DirX); //Also Direction
+            //Trace.WriteLine(m_ffbHeader.DirY);
+
+            //Trace.WriteLine(DirXMult);
+            //Trace.WriteLine(DirYMult);
+
+            return new EffectReturnValue(effValue * DirXMult, effValue * DirYMult);
         }
         protected abstract float ComputeEffect();
 
@@ -125,7 +148,7 @@ namespace ScpPad2vJoy.VjoyEffect
         private Boolean OverTick()
         {
             long currRunTime = effectTimer.ElapsedMilliseconds;
-            while (currRunTime > ((long)m_ffbHeader.Duration * (m_runLoops+1)))
+            while (currRunTime > ((long)m_ffbHeader.Duration * (m_runLoops + 1)))
             {
                 m_runLoops += 1;
                 if (maxLoopCount != vJoyConstants.EFFECT_MAX_LOOP_COUNT && maxLoopCount - m_runLoops == 0)

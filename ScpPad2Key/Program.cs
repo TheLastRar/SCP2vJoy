@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Win32;
-using System.Runtime.InteropServices;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace ScpPad2vJoy
 {
     static class Program
     {
         const string VJOYKEY_PATH = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1";
-        
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -38,7 +35,6 @@ namespace ScpPad2vJoy
             RegistryKey _regKey = _baseKey.OpenSubKey(VJOYKEY_PATH, false);
             if (_regKey != null)
             {
-                
                 Boolean is64 = Environment.Is64BitProcess;
                 if (is64 == true)
                 {

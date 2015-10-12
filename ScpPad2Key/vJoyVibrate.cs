@@ -1,11 +1,8 @@
-﻿using System;
+﻿using ScpPad2vJoy.VjoyEffect;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using vJoyInterfaceWrap;
-using ScpPad2vJoy.VjoyEffect;
 using System.Diagnostics;
+using vJoyInterfaceWrap;
 
 namespace ScpPad2vJoy
 {
@@ -59,7 +56,6 @@ namespace ScpPad2vJoy
 
             FFBDevice srcDevice = devices[id - 1];
 
-            //Trace.WriteLine(String.Format("EBI : {0}", effectBlockIndex));
             //Read Based on Type
             switch (type)
             {
@@ -80,12 +76,6 @@ namespace ScpPad2vJoy
                     //Trace.WriteLine(String.Format("Polar     : {0}", effectParam.Polar));
                     //Trace.WriteLine(String.Format("Dir1      : {0}", effectParam.DirX));
                     //Trace.WriteLine(String.Format("Dir2      : {0}", effectParam.DirY));
-                    //byte[] rawP = new byte[0];
-                    //int len = 0;
-                    //uint transfertype = 0;
-                    //joystick.Ffb_h_Packet(data, ref transfertype, ref len, ref rawP);
-                    //Trace.WriteLine(String.Format("TypeSpecificBlockOffset1 : {0}", BitConverter.ToUInt16(rawP, len - 4)));
-                    //Trace.WriteLine(String.Format("TypeSpecificBlockOffset2 : {0}", BitConverter.ToUInt16(rawP, len - 2)));
                     srcDevice.EffectBlocks[(Byte)effectBlockIndex].ffbHeader = effectParam;
                     break;
 
@@ -137,7 +127,7 @@ namespace ScpPad2vJoy
                         return;
                     }
                     Trace.WriteLine(String.Format("Got Const Effect on EBI : {0}", effectBlockIndex));
-                    Trace.WriteLine(String.Format("Magnitude : {0}", constEffect.Magnitude));
+                    //Trace.WriteLine(String.Format("Magnitude : {0}", constEffect.Magnitude));
                     srcDevice.EffectBlocks[(Byte)effectBlockIndex].PrimaryEffectData(constEffect);
                     break;
 
@@ -148,7 +138,7 @@ namespace ScpPad2vJoy
                         Trace.WriteLine("Error: Unable read Ramp Effect");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Got Ramp Effect on EBI (Not Supported): {0}", effectBlockIndex));
+                    Trace.WriteLine(String.Format("Got Ramp Effect on EBI (Not Tested): {0}", effectBlockIndex));
                     //Trace.WriteLine(String.Format("Start : {0}", rampEffect.Start));
                     //Trace.WriteLine(String.Format("End   : {0}", rampEffect.End));
                     break;
@@ -190,7 +180,7 @@ namespace ScpPad2vJoy
                             break;
                     }
                     break;
-                    
+
                 case FFBPType.PT_BLKFRREP:
                     Trace.WriteLine("Free Block");
                     lock (vibThreadSentry)
@@ -277,17 +267,20 @@ namespace ScpPad2vJoy
                     }
                     Trace.WriteLine((String.Format("Incomming Effect : {0}", nextEffect.ToString())));
                     //Add + Load Block
+                    //Use effecct type as an index
                     byte free_ebi = srcDevice.NextKey();
                     if (free_ebi != 0)
                     {
                         BaseEffectBlock newBlock;
                         switch (nextEffect)
                         {
-                                //ET_NONE
+                            //ET_NONE
                             case FFBEType.ET_CONST:
                                 newBlock = new ConstEffectBlock();
                                 break;
-                                //ET_RAMP
+                            case FFBEType.ET_RAMP:
+                                newBlock = new RampEffectBlock();
+                                break;
                             case FFBEType.ET_SQR:
                                 newBlock = new SquareEffectBlock();
                                 break;
@@ -303,11 +296,21 @@ namespace ScpPad2vJoy
                             case FFBEType.ET_STDN:
                                 newBlock = new SawDownEffectBlock();
                                 break;
-                                //Conditinal effects
-                                //ET_CSTM
+                            //Conditinal effects (unsurported)
+                            case FFBEType.ET_SPRNG:
+                            case FFBEType.ET_DMPR:
+                            case FFBEType.ET_INRT:
+                            case FFBEType.ET_FRCTN:
+                                Trace.WriteLine("Unsupported Conditinal Effect");
+                                newBlock = new NullEffectBlock();
+                                break;    
+                            case FFBEType.ET_CSTM: //Custom (need test case)
+                                Trace.WriteLine("Unsupported Custom Effect");
+                                newBlock = new NullEffectBlock();
+                                break;    
                             default:
                                 Trace.WriteLine("Unkown Effect");
-                                newBlock = null;//new BaseEffectBlock();
+                                newBlock = new NullEffectBlock();
                                 break;
                         }
                         if (newBlock != null)
@@ -328,7 +331,7 @@ namespace ScpPad2vJoy
                     break;
 
                 case FFBPType.PT_POOLREP:
-                    Trace.WriteLine("Error: Unkown command");
+                    Trace.WriteLine("Pool Report (Not supported)");
                     break;
                 default:
                     Trace.WriteLine("Error: Unkown command");
@@ -343,11 +346,12 @@ namespace ScpPad2vJoy
             // Start FFB Mechanism
             //if (!joystick.FfbStart(id))
             //    throw new Exception(String.Format("Cannot start Forcefeedback on device {0}", id));
-            // Register the callback function & pass the dialog box object
-            OnEffectObj = new vJoy.FfbCbFunc(func_OnEffectObj);
-            joystick.FfbRegisterGenCB(OnEffectObj, joystick);
             if (RefCounter == 0)
             {
+                // Register the callback function & pass the dialog box object
+                OnEffectObj = new vJoy.FfbCbFunc(func_OnEffectObj);
+                joystick.FfbRegisterGenCB(OnEffectObj, joystick);
+
                 HaltVibThread = false;
                 eTh = new System.Threading.Thread(EffectThread);
                 eTh.Start();
@@ -362,6 +366,8 @@ namespace ScpPad2vJoy
             RefCounter -= 1;
             if (RefCounter == 0)
             {
+                //Can't unreg callback
+
                 HaltVibThread = true;
                 eTh.Join();
             }
@@ -380,7 +386,7 @@ namespace ScpPad2vJoy
                         //inactive devices
                         continue;
                     }
-                    
+
                     EffectReturnValue VibValues = new EffectReturnValue(0, 0);
                     if (!srcDevice.DevicePaused)
                     {
@@ -410,7 +416,7 @@ namespace ScpPad2vJoy
                 }
                 System.Threading.Thread.Sleep(5);
             }
-            
+
             for (int x = 0; x < SCPConstants.MAX_XINPUT_DEVICES; x++)
             {
                 DeactivateIfNeeded((uint)x + 1);
@@ -418,9 +424,9 @@ namespace ScpPad2vJoy
         }
         private Boolean DeactivateIfNeeded(uint id)
         {
-            if (devices[id-1].DeviceActive == FFBDevice.DeviceState.AwaitingDeactivation)
+            if (devices[id - 1].DeviceActive == FFBDevice.DeviceState.AwaitingDeactivation)
             {
-                devices[id-1].DeviceActive = FFBDevice.DeviceState.Deactivated;
+                devices[id - 1].DeviceActive = FFBDevice.DeviceState.Deactivated;
                 //Send Zero Vibration
                 //To stop left over effect
                 if (VibrationCommand != null)

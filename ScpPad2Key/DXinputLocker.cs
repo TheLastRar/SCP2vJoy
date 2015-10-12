@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.Management;
+﻿using DisableDevice;
 using SharpDX.DirectInput;
+using System;
+using System.Collections.Generic;
+using System.Management;
 using System.ServiceProcess;
-using DisableDevice;
+using System.Windows.Forms;
 
 namespace ScpPad2vJoy
 {
@@ -53,7 +52,7 @@ namespace ScpPad2vJoy
             //controller, but we can still disable and re-enable it
             //If we do this while the service is running, the program will
             //crash
-            ServiceController sc = new ServiceController("SCP DS3 Service");
+            ServiceController sc = new ServiceController("SCP DSx Service");
             sc.Stop();
             sc.WaitForStatus(ServiceControllerStatus.Stopped);
 
@@ -87,12 +86,12 @@ namespace ScpPad2vJoy
                     joystick.Unacquire();
                     string[] dpstlit = devicePath.Split('#');
                     devicePath = @"HID\" + dpstlit[1].ToUpper() + @"\" + dpstlit[2].ToUpper();
-                    lockedDevices.Add(new DeviceID(deviceGUID,devicePath));
+                    lockedDevices.Add(new DeviceID(deviceGUID, devicePath));
 
                     DeviceHelper.SetDeviceEnabled(deviceGUID, devicePath, false);
                 }
             }
-            
+
         }
         public void UnlockDevices() //re-enable them
         {

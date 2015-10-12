@@ -1,13 +1,11 @@
-﻿using System;
-using System.Text;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
-using DisableDevice;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
-using Microsoft.Win32.SafeHandles;
-using System.Security;
 using System.Runtime.ConstrainedExecution;
-using System.Management;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Text;
 
 //Taken from http://stackoverflow.com/questions/1438371/win32-api-function-to-programmatically-enable-disable-device 1st answer
 
@@ -212,7 +210,7 @@ namespace DisableDevice
         public static extern SafeDeviceInfoSetHandle SetupDiGetClassDevs(
             [In()] ref Guid classGuid,
             [MarshalAs(UnmanagedType.LPWStr)] string enumerator,
-            IntPtr hwndParent, 
+            IntPtr hwndParent,
             SetupDiGetClassDevsFlags flags);
 
         /*
@@ -244,7 +242,7 @@ ref int requiredSize);
         public static extern bool SetupDiSetClassInstallParams(
             SafeDeviceInfoSetHandle deviceInfoSet,
             [In()] ref DeviceInfoData deviceInfoData,
-            [In()] ref PropertyChangeParameters classInstallParams, 
+            [In()] ref PropertyChangeParameters classInstallParams,
             int classInstallParamsSize);
     }
 
