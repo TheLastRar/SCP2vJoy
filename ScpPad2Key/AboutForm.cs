@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace ScpPad2vJoy
 {
@@ -15,7 +11,7 @@ namespace ScpPad2vJoy
         public AboutForm()
         {
             InitializeComponent();
-            this.MouseWheel += new MouseEventHandler(Panel_MouseWheel);
+            //this.MouseWheel += new MouseEventHandler(Panel_MouseWheel);
             DoAboutPage();
             DoContConfigPage();
             DoDSParamPage();
@@ -24,8 +20,10 @@ namespace ScpPad2vJoy
             int neededTabWidth = tableEdgePadding * 2 + parmWidth + descWidth + typeWidth + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
             int neededtabControlWidth = neededTabWidth + 8;
             tabControl1.Width = neededtabControlWidth;
-            int neededClientWidth = neededtabControlWidth + 13*2;
+            int neededClientWidth = neededtabControlWidth + 13 * 2;
             this.ClientSize = new Size(neededClientWidth, this.ClientSize.Height);
+
+            Icon = Properties.Resources.Scp_All;
         }
 
         public void DoAboutPage()
@@ -95,7 +93,7 @@ namespace ScpPad2vJoy
         }
         public void DoDSParamPage()
         {
-            string [] dsTable = Properties.Resources.DSButtons.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            string[] dsTable = Properties.Resources.DSButtons.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             DrawTable(dsTable, tabDSParam);
         }
         public void DovJoyParamPage()
@@ -180,12 +178,12 @@ namespace ScpPad2vJoy
 
         private TextBox CreateTextBox(int x, int y, int width, String text, TabPage parDestination)
         {
-            TextBox boxParam = new TextBox();
+            MouseTransparentTextBox boxParam = new MouseTransparentTextBox();
             boxParam.ReadOnly = true;
             boxParam.Width = width;
             boxParam.Text = text.Replace("{NL}", Environment.NewLine);
             boxParam.Location = new Point(x, y);
-            boxParam.MouseWheel += new MouseEventHandler(Panel_MouseWheel);
+            boxParam.Cursor = this.Cursor;
             parDestination.Controls.Add(boxParam);
             return boxParam;
         }
@@ -202,11 +200,6 @@ namespace ScpPad2vJoy
         private void linkSupport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(e.Link.LinkData.ToString());
-        }
-        private void Panel_MouseWheel(object sender, MouseEventArgs e)
-        {
-            //focus the panel so that scrolling with the mousewheel works
-            tabControl1.TabPages[tabControl1.SelectedIndex].Focus();
         }
     }
 }

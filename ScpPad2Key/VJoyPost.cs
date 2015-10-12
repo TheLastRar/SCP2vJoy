@@ -1,38 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using DisableDevice;
+using ScpPad2vJoy.VjoyEffect;
+using System;
+using System.Diagnostics;
 using System.Management;
-
-using DisableDevice;
-
-using ScpControl;
+using System.Runtime.InteropServices;
+//using ScpControl;
 
 using vJoyInterfaceWrap;
-using System.Runtime.InteropServices;
 
 namespace ScpPad2vJoy
 {
-    public class VJoyPost
+    class vJoyInstall
+    {
+        //See wrapper.h in vJoy sourcecode for full definitions
+        [DllImport("vJoyInstall.dll", EntryPoint = "enable")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool Enable(UInt16 Revision);
+        [DllImport("vJoyInstall.dll", EntryPoint = "disable")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool Disable(UInt16 Revision);
+        [DllImport("vJoyInstall.dll", EntryPoint = "refresh_vjoy")]
+        public static extern void RefreshvJoy();
+    }
+
+    class vJoyPost
     {
         protected vJoy joystick;
-        protected vJoy.JoystickState[] joyReport = new vJoy.JoystickState[4];
+        protected vJoyVibrate vibrationCore;
+        protected vJoy.JoystickState[] joyReport = new vJoy.JoystickState[SCPConstants.MAX_XINPUT_DEVICES];
         protected UInt32 vJoyVersion = 0;
 
-        //vJoy
-        protected const UInt32 MIN_VER = 0x205;
-        //Axis
-        protected const Int32 MAX_VJOY_AXIS = 32767; //Max vJoy value (0-32767)
-        protected const Int32 HALF_VJOY_AXIS = MAX_VJOY_AXIS / 2;
-        protected const Int32 MAX_SCP_AXIS = 255; //Max SCP value (0-255)
-        protected const Int32 AXIS_SCALE = (MAX_VJOY_AXIS + 1) / (MAX_SCP_AXIS+1); //(+1 the max values to give interger scale)
+
+        protected const Int32 HALF_VJOY_AXIS = vJoyConstants.MAX_AXIS_VALUE / 2;
+        protected const Int32 AXIS_SCALE = (vJoyConstants.MAX_AXIS_VALUE + 1) / (SCPConstants.MAX_SCP_AXIS + 1); //(+1 the max values to give interger scale)
         protected const Int32 AXIS_SCALE_OFFSET = AXIS_SCALE / 2; //Offset needs to be applied to account for us (adding 1 the max values)
+
+        //Events
+        public event vJoyVibrate.VibrationEventHandler VibrationCommand;
+        private void VibEventProxy(uint parvjid, EffectReturnValue e)
+        {
+            if (VibrationCommand == null)
+                return;
+            VibrationCommand(GetDSFromvj(parvjid), e);
+        }
 
         public bool Start(bool[] parSelectedPads, PadSettings config, DeviceManagement devManLevel)
         {
+            //Setup vJoy
+            //Perform device enable/disable based on dll version
+            //EnableVJoy needs to know which version of vJoy we are running
+            joystick = new vJoy();
+            UInt32 DllVer = 0, DrvVer = 0;
+            joystick.DriverMatch(ref DllVer, ref DrvVer);
+            //MIN Version Check 1
+            vJoyVersion = DllVer;
+            if (vJoyVersion < vJoyConstants.MIN_VER)
+            {
+                Trace.WriteLine("vJoy version less than required: Aborting\n");
+                Stop(parSelectedPads, devManLevel);
+                return false;
+            }
+
             if ((devManLevel & DeviceManagement.vJoy_Config) == DeviceManagement.vJoy_Config)
             {
                 EnableVJoy(false);
                 SetupVjoy(parSelectedPads, config);
+                vJoyInstall.RefreshvJoy(); //do it like vJConfig does (needed in 2.1.6)
                 EnableVJoy(true);
             }
             else if ((devManLevel & DeviceManagement.vJoy_Device) == DeviceManagement.vJoy_Device)
@@ -40,42 +73,45 @@ namespace ScpPad2vJoy
                 EnableVJoy(true);
             }
 
-            joystick = new vJoy();
-
             if (!joystick.vJoyEnabled())
             {
-                Console.WriteLine("vJoy driver not enabled: Failed Getting vJoy attributes.\n");
+                Trace.WriteLine("vJoy driver not enabled: Failed Getting vJoy attributes.\n");
                 return false;
             }
             else
             {
-                Console.WriteLine("Vendor : {0}\nProduct: {1}\nVersion: {2}\n",
+                Trace.WriteLine(String.Format("Vendor : {0}\nProduct: {1}\nVersion: {2}\n",
                 joystick.GetvJoyManufacturerString(),
                 joystick.GetvJoyProductString(),
-                joystick.GetvJoySerialNumberString());
+                joystick.GetvJoySerialNumberString()));
 
                 // Test if DLL matches the driver
-                UInt32 DllVer = 0, DrvVer = 0;
                 bool match = joystick.DriverMatch(ref DllVer, ref DrvVer);
                 if (match)
-                    Console.WriteLine("Version of Driver Matches DLL Version ({0:X})\n", DllVer);
+                {
+                    Trace.WriteLine(String.Format("Version of Driver Matches DLL Version ({0:X})", DllVer));
+                    Trace.WriteLine(String.Format("Version of vJoyInterfaceWrap.dll is ({0})",
+                        typeof(vJoy).Assembly.GetName().Version));
+                    Trace.WriteLine(String.Format("Version of ScpControl.dll is ({0})\n",
+                        typeof(ScpControl.ScpProxy).Assembly.GetName().Version));
+                }
                 else
                 {
-                    Console.WriteLine("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer);
+                    Trace.WriteLine(String.Format("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer));
                     Stop(parSelectedPads, devManLevel);
                     return false;
                 }
                 //MinVersion Check
                 vJoyVersion = DrvVer;
-                if (vJoyVersion < MIN_VER)
+                if (vJoyVersion < vJoyConstants.MIN_VER)
                 {
-                    Console.WriteLine("vJoy version less than required: Aborting\n");
+                    Trace.WriteLine("vJoy version less than required: Aborting\n");
                     Stop(parSelectedPads, devManLevel);
                     return false;
                 }
             }
 
-            for (uint dsID = 1; dsID <= 4; dsID++)
+            for (uint dsID = 1; dsID <= SCPConstants.MAX_XINPUT_DEVICES; dsID++)
             {
                 if (parSelectedPads[dsID - 1])
                 {
@@ -85,17 +121,24 @@ namespace ScpPad2vJoy
                     VjdStat status = joystick.GetVJDStatus(id);
                     if ((status == VjdStat.VJD_STAT_OWN) || ((status == VjdStat.VJD_STAT_FREE) && (!joystick.AcquireVJD(id))))
                     {
-                        Console.WriteLine(String.Format("Failed to acquire vJoy device number {0}.", id));
+                        Trace.WriteLine(String.Format("Failed to acquire vJoy device number {0}.", id));
                         Stop(parSelectedPads, devManLevel);
                         return false;
                     }
                     else
                     {
-                        Console.WriteLine(String.Format("Acquired: vJoy device number {0}.", id));
+                        Trace.WriteLine(String.Format("Acquired vJoy device number {0}.", id));
                     }
-                    Console.WriteLine(String.Format("Buttons : {0}.", joystick.GetVJDButtonNumber(id)));
-                    Console.WriteLine(String.Format("DiscPov : {0}.", joystick.GetVJDDiscPovNumber(id)));
-                    Console.WriteLine(String.Format("ContPov : {0}.", joystick.GetVJDContPovNumber(id)));
+                    Trace.WriteLine(String.Format("Buttons : {0}.", joystick.GetVJDButtonNumber(id)));
+                    Trace.WriteLine(String.Format("DiscPov : {0}.", joystick.GetVJDDiscPovNumber(id)));
+                    Trace.WriteLine(String.Format("ContPov : {0}.", joystick.GetVJDContPovNumber(id)));
+                    //FFB
+                    if (config.ffb)
+                    {
+                        vibrationCore = new vJoyVibrate(joystick);
+                        vibrationCore.FfbInterface(dsID);
+                        vibrationCore.VibrationCommand += VibEventProxy;
+                    }
                     // Reset this device to default values
                     joystick.ResetVJD(id);
                     //Set Axis to mid value
@@ -114,15 +157,19 @@ namespace ScpPad2vJoy
 
         public void Stop(bool[] parSelectedPads, DeviceManagement devManLevel)
         {
-            for (uint dsID=1; dsID <= 4; dsID++)
+            for (uint dsID = 1; dsID <= SCPConstants.MAX_XINPUT_DEVICES; dsID++)
             {
                 if (parSelectedPads[dsID - 1])
                 {
                     uint id = GetvjFromDS(dsID);
                     try
                     {
+                        if (vibrationCore != null)
+                        {
+                            vibrationCore.FfbStop(id);
+                            vibrationCore = null;
+                        }
                         joystick.RelinquishVJD(id);
-
                     }
                     catch
                     {
@@ -140,28 +187,32 @@ namespace ScpPad2vJoy
         {
             return parDSid;
         }
+        public uint GetDSFromvj(uint parvjid)
+        {
+            return parvjid;
+        }
 
-        public void JoyButton(uint parButtonID, bool parDown,uint parDSid)
+        public void JoyButton(uint parButtonID, bool parDown, uint parDSid)
         {
             if (parButtonID != 0)
             {
                 if (parDown)
                 {
-                    if (parButtonID < 33) //1-32
+                    if (parButtonID < vJoyConstants.BUTTON_EX1) //1-32
                     {
-                        joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID - 1));
+                        joyReport[parDSid - 1].Buttons |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX0));
                     }
-                    else if (parButtonID < 65) //33-64
+                    else if (parButtonID < vJoyConstants.BUTTON_EX2) //33-64
                     {
-                        joyReport[parDSid - 1].ButtonsEx1 |= (uint)(0x1 << (int)(parButtonID - 33));
+                        joyReport[parDSid - 1].ButtonsEx1 |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX1));
                     }
-                    else if (parButtonID < 97) //65-96
+                    else if (parButtonID < vJoyConstants.BUTTON_EX3) //65-96
                     {
-                        joyReport[parDSid - 1].ButtonsEx2 |= (uint)(0x1 << (int)(parButtonID - 65));
+                        joyReport[parDSid - 1].ButtonsEx2 |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX2));
                     }
                     else //97-128
                     {
-                        joyReport[parDSid - 1].ButtonsEx3 |= (uint)(0x1 << (int)(parButtonID - 97));
+                        joyReport[parDSid - 1].ButtonsEx3 |= (uint)(0x1 << (int)(parButtonID - vJoyConstants.BUTTON_EX3));
                     }
                 }
             }
@@ -181,28 +232,28 @@ namespace ScpPad2vJoy
                 {
                     case HID_USAGES.HID_USAGE_X:
                         joyReport[parDSid - 1].AxisX = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_Y:
                         joyReport[parDSid - 1].AxisY = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_Z:
                         joyReport[parDSid - 1].AxisZ = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_RX:
                         joyReport[parDSid - 1].AxisXRot = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_RY:
                         joyReport[parDSid - 1].AxisYRot = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_RZ:
                         joyReport[parDSid - 1].AxisZRot = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_SL0:
                         joyReport[parDSid - 1].Slider = JoyValue;
-                    break;
+                        break;
                     case HID_USAGES.HID_USAGE_SL1:
                         joyReport[parDSid - 1].Dial = JoyValue;
-                    break;
+                        break;
                 }
             }
         }
@@ -215,65 +266,38 @@ namespace ScpPad2vJoy
                 case Direction.UpLeft:
                     value = 31500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.UpRight:
                     value = 4500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.DownLeft:
                     value = 22500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.DownRight:
                     value = 13500;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Up:
                     value = 0;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Down:
                     value = 18000;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Left:
                     value = 27000;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 case Direction.Right:
                     value = 9000;
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
                 default:
                     value = unchecked((uint)-1);
                     joyReport[parDSid - 1].bHats = value;
-                    //joyReport[parDSid - 1].bHatsEx1 = value;
-                    //joyReport[parDSid - 1].bHatsEx2 = value;
-                    //joyReport[parDSid - 1].bHatsEx3 = value;
                     break;
             }
         }
@@ -281,7 +305,7 @@ namespace ScpPad2vJoy
         public void JoySubmit(uint parDSid)
         {
             uint id = GetvjFromDS(parDSid);
-            joystick.UpdateVJD(id, ref joyReport[parDSid-1]);
+            joystick.UpdateVJD(id, ref joyReport[parDSid - 1]);
             joyReport[parDSid - 1].Buttons = 0;
             joyReport[parDSid - 1].ButtonsEx1 = 0;
             joyReport[parDSid - 1].ButtonsEx2 = 0;
@@ -300,25 +324,17 @@ namespace ScpPad2vJoy
 
         public void EnableVJoy(bool enable)
         {
-            string strClassGUID = "{745a17a0-74d3-11d0-b6fe-00a0c90f57da}";
-            Guid ClassGUID = new Guid(strClassGUID);
-            //find all vjoy pads and enable them
-            ManagementObjectSearcher objSearcher = new ManagementObjectSearcher("Select * from Win32_PnPSignedDriver WHERE ClassGuid = '" + strClassGUID + "' AND DeviceName = 'vJoy Device'");
-
-            ManagementObjectCollection objCollection = objSearcher.Get();
-
-            //We expect only one vJoy Device to be returned
-            string objdeviceid = "";
-            foreach (ManagementObject cobj in objCollection)
             {
-                //string info = String.Format("Device='{0}',Manufacturer='{1}',DriverVersion='{2}' ", cobj["HardWareID"], cobj["DeviceID"], cobj["DeviceName"]);
-                //Console.Out.WriteLine(info);
-                objdeviceid = (string)cobj["DeviceID"];
-                break;
-            }
-            if (objdeviceid !="")
-            {
-                DeviceHelper.SetDeviceEnabled(ClassGUID, objdeviceid, enable);
+                //Version 2.0.5 does not have these functions
+                if (enable)
+                {
+                    //Don't have easy way of getting driver version
+                    vJoyInstall.Enable(0);
+                }
+                else
+                {
+                    vJoyInstall.Disable((UInt16)joystick.GetvJoyVersion());
+                }
             }
         }
 
@@ -330,27 +346,31 @@ namespace ScpPad2vJoy
             //create needed pads
             byte dpads = 0;
             if (config.dpad) { dpads = 1; }
-            for (uint dsID = 1; dsID <= 4; dsID++)
+            for (uint dsID = 1; dsID <= SCPConstants.MAX_XINPUT_DEVICES; dsID++)
             {
                 if (parSelectedPads[dsID - 1])
                 {
-                    uint id = GetvjFromDS(dsID);
-                    byte[] PadConfig = VJC.CreateHidReportDesc((byte)id, config.enabledAxis, dpads, 0, config.nButtons);
+                    uint id = GetvjFromDS(dsID); //
+                    //byte[] PadConfig = VJC.CreateHidReportDesc(config.nButtons, config.enabledAxis, dpads, 0,(byte)id,
+                    //    false, new bool [] {false,false,false,false,false,false,false,false,false,false,false});
+                    byte[] PadConfig = VJC.CreateHidReportDesc(config.nButtons, config.enabledAxis, dpads, 0, (byte)id,
+                        config.ffb, //enable vibration
+                        new bool[] {
+                            true, //Const
+                            true, //Ramp
+                            true, //Square Wave
+                            true, //Sine Wave
+                            true, //Tri Wave
+                            true, //SawUp Wave
+                            true, //SawDown wave
+                            false, //Spring
+                            false, //Damper
+                            false, //Inertia
+                            false  //Friction
+                        });
                     VJC.WriteHidReportDescToReg((int)id, PadConfig);
                 }
             }
         }
-
-        //public void FfbInterface(object dialog, uint parDSid)
-        //{
-        //    // Start FFB Mechanism
-        //    if (!joystick.Ff))
-        //    throw new Exception(String.Format("Cannot start Forcefeedback on device {0}", id));
-        //    // Convert Form to pointer and pass it as user data to the callback function
-        //    GCHandle h = GCHandle.Alloc(dialog);
-        //    IntPtr parameter = (IntPtr)h;
-        //    // Register the callback function & pass the dialog box object
-        //    joystick.FfbRegisterGenCB(OnEffectObj, dialog);
-        //}
     }
 }

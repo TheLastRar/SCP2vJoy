@@ -1,21 +1,21 @@
-﻿using System;
-
-using ScpControl;
-
-using vJoyInterfaceWrap;
+﻿using ScpControl;
+using ScpControl.ScpCore;
+using ScpPad2vJoy.VjoyEffect;
+using System;
 
 namespace ScpPad2vJoy
 {
-    public class DXPadState
+    class DXPadState
     {
         protected ScpProxy m_VibProxy = null;
 
-        protected volatile VJoyPost vJPad;
+        protected volatile vJoyPost vJPad;
         protected volatile PadSettings config;
-        public DXPadState(VJoyPost parVJoyPad, PadSettings parConfig)
+        public DXPadState(vJoyPost parVJoyPad, PadSettings parConfig)
         {
             vJPad = parVJoyPad;
             config = parConfig;
+            vJPad.VibrationCommand += Rumble;
         }
 
         //AxisAsButton
@@ -150,7 +150,7 @@ namespace ScpPad2vJoy
         {
             if (parInverted)
             {
-                vJPad.JoyAxis(parTargetHID, 255 - parAxisValue, parDsID);
+                vJPad.JoyAxis(parTargetHID, SCPConstants.MAX_SCP_AXIS - parAxisValue, parDsID);
             }
             else
             {
@@ -193,7 +193,7 @@ namespace ScpPad2vJoy
                 //HI
                 if (parDown)
                 {
-                    vJPad.JoyAxis((HID_USAGES)(parButtonID - 2000), 255, parDsID);
+                    vJPad.JoyAxis((HID_USAGES)(parButtonID - 2000), SCPConstants.MAX_SCP_AXIS, parDsID);
                 }
             }
         }
@@ -272,14 +272,80 @@ namespace ScpPad2vJoy
         public ScpProxy Proxy
         {
             get { return m_VibProxy; }
-            set { m_VibProxy = value;}
+            set { m_VibProxy = value; }
         }
-        //protected void Rumble(Byte Large, Byte Small)
-        //{
-        //    if (Proxy != null)
-        //    {
-        //        Proxy.Rumble(Pad, Large, Small); //large moter + small moter
-        //    }
-        //}
+        protected void Rumble(uint parDsID, EffectReturnValue e)
+        {
+            if (m_VibProxy != null)
+            {
+                Proxy.Rumble((DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), ScaleSmallMotor(e.MotorRight)); //large moter + small moter
+                //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + ScaleLargeMotor(e.MotorLeft));
+            }
+        }
+        protected Byte ScaleLargeMotor(float parLevel)
+        {
+            //Reflect negative values
+            if (parLevel < 0)
+            {
+                parLevel = -parLevel;
+            }
+
+            const float OUT_MAX = SCPConstants.EFFECT_MAX_VALUE;
+            const float OUT_MIN = 50;
+            const float OUT_RANGE = OUT_MAX - OUT_MIN;
+
+            //Clamp High Values
+            if (parLevel > vJoyConstants.EFFECT_MAX_VALUE)
+            {
+                parLevel = vJoyConstants.EFFECT_MAX_VALUE;
+            }
+
+            float ret;
+            if (parLevel < 1.0)
+            {
+                //Give near zero values a truly zero
+                //vibration
+                //instead of a value of 50
+                ret = 0;
+            } 
+            else
+            {
+                float verIn = parLevel / vJoyConstants.EFFECT_MAX_VALUE;
+                ret = (OUT_MIN + verIn * OUT_RANGE);
+            }
+
+
+            return (Byte)ret;
+        }
+        protected Byte ScaleSmallMotor(float parLevel)
+        {
+            //return ScaleLargeMotor(parLevel);
+            //Reflect negative values
+            if (parLevel < 0)
+            {
+                parLevel = -parLevel;
+            }
+
+            const float OUT_MAX = SCPConstants.EFFECT_MAX_VALUE;
+            const float OUT_MIN = 0;
+            const float OUT_RANGE = OUT_MAX - OUT_MIN;
+
+            //Clamp High Values
+            if (parLevel > vJoyConstants.EFFECT_MAX_VALUE)
+            {
+                parLevel = vJoyConstants.EFFECT_MAX_VALUE;
+            }
+            //Small moter is V sensitive
+            //Remove lower values to compensate
+            if (parLevel < 2000)
+            {
+                parLevel = 0;
+            }
+
+            float verIn = parLevel / vJoyConstants.EFFECT_MAX_VALUE;
+            float ret = (OUT_MIN + verIn * OUT_RANGE);
+
+            return (Byte)ret;
+        }
     }
 }

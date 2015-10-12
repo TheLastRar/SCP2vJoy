@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -35,6 +36,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,7 +47,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ScpPad2vJoy</RootNamespace>
     <AssemblyName>ScpPad2vJoy</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -59,6 +61,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -68,11 +71,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\Scp_All.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>.\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveSockets">
+      <HintPath>.\ReactiveSockets.dll</HintPath>
+    </Reference>
     <Reference Include="ScpControl, Version=1.2.0.160, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\ScpControl.dll</HintPath>
@@ -88,12 +98,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>.\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>.\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>.\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>.\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="vJoyInterfaceWrap">
+    <Reference Include="vJoyInterfaceWrap, Version=0.2.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\vJoyInterfaceWrap.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -103,10 +125,18 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="DeviceManagement.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="DisableHardware.cs" />
     <Compile Include="DXinputLocker.cs" />
+    <Compile Include="HidFfbEffects.cs" />
+    <Compile Include="HidReportDescFfb.cs" />
+    <Compile Include="HidToken.cs" />
+    <Compile Include="HidUsage.cs" />
+    <Compile Include="MouseTransparentTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PadSettings.cs" />
     <Compile Include="PadState.cs" />
     <Compile Include="Properties\CommonInfo.cs" />
@@ -119,12 +149,28 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="vJoyConf.cs" />
-    <Compile Include="VJoyPost.cs" />
+    <Compile Include="VjoyEffect\ConstEffectBlock.cs" />
+    <Compile Include="VjoyEffect\BaseEffectBlock.cs" />
+    <Compile Include="VjoyEffect\EffectReturnValue.cs" />
+    <Compile Include="VjoyEffect\EnverlopeCabableBaseEffectBlack.cs" />
+    <Compile Include="VjoyEffect\FFBDevice.cs" />
+    <Compile Include="VjoyEffect\NullEffectBlock.cs" />
+    <Compile Include="VjoyEffect\PeriodBaseEffectBlock.cs" />
+    <Compile Include="VjoyEffect\RampEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SawDownEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SawUpEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SineEffectBlock.cs" />
+    <Compile Include="VjoyEffect\SquareEffectBlock.cs" />
+    <Compile Include="VjoyEffect\TrangleEffectBlock.cs" />
+    <Compile Include="vJoyPost.cs" />
+    <Compile Include="vJoyVibrate.cs" />
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ScpForm.resx">
       <DependentUpon>ScpForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -136,12 +182,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -177,7 +225,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -1,48 +1,41 @@
-﻿using System;
+﻿using ScpControl;
+using ScpControl.ScpCore;
+using System;
+using System.Reflection;
 using System.Windows.Forms;
 
-using System.Runtime.InteropServices;
-using ScpControl;
-
-using vJoyInterfaceWrap;
-using System.Reflection;
-
-namespace ScpPad2vJoy 
+namespace ScpPad2vJoy
 {
-    public partial class ScpForm : Form 
+    partial class ScpForm : Form
     {
         protected DXPadState gps;
 
-        protected VJoyPost vJP = new VJoyPost();
+        protected vJoyPost vJP = new vJoyPost();
         protected X360_InputLocker dxLocker;
-        protected String m_Active;
+
         protected PadSettings config;
-        protected bool[] selectedPads = new bool[] {true,false,false,false};
+        protected bool[] selectedPads = new bool[] { true, false, false, false };
         protected DeviceManagement devManLevel = DeviceManagement.vJoy_Config | DeviceManagement.vJoy_Device | DeviceManagement.Xinput_DX /*| DeviceManagement.Xinput_XI*/;
 
-        public ScpForm() 
+        public ScpForm()
         {
             InitializeComponent();
-            Version ver =  Assembly.GetExecutingAssembly().GetName().Version;
+            Version ver = Assembly.GetExecutingAssembly().GetName().Version;
             this.Text += ver.Major + "." + ver.Minor;
         }
 
-        protected void Form_Load(object sender, EventArgs e) 
+        protected void Form_Load(object sender, EventArgs e)
         {
             Icon = Properties.Resources.Scp_All;
             //if DefaultConfig.txt exits in working directory, use that
             if (System.IO.File.Exists("Default_vjConfig.txt"))
             {
                 string[] configfile = System.IO.File.ReadAllLines("Default_vjConfig.txt");
-                config = new PadSettings(configfile);               
+                config = new PadSettings(configfile);
             }
             else
             {//No Default config, use our own
                 config = new PadSettings(Properties.Resources.W3C.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None));
-            }
-            if (scpProxy.Load())
-            {
-                m_Active = scpProxy.Active;
             }
 
             //cbPad.SelectedIndex = (Int32) m_Pad;
@@ -50,7 +43,7 @@ namespace ScpPad2vJoy
             dxLocker = new X360_InputLocker(this);
         }
 
-        protected void Form_Close(object sender, FormClosingEventArgs e) 
+        protected void Form_Close(object sender, FormClosingEventArgs e)
         {
 
             if (btnStop.Enabled)
@@ -59,9 +52,9 @@ namespace ScpPad2vJoy
             }
         }
 
-        protected void Parse(object sender, DsPacket e) 
+        protected void Parse(object sender, DsPacket e)
         {
-            lock(this)
+            lock (this)
             {
                 if (selectedPads[(int)e.Detail.Pad] && !(gps == null))
                 {
@@ -70,14 +63,21 @@ namespace ScpPad2vJoy
             }
         }
 
-        protected void btnStart_Click(object sender, EventArgs e) 
+        protected void onVib(object sender, EventArgs e)
+        {
+            scpProxy.Rumble(DsPadId.One, 100, 100);
+        }
+
+        protected void btnStart_Click(object sender, EventArgs e)
         {
             if (scpProxy.Start())
             {
-                cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = btnStart.Enabled = false;
+                cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = btnStart.Enabled = cbVib.Enabled = false;
+                config.ffb = cbVib.Checked;
                 if (vJP.Start(selectedPads, config, devManLevel))
                 {
-                    gps = new DXPadState(vJP,config);
+                    gps = new DXPadState(vJP, config);
+                    gps.Proxy = scpProxy;
                     if ((devManLevel & DeviceManagement.Xinput_XI) == DeviceManagement.Xinput_XI)
                     {
                         //SCP X360 Controller can only be disabled when
@@ -85,11 +85,14 @@ namespace ScpPad2vJoy
                         //restart the service (done in Lock_XI_Devices).
                         //However, ScpProxy dosn't like the service
                         //restart, so we need create a new instance.
+                        //Edit, Due to changes in reloaded, we have to
+                        //do this anyway when we stop the device
+                        //we just have to do it here when we start
+                        //due to the locking X360 devices reason.
                         scpProxy.Stop();
-                        this.components.Remove(scpProxy);
                         dxLocker.Lock_XI_Devices();
-                        scpProxy = new ScpProxy(this.components);
-                        this.scpProxy.Packet += new System.EventHandler<ScpControl.DsPacket>(this.Parse);
+                        StandardScpStop(); //Test this in this situation(?)
+                        //
                         if (!scpProxy.Start())
                         {
                             //error
@@ -103,33 +106,43 @@ namespace ScpPad2vJoy
                         dxLocker.Lock_DX_Devices();
                     }
 
-                    btnStop.Enabled = true;  
+                    btnStop.Enabled = true;
                 }
                 else
                 {
-                    scpProxy.Stop();
-                    cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = btnStart.Enabled = true;
+                    StandardScpStop();
+                    cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = btnStart.Enabled = cbVib.Enabled = true;
                     MessageBox.Show(this, "Vjoy pad is not available", "ScpPad2vJoy", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             else
             {
-                MessageBox.Show(this, "Native Feed is not available",  "ScpPad2vJoy", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, "Native Feed is not available", "ScpPad2vJoy", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
-        protected void btnStop_Click(object sender, EventArgs e) 
+        protected void btnStop_Click(object sender, EventArgs e)
         {
-            btnStop.Enabled = false;            
+            btnStop.Enabled = false;
 
-            scpProxy.Stop();
             vJP.Stop(selectedPads, devManLevel);
+            //Can't restart proxy after stop (now)
+            StandardScpStop();
             //Do this regardless as the input
             //locker only unlocks devices it has locked.
             dxLocker.UnlockDevices();
 
-            cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = true;
+            cbP1.Enabled = cbP2.Enabled = cbP3.Enabled = cbP4.Enabled = btnLoadConfig.Enabled = cbVib.Enabled = true;
             btnStart.Enabled = true;
+        }
+
+        protected void StandardScpStop()
+        {
+            scpProxy.Stop();
+            this.components.Remove(scpProxy);
+            scpProxy.Dispose();
+            scpProxy = new ScpProxy(this.components);
+            this.scpProxy.NativeFeedReceived += new System.EventHandler<DsPacket>(this.Parse);
         }
 
         private void cbP1_CheckedChanged(object sender, EventArgs e)
