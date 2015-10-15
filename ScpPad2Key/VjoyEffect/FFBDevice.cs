@@ -12,7 +12,7 @@ namespace ScpPad2vJoy.VjoyEffect
             AwaitingDeactivation,
             Active
         }
-        private const Byte MAX_BLOCKS = 255;
+        private const Byte MAX_BLOCKS = 255;//(2^7) - 1; //7bits for EBI
 
         public volatile DeviceState DeviceActive = DeviceState.Deactivated;
         public Dictionary<Byte, BaseEffectBlock> EffectBlocks = new Dictionary<Byte, BaseEffectBlock>();
@@ -61,7 +61,7 @@ namespace ScpPad2vJoy.VjoyEffect
         {
             EffectBlocks.Clear();
             LoadedBlocks = new Boolean[MAX_BLOCKS];
-            LoadedBlocks[0] = true;
+            LoadedBlocks[0] = true; //Never use 0 as it is for failed allocations
         }
         public byte NextKey()
         {

@@ -24,7 +24,7 @@ namespace ScpPad2vJoy.VjoyEffect
         {
             if (m_ffbHeader.Duration != vJoyConstants.EFFECT_INF_DURATION)
             {
-                float unitTime = (float)m_ffbHeader.Duration / (float)m_runTime;
+                float unitTime = (float)m_runTime / (float)m_ffbHeader.Duration;
                 Int32 delta = rampEffect.End - rampEffect.Start;
                 return rampEffect.Start + (Int32)(delta * unitTime);
             }
