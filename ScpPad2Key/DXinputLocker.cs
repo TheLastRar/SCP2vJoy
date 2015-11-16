@@ -53,45 +53,59 @@ namespace ScpPad2vJoy
             //If we do this while the service is running, the program will
             //crash
             ServiceController sc = new ServiceController("SCP DSx Service");
-            sc.Stop();
-            sc.WaitForStatus(ServiceControllerStatus.Stopped);
-
-            foreach (String objdeviceid in objdeviceids)
+            try
             {
-                if (objdeviceid != "")
-                {
-                    lockedDevices.Add(new DeviceID(ClassGUID, objdeviceid));
-                    DeviceHelper.SetDeviceEnabled(ClassGUID, objdeviceid, false, false);
-                }
-            }
+                sc.Stop();
+                sc.WaitForStatus(ServiceControllerStatus.Stopped);
 
-            //Restart service
-            sc.Start();
-            sc.WaitForStatus(ServiceControllerStatus.Running);
+
+                foreach (String objdeviceid in objdeviceids)
+                {
+                    if (objdeviceid != "")
+                    {
+                        DeviceHelper.SetDeviceEnabled(ClassGUID, objdeviceid, false, false);
+                        lockedDevices.Add(new DeviceID(ClassGUID, objdeviceid));
+                    }
+                }
+
+                //Restart service
+                sc.Start();
+                sc.WaitForStatus(ServiceControllerStatus.Running);
+            }
+            finally
+            {
+                sc.Dispose();
+            }
         }
         public void Lock_DX_Devices()//Disable all dinput devices for xinput controllers
         {
             var directInput = new DirectInput();
 
-            IList<DeviceInstance> devicelist = directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AttachedOnly);
-
-            foreach (DeviceInstance cdevice in devicelist)
+            try
             {
-                if (cdevice.InstanceName == XINPUT_NAME)
-                {
-                    var joystick = new Joystick(directInput, cdevice.InstanceGuid);
-                    joystick.Acquire();
-                    Guid deviceGUID = joystick.Properties.ClassGuid;
-                    string devicePath = joystick.Properties.InterfacePath;
-                    joystick.Unacquire();
-                    string[] dpstlit = devicePath.Split('#');
-                    devicePath = @"HID\" + dpstlit[1].ToUpper() + @"\" + dpstlit[2].ToUpper();
-                    lockedDevices.Add(new DeviceID(deviceGUID, devicePath));
+                IList<DeviceInstance> devicelist = directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AttachedOnly);
 
-                    DeviceHelper.SetDeviceEnabled(deviceGUID, devicePath, false);
+                foreach (DeviceInstance cdevice in devicelist)
+                {
+                    if (cdevice.InstanceName == XINPUT_NAME)
+                    {
+                        var joystick = new Joystick(directInput, cdevice.InstanceGuid);
+                        joystick.Acquire();
+                        Guid deviceGUID = joystick.Properties.ClassGuid;
+                        string devicePath = joystick.Properties.InterfacePath;
+                        joystick.Unacquire();
+                        string[] dpstlit = devicePath.Split('#');
+                        devicePath = @"HID\" + dpstlit[1].ToUpper() + @"\" + dpstlit[2].ToUpper();
+                        lockedDevices.Add(new DeviceID(deviceGUID, devicePath));
+
+                        DeviceHelper.SetDeviceEnabled(deviceGUID, devicePath, false);
+                    }
                 }
             }
-
+            finally
+            {
+                directInput.Dispose();
+            }
         }
         public void UnlockDevices() //re-enable them
         {

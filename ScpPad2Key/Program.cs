@@ -45,8 +45,10 @@ namespace ScpPad2vJoy
                     file = (string)_regKey.GetValue("DllX86Location");
                 }
             }
-            _regKey.Close();
-            _baseKey.Close();
+            if (_regKey != null)
+                _regKey.Close();
+            if (_baseKey != null)
+                _baseKey.Close();
             return file;
         }
 

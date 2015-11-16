@@ -1,5 +1,6 @@
 ﻿using ScpControl;
 using ScpControl.ScpCore;
+using ScpControl.Profiler;
 using System;
 using System.Reflection;
 using System.Windows.Forms;
@@ -19,7 +20,14 @@ namespace ScpPad2vJoy
 
         public ScpForm()
         {
-            InitializeComponent();
+            //try
+            //{
+                InitializeComponent();
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("HELP");
+            //}
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
             this.Text += ver.Major + "." + ver.Minor;
         }
@@ -52,11 +60,11 @@ namespace ScpPad2vJoy
             }
         }
 
-        protected void Parse(object sender, DsPacket e)
+        protected void Parse(object sender, ScpHidReport e)
         {
             lock (this)
             {
-                if (selectedPads[(int)e.Detail.Pad] && !(gps == null))
+                if (selectedPads[(int)e.PadId] && !(gps == null))
                 {
                     gps.Update(e);
                 }
@@ -142,7 +150,7 @@ namespace ScpPad2vJoy
             this.components.Remove(scpProxy);
             scpProxy.Dispose();
             scpProxy = new ScpProxy(this.components);
-            this.scpProxy.NativeFeedReceived += new System.EventHandler<DsPacket>(this.Parse);
+            this.scpProxy.NativeFeedReceived += new System.EventHandler<ScpHidReport>(this.Parse);
         }
 
         private void cbP1_CheckedChanged(object sender, EventArgs e)

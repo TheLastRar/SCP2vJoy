@@ -1,5 +1,6 @@
 ﻿using ScpControl;
-using ScpControl.ScpCore;
+//using ScpControl.ScpCore;
+using ScpControl.Profiler;
 using ScpPad2vJoy.VjoyEffect;
 using System;
 
@@ -22,49 +23,49 @@ namespace ScpPad2vJoy
         private const byte HighTrigger = 193;
         private const byte LowTrigger = 32;
 
-        public void Update(DsPacket Data)
+        public void Update(ScpHidReport Data)
         {
             lock (this)
             {
-                uint dsID = (uint)Data.Detail.Pad + 1;
-                switch (Data.Detail.Model)
+                uint dsID = (uint)Data.PadId + 1;
+                switch (Data.Model)
                 {
                     #region DS3
-                    case DsModel.DS3:
+                    case ScpControl.ScpCore.DsModel.DS3:
                         {
                             #region Axis
-                            vJPad.JoyAxis(config.axisL2, Data.Axis(Ds3Axis.L2), dsID);
-                            vJPad.JoyAxis(config.axisR2, Data.Axis(Ds3Axis.R2), dsID);
-                            SetAxis(Data.Axis(Ds3Axis.LX), config.axisLX, config.invertLX, dsID);
-                            SetAxis(Data.Axis(Ds3Axis.LY), config.axisLY, config.invertLY, dsID);
+                            vJPad.JoyAxis(config.axisL2, Data[Ds3Axis.L2].Value, dsID);
+                            vJPad.JoyAxis(config.axisR2, Data[Ds3Axis.R2].Value, dsID);
+                            SetAxis(Data[Ds3Axis.Lx].Value, config.axisLX, config.invertLX, dsID);
+                            SetAxis(Data[Ds3Axis.Ly].Value, config.axisLY, config.invertLY, dsID);
 
-                            SetAxis(Data.Axis(Ds3Axis.RX), config.axisRX, config.invertRX, dsID);
-                            SetAxis(Data.Axis(Ds3Axis.RY), config.axisRY, config.invertRY, dsID);
+                            SetAxis(Data[Ds3Axis.Rx].Value, config.axisRX, config.invertRX, dsID);
+                            SetAxis(Data[Ds3Axis.Ry].Value, config.axisRY, config.invertRY, dsID);
                             #endregion
                             #region Buttons
-                            SetButton(Data.Button(Ds3Button.Cross), config.cross, dsID);
-                            SetButton(Data.Button(Ds3Button.Circle), config.circle, dsID);
-                            SetButton(Data.Button(Ds3Button.Square), config.square, dsID);
-                            SetButton(Data.Button(Ds3Button.Triangle), config.triangle, dsID);
-                            SetButton(Data.Button(Ds3Button.L1), config.l1, dsID);
-                            SetButton(Data.Button(Ds3Button.R1), config.r1, dsID);
-                            SetButton(Data.Button(Ds3Button.L2), config.l2, dsID);
-                            SetButton(Data.Button(Ds3Button.R2), config.r2, dsID);
-                            SetButton(Data.Button(Ds3Button.Select), config.select_share, dsID);
-                            SetButton(Data.Button(Ds3Button.Start), config.start_options, dsID);
-                            SetButton(Data.Button(Ds3Button.L3), config.l3, dsID);
-                            SetButton(Data.Button(Ds3Button.R3), config.r3, dsID);
-                            SetButton(Data.Button(Ds3Button.PS), config.ps, dsID);
+                            SetButton(Data[Ds3Button.Cross].IsPressed, config.cross, dsID);
+                            SetButton(Data[Ds3Button.Circle].IsPressed, config.circle, dsID);
+                            SetButton(Data[Ds3Button.Square].IsPressed, config.square, dsID);
+                            SetButton(Data[Ds3Button.Triangle].IsPressed, config.triangle, dsID);
+                            SetButton(Data[Ds3Button.L1].IsPressed, config.l1, dsID);
+                            SetButton(Data[Ds3Button.R1].IsPressed, config.r1, dsID);
+                            SetButton(Data[Ds3Button.L2].IsPressed, config.l2, dsID);
+                            SetButton(Data[Ds3Button.R2].IsPressed, config.r2, dsID);
+                            SetButton(Data[Ds3Button.Select].IsPressed, config.select_share, dsID);
+                            SetButton(Data[Ds3Button.Start].IsPressed, config.start_options, dsID);
+                            SetButton(Data[Ds3Button.L3].IsPressed, config.l3, dsID);
+                            SetButton(Data[Ds3Button.R3].IsPressed, config.r3, dsID);
+                            SetButton(Data[Ds3Button.Ps].IsPressed, config.ps, dsID);
                             //Dpad as button
-                            SetButton(Data.Button(Ds3Button.Up), config.up, dsID);
-                            SetButton(Data.Button(Ds3Button.Down), config.down, dsID);
-                            SetButton(Data.Button(Ds3Button.Left), config.left, dsID);
-                            SetButton(Data.Button(Ds3Button.Right), config.right, dsID);
+                            SetButton(Data[Ds3Button.Up].IsPressed, config.up, dsID);
+                            SetButton(Data[Ds3Button.Down].IsPressed, config.down, dsID);
+                            SetButton(Data[Ds3Button.Left].IsPressed, config.left, dsID);
+                            SetButton(Data[Ds3Button.Right].IsPressed, config.right, dsID);
                             //AxisAsButton
-                            SetAxisAsButton(Data.Axis(Ds3Axis.LX), config.aLRight, config.aLLeft, dsID);
-                            SetAxisAsButton(Data.Axis(Ds3Axis.LY), config.aLDown, config.aLUp, dsID);
-                            SetAxisAsButton(Data.Axis(Ds3Axis.RX), config.aRRight, config.aRLeft, dsID);
-                            SetAxisAsButton(Data.Axis(Ds3Axis.RY), config.aRDown, config.aRUp, dsID);
+                            SetAxisAsButton(Data[Ds3Axis.Lx].Value, config.aLRight, config.aLLeft, dsID);
+                            SetAxisAsButton(Data[Ds3Axis.Ly].Value, config.aLDown, config.aLUp, dsID);
+                            SetAxisAsButton(Data[Ds3Axis.Rx].Value, config.aRRight, config.aRLeft, dsID);
+                            SetAxisAsButton(Data[Ds3Axis.Ry].Value, config.aRDown, config.aRUp, dsID);
                             #endregion
                             #region Dpad
                             //Dpad
@@ -86,42 +87,41 @@ namespace ScpPad2vJoy
                         break;
                     #endregion
                     #region DS4
-                    case DsModel.DS4:
+                    case ScpControl.ScpCore.DsModel.DS4:
                         {
                             #region Axis
-                            vJPad.JoyAxis(config.axisL2, Data.Axis(Ds4Axis.L2), dsID);
-                            vJPad.JoyAxis(config.axisR2, Data.Axis(Ds4Axis.R2), dsID);
+                            vJPad.JoyAxis(config.axisL2, Data[Ds4Axis.L2].Value, dsID);
+                            vJPad.JoyAxis(config.axisR2, Data[Ds4Axis.R2].Value, dsID);
+                            SetAxis(Data[Ds4Axis.Lx].Value, config.axisLX, config.invertLX, dsID);
+                            SetAxis(Data[Ds4Axis.Ly].Value, config.axisLY, config.invertLY, dsID);
 
-                            SetAxis(Data.Axis(Ds4Axis.LX), config.axisLX, config.invertLX, dsID);
-                            SetAxis(Data.Axis(Ds4Axis.LY), config.axisLY, config.invertLY, dsID);
-
-                            SetAxis(Data.Axis(Ds4Axis.RX), config.axisRX, config.invertRX, dsID);
-                            SetAxis(Data.Axis(Ds4Axis.RY), config.axisRY, config.invertRY, dsID);
+                            SetAxis(Data[Ds4Axis.Rx].Value, config.axisRX, config.invertRX, dsID);
+                            SetAxis(Data[Ds4Axis.Ry].Value, config.axisRY, config.invertRY, dsID);
                             #endregion
                             #region Buttons
-                            SetButton(Data.Button(Ds4Button.Cross), config.cross, dsID);
-                            SetButton(Data.Button(Ds4Button.Circle), config.circle, dsID);
-                            SetButton(Data.Button(Ds4Button.Square), config.square, dsID);
-                            SetButton(Data.Button(Ds4Button.Triangle), config.triangle, dsID);
-                            SetButton(Data.Button(Ds4Button.L1), config.l1, dsID);
-                            SetButton(Data.Button(Ds4Button.R1), config.r1, dsID);
-                            SetButton(Data.Button(Ds4Button.L2), config.l2, dsID);
-                            SetButton(Data.Button(Ds4Button.R2), config.r2, dsID);
-                            SetButton(Data.Button(Ds4Button.Share), config.select_share, dsID);
-                            SetButton(Data.Button(Ds4Button.Options), config.start_options, dsID);
-                            SetButton(Data.Button(Ds4Button.L3), config.l3, dsID);
-                            SetButton(Data.Button(Ds4Button.R3), config.r3, dsID);
-                            SetButton(Data.Button(Ds4Button.PS), config.ps, dsID);
+                            SetButton(Data[Ds4Button.Cross].IsPressed, config.cross, dsID);
+                            SetButton(Data[Ds4Button.Circle].IsPressed, config.circle, dsID);
+                            SetButton(Data[Ds4Button.Square].IsPressed, config.square, dsID);
+                            SetButton(Data[Ds4Button.Triangle].IsPressed, config.triangle, dsID);
+                            SetButton(Data[Ds4Button.L1].IsPressed, config.l1, dsID);
+                            SetButton(Data[Ds4Button.R1].IsPressed, config.r1, dsID);
+                            SetButton(Data[Ds4Button.L2].IsPressed, config.l2, dsID);
+                            SetButton(Data[Ds4Button.R2].IsPressed, config.r2, dsID);
+                            SetButton(Data[Ds4Button.Share].IsPressed, config.select_share, dsID);
+                            SetButton(Data[Ds4Button.Options].IsPressed, config.start_options, dsID);
+                            SetButton(Data[Ds4Button.L3].IsPressed, config.l3, dsID);
+                            SetButton(Data[Ds4Button.R3].IsPressed, config.r3, dsID);
+                            SetButton(Data[Ds4Button.Ps].IsPressed, config.ps, dsID);
                             //Dpad as button
-                            SetButton(Data.Button(Ds4Button.Up), config.up, dsID);
-                            SetButton(Data.Button(Ds4Button.Down), config.down, dsID);
-                            SetButton(Data.Button(Ds4Button.Left), config.left, dsID);
-                            SetButton(Data.Button(Ds4Button.Right), config.right, dsID);
+                            SetButton(Data[Ds4Button.Up].IsPressed, config.up, dsID);
+                            SetButton(Data[Ds4Button.Down].IsPressed, config.down, dsID);
+                            SetButton(Data[Ds4Button.Left].IsPressed, config.left, dsID);
+                            SetButton(Data[Ds4Button.Right].IsPressed, config.right, dsID);
                             //AxisAsButton
-                            SetAxisAsButton(Data.Axis(Ds4Axis.LX), config.aLRight, config.aLLeft, dsID);
-                            SetAxisAsButton(Data.Axis(Ds4Axis.LY), config.aLDown, config.aLUp, dsID);
-                            SetAxisAsButton(Data.Axis(Ds4Axis.RX), config.aRRight, config.aRLeft, dsID);
-                            SetAxisAsButton(Data.Axis(Ds4Axis.RY), config.aRDown, config.aRUp, dsID);
+                            SetAxisAsButton(Data[Ds4Axis.Lx].Value, config.aLRight, config.aLLeft, dsID);
+                            SetAxisAsButton(Data[Ds4Axis.Ly].Value, config.aLDown, config.aLUp, dsID);
+                            SetAxisAsButton(Data[Ds4Axis.Rx].Value, config.aRRight, config.aRLeft, dsID);
+                            SetAxisAsButton(Data[Ds4Axis.Ry].Value, config.aRDown, config.aRUp, dsID);
                             #endregion
                             #region Dpad
                             //Dpad
@@ -198,44 +198,44 @@ namespace ScpPad2vJoy
             }
         }
 
-        private bool CheckDpadDs3(DsPacket Data, DSButton parButton)
+        private bool CheckDpadDs3(ScpHidReport Data, DSButton parButton)
         {
             if (parButton.DS3 != Ds3Button.None)
             {
-                return Data.Button(parButton.DS3);
+                return Data[parButton.DS3].IsPressed;
             }
             else
             {
                 return false;
             }
         }
-        private bool CheckDpadDs4(DsPacket Data, DSButton parButton)
+        private bool CheckDpadDs4(ScpHidReport Data, DSButton parButton)
         {
             if (parButton.DS4 != Ds4Button.None)
             {
-                return Data.Button(parButton.DS4);
+                return Data[parButton.DS4].IsPressed;
             }
             else
             {
                 return false;
             }
         }
-        private bool CheckDpadDs3AxisAsButton(DsPacket Data, DSAxis parAxis)
+        private bool CheckDpadDs3AxisAsButton(ScpHidReport Data, DSAxis parAxis)
         {
             if (parAxis.DS3 != Ds3Axis.None)
             {
-                return CheckDpadAxisAsButton(Data.Axis(parAxis.DS3), parAxis.triggerHigh);
+                return CheckDpadAxisAsButton(Data[parAxis.DS3].Value, parAxis.triggerHigh);
             }
             else
             {
                 return false;
             }
         }
-        private bool CheckDpadDs4AxisAsButton(DsPacket Data, DSAxis parAxis)
+        private bool CheckDpadDs4AxisAsButton(ScpHidReport Data, DSAxis parAxis)
         {
             if (parAxis.DS4 != Ds4Axis.None)
             {
-                return CheckDpadAxisAsButton(Data.Axis(parAxis.DS4), parAxis.triggerHigh);
+                return CheckDpadAxisAsButton(Data[parAxis.DS4].Value, parAxis.triggerHigh);
             }
             else
             {
@@ -278,7 +278,7 @@ namespace ScpPad2vJoy
         {
             if (m_VibProxy != null)
             {
-                Proxy.Rumble((DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), ScaleSmallMotor(e.MotorRight)); //large moter + small moter
+                Proxy.Rumble((ScpControl.ScpCore.DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), ScaleSmallMotor(e.MotorRight)); //large moter + small moter
                 //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + ScaleLargeMotor(e.MotorLeft));
             }
         }

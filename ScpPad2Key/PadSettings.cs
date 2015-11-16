@@ -1,4 +1,4 @@
-﻿using ScpControl.ScpCore;
+﻿using ScpControl.Profiler;
 using System;
 using System.Linq;
 
@@ -8,19 +8,19 @@ namespace ScpPad2vJoy
     #region DS structs
     public struct DSButton
     {
-        private Ds4Button m_DS4;
-        private Ds3Button m_DS3;
+        private IDsButton m_DS4;
+        private IDsButton m_DS3;
 
-        public DSButton(Ds3Button parDs3Button, Ds4Button parDs4Button)
+        public DSButton(IDsButton parDs3Button, IDsButton parDs4Button)
         {
             m_DS3 = parDs3Button;
             m_DS4 = parDs4Button;
         }
-        public Ds3Button DS3
+        public IDsButton DS3
         {
             get { return m_DS3; }
         }
-        public Ds4Button DS4
+        public IDsButton DS4
         {
             get { return m_DS4; }
         }
@@ -28,20 +28,20 @@ namespace ScpPad2vJoy
     }
     public struct DSAxis
     {
-        private Ds4Axis m_DS4;
-        private Ds3Axis m_DS3;
+        private IDsAxis m_DS4;
+        private IDsAxis m_DS3;
         private bool m_TriggerHigh;
-        public DSAxis(Ds3Axis parDs3Axis, Ds4Axis parDs4Axis, bool parTriggerHigh)
+        public DSAxis(IDsAxis parDs3Axis, IDsAxis parDs4Axis, bool parTriggerHigh)
         {
             m_DS3 = parDs3Axis;
             m_DS4 = parDs4Axis;
             m_TriggerHigh = parTriggerHigh;
         }
-        public Ds3Axis DS3
+        public IDsAxis DS3
         {
             get { return m_DS3; }
         }
-        public Ds4Axis DS4
+        public IDsAxis DS4
         {
             get { return m_DS4; }
         }
@@ -246,7 +246,7 @@ namespace ScpPad2vJoy
                             break;
                         case "PS":
                             {
-                                AssignButton(ref m_PS, new DSButton(Ds3Button.PS, Ds4Button.PS), Setting[0]);
+                                AssignButton(ref m_PS, new DSButton(Ds3Button.Ps, Ds4Button.Ps), Setting[0]);
                             }
                             break;
                         case "UP":
@@ -274,42 +274,42 @@ namespace ScpPad2vJoy
                         //TODO: Enable AxisAsButtons to work on dpad
                         case "LS_UP":
                             {
-                                AssignAxisButton(ref m_aLUp, new DSAxis(Ds3Axis.LY, Ds4Axis.LY, false), Setting[0]);
+                                AssignAxisButton(ref m_aLUp, new DSAxis(Ds3Axis.Ly, Ds4Axis.Ly, false), Setting[0]);
                             }
                             break;
                         case "LS_DOWN":
                             {
-                                AssignAxisButton(ref m_aLDown, new DSAxis(Ds3Axis.LY, Ds4Axis.LY, true), Setting[0]);
+                                AssignAxisButton(ref m_aLDown, new DSAxis(Ds3Axis.Ly, Ds4Axis.Ly, true), Setting[0]);
                             }
                             break;
                         case "LS_LEFT":
                             {
-                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.LX, Ds4Axis.LX, false), Setting[0]);
+                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.Lx, Ds4Axis.Lx, false), Setting[0]);
                             }
                             break;
                         case "LS_RIGHT":
                             {
-                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.LX, Ds4Axis.LX, true), Setting[0]);
+                                AssignAxisButton(ref m_aLLeft, new DSAxis(Ds3Axis.Lx, Ds4Axis.Lx, true), Setting[0]);
                             }
                             break;
                         case "RS_UP":
                             {
-                                AssignAxisButton(ref m_aRUp, new DSAxis(Ds3Axis.RY, Ds4Axis.RY, false), Setting[0]);
+                                AssignAxisButton(ref m_aRUp, new DSAxis(Ds3Axis.Ry, Ds4Axis.Ry, false), Setting[0]);
                             }
                             break;
                         case "RS_DOWN":
                             {
-                                AssignAxisButton(ref m_aRDown, new DSAxis(Ds3Axis.RY, Ds4Axis.RY, true), Setting[0]);
+                                AssignAxisButton(ref m_aRDown, new DSAxis(Ds3Axis.Ry, Ds4Axis.Ry, true), Setting[0]);
                             }
                             break;
                         case "RS_LEFT":
                             {
-                                AssignAxisButton(ref m_aRLeft, new DSAxis(Ds3Axis.RX, Ds4Axis.RX, false), Setting[0]);
+                                AssignAxisButton(ref m_aRLeft, new DSAxis(Ds3Axis.Rx, Ds4Axis.Rx, false), Setting[0]);
                             }
                             break;
                         case "RS_RIGHT":
                             {
-                                AssignAxisButton(ref m_aRRight, new DSAxis(Ds3Axis.RX, Ds4Axis.RX, true), Setting[0]);
+                                AssignAxisButton(ref m_aRRight, new DSAxis(Ds3Axis.Rx, Ds4Axis.Rx, true), Setting[0]);
                             }
                             break;
                         #endregion

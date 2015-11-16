@@ -8,6 +8,7 @@ namespace ScpPad2vJoy.VjoyEffect
         protected vJoy.FFB_EFF_PERIOD periodEffect;
         public override void PrimaryEffectData(object eff)
         {
+            base.PrimaryEffectData(eff);
             periodEffect = (vJoy.FFB_EFF_PERIOD)eff;
         }
         protected override sealed float ComputeEffect()

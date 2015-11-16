@@ -33,12 +33,12 @@ namespace ScpPad2vJoy.VjoyEffect
                 if (m_ffbHeader.Polar == true)
                 {
                     if (m_ffbHeader.DirY > 0)
-                        Trace.WriteLine("Direction Not Supported");
+                        Trace.WriteLine("Polar Direction with value for Y Not Supported");
                 }
                 else
                 {
                     if (m_ffbHeader.DirY != 0 | m_ffbHeader.DirX != 0)
-                        Trace.WriteLine("Direction Not Supported");
+                        Trace.WriteLine("Cartesian Direction Not Supported");
                 }
                 if (m_ffbHeader.EffectType != m_effectType)
                 {
@@ -48,6 +48,10 @@ namespace ScpPad2vJoy.VjoyEffect
                 if (m_ffbHeader.TrigerBtn != vJoyConstants.EFFECT_NULL_TRIGGER_BTN)
                 {
                     Trace.WriteLine("TRIGGER BUTTON NOT SUPPORTED");
+                }
+                if (m_ffbHeader.SamplePrd > 1)
+                {
+                    Trace.WriteLine("Custom Sample Rate Not Supported");
                 }
                 gain = value.Gain / vJoyConstants.EFFECT_MAX_GAIN;
             }

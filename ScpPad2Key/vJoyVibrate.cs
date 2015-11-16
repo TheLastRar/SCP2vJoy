@@ -80,15 +80,15 @@ namespace ScpPad2vJoy
                         return;
                     }
                     Trace.WriteLine(String.Format("Got Effect Param on EBI: {0}", effectParam.EffectBlockIndex));
-                    Trace.WriteLine(String.Format("EffectType: {0}", effectParam.EffectType.ToString()));
-                    Trace.WriteLine(String.Format("Duration  : {0}", effectParam.Duration));
-                    Trace.WriteLine(String.Format("TrigerRpt : {0}", effectParam.TrigerRpt));
-                    Trace.WriteLine(String.Format("SamplePrd : {0}", effectParam.SamplePrd));
-                    Trace.WriteLine(String.Format("Gain      : {0}", effectParam.Gain));
-                    Trace.WriteLine(String.Format("TrigerBtn : {0}", effectParam.TrigerBtn));
-                    Trace.WriteLine(String.Format("Polar     : {0}", effectParam.Polar));
-                    Trace.WriteLine(String.Format("Dir1      : {0}", effectParam.DirX));
-                    Trace.WriteLine(String.Format("Dir2      : {0}", effectParam.DirY));
+                    //Trace.WriteLine(String.Format("EffectType: {0}", effectParam.EffectType.ToString()));
+                    //Trace.WriteLine(String.Format("Duration  : {0}", effectParam.Duration));
+                    //Trace.WriteLine(String.Format("TrigerRpt : {0}", effectParam.TrigerRpt));
+                    //Trace.WriteLine(String.Format("SamplePrd : {0}", effectParam.SamplePrd));
+                    //Trace.WriteLine(String.Format("Gain      : {0}", effectParam.Gain));
+                    //Trace.WriteLine(String.Format("TrigerBtn : {0}", effectParam.TrigerBtn));
+                    //Trace.WriteLine(String.Format("Polar     : {0}", effectParam.Polar));
+                    //Trace.WriteLine(String.Format("Dir1      : {0}", effectParam.DirX));
+                    //Trace.WriteLine(String.Format("Dir2      : {0}", effectParam.DirY));
 
                     byte[] rawP = new byte[0];
                     int len = 0;
