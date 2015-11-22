@@ -8,6 +8,7 @@ namespace ScpPad2vJoy
         public const UInt32 MIN_VER = 0x216;
         //Axis
         public const byte MAX_AXIS_COUNT = 8;
+        public const Int32 HALF_AXIS_VALUE = vJoyConstants.MAX_AXIS_VALUE / 2;
         public const Int32 MAX_AXIS_VALUE = 32767; //Max vJoy value (0-32767)
         //Buttons
         public const byte MAX_BUTTON_COUNT = 128;

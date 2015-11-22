@@ -3,6 +3,7 @@
 using ScpControl.Profiler;
 using ScpPad2vJoy.VjoyEffect;
 using System;
+using System.Collections.Generic;
 
 namespace ScpPad2vJoy
 {
@@ -33,6 +34,10 @@ namespace ScpPad2vJoy
                     #region DS3
                     case ScpControl.ScpCore.DsModel.DS3:
                         {
+                            #region Gryo
+                            //Data.Orientation
+                            //Data.Motion
+                            #endregion
                             #region Axis
                             vJPad.JoyAxis(config.axisL2, Data[Ds3Axis.L2].Value, dsID);
                             vJPad.JoyAxis(config.axisR2, Data[Ds3Axis.R2].Value, dsID);
@@ -89,6 +94,17 @@ namespace ScpPad2vJoy
                     #region DS4
                     case ScpControl.ScpCore.DsModel.DS4:
                         {
+                            #region ThouchPad
+                            //These are Int values
+                            //What is the range?
+                            //Also these have ID values, which mean what?
+                            DsTrackPadTouch tp0 = Data.TrackPadTouch0;
+                            DsTrackPadTouch tp1 = Data.TrackPadTouch1;
+                            #endregion
+                            #region Gryo
+                            //Data.Orientation
+                            //Data.Motion
+                            #endregion
                             #region Axis
                             vJPad.JoyAxis(config.axisL2, Data[Ds4Axis.L2].Value, dsID);
                             vJPad.JoyAxis(config.axisR2, Data[Ds4Axis.R2].Value, dsID);
@@ -142,6 +158,16 @@ namespace ScpPad2vJoy
                         break;
                     #endregion
                 }
+                //List<DeadZone> DeadZones = new List<DeadZone>();
+                //RadialDeadZone adz = new RadialDeadZone();
+                //adz.AxisX = HID_USAGES.HID_USAGE_X;
+                //adz.AxisTypeX = AxisType.Stick;
+                //adz.AxisY = HID_USAGES.HID_USAGE_Y;
+                //adz.AxisTypeY = AxisType.Stick;
+                //adz.DeadZone = 0.1;
+
+                //DeadZones.Add(adz);
+                //vJPad.ApplyDeadzone(DeadZones, dsID);
                 vJPad.JoySubmit(dsID);
             }
         }

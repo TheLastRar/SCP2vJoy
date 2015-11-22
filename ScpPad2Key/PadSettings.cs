@@ -1,5 +1,6 @@
 ﻿using ScpControl.Profiler;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -59,6 +60,18 @@ namespace ScpPad2vJoy
         protected bool[] m_EnabledAxis = new bool[] { false, false, false, false, false, false, false, false };
         protected byte m_nButtons = 0;
         protected bool m_dpad = false;
+        //DeadZone
+        protected List<DeadZone> m_DeadZones = new List<DeadZone>();
+
+        //TouchPad
+        protected HID_USAGES m_AxisTP0X = 0;
+        protected HID_USAGES m_AxisTP0Y = 0;
+        protected HID_USAGES m_AxisTP1X = 0;
+        protected HID_USAGES m_AxisTP1Y = 0;
+
+        //Gryo/Motion
+        //TODO
+
         //Axis
         protected HID_USAGES m_AxisL2 = 0;
         protected HID_USAGES m_AxisR2 = 0;

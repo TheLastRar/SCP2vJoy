@@ -170,6 +170,7 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
+    <Compile Include="DeadZone.cs" />
     <Compile Include="DeviceManagement.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="DisableHardware.cs" />
