@@ -1,4 +1,5 @@
-﻿using ScpPad2vJoy.VjoyEffect;
+﻿using ScpPad2vJoy.vJ.FFB.Effect;
+using ScpPad2vJoy.vJ.FFB.Effect.Periodic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +7,7 @@ using vJoyInterfaceWrap;
 
 using System.Runtime.InteropServices;
 
-namespace ScpPad2vJoy
+namespace ScpPad2vJoy.vJ.FFB
 {
     //A dead lev=ft over API function?
     //class vJoy_Extra

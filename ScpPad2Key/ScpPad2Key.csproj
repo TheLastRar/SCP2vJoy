@@ -175,10 +175,10 @@
     <Compile Include="Direction.cs" />
     <Compile Include="DisableHardware.cs" />
     <Compile Include="DXinputLocker.cs" />
-    <Compile Include="HidFfbEffects.cs" />
-    <Compile Include="HidReportDescFfb.cs" />
-    <Compile Include="HidToken.cs" />
-    <Compile Include="HidUsage.cs" />
+    <Compile Include="vJ\FFB\HidFfbEffects.cs" />
+    <Compile Include="vJ\FFB\HidReportDescFfb.cs" />
+    <Compile Include="vJ\HidToken.cs" />
+    <Compile Include="vJ\HidUsage.cs" />
     <Compile Include="MouseTransparentTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -193,22 +193,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="vJoyConf.cs" />
-    <Compile Include="VjoyEffect\ConstEffectBlock.cs" />
-    <Compile Include="VjoyEffect\BaseEffectBlock.cs" />
-    <Compile Include="VjoyEffect\EffectReturnValue.cs" />
-    <Compile Include="VjoyEffect\EnverlopeCabableBaseEffectBlack.cs" />
-    <Compile Include="VjoyEffect\FFBDevice.cs" />
-    <Compile Include="VjoyEffect\NullEffectBlock.cs" />
-    <Compile Include="VjoyEffect\PeriodBaseEffectBlock.cs" />
-    <Compile Include="VjoyEffect\RampEffectBlock.cs" />
-    <Compile Include="VjoyEffect\SawDownEffectBlock.cs" />
-    <Compile Include="VjoyEffect\SawUpEffectBlock.cs" />
-    <Compile Include="VjoyEffect\SineEffectBlock.cs" />
-    <Compile Include="VjoyEffect\SquareEffectBlock.cs" />
-    <Compile Include="VjoyEffect\TrangleEffectBlock.cs" />
-    <Compile Include="vJoyPost.cs" />
-    <Compile Include="vJoyVibrate.cs" />
+    <Compile Include="vJ\vJoyConf.cs" />
+    <Compile Include="vJ\FFB\Effect\ConstEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\BaseEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\EffectReturnValue.cs" />
+    <Compile Include="vJ\FFB\Effect\EnverlopeCabableBaseEffectBlock.cs" />
+    <Compile Include="vJ\FFB\FFBDevice.cs" />
+    <Compile Include="vJ\FFB\Effect\NullEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\Periodic\PeriodBaseEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\RampEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\Periodic\SawDownEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\Periodic\SawUpEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\Periodic\SineEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\Periodic\SquareEffectBlock.cs" />
+    <Compile Include="vJ\FFB\Effect\Periodic\TrangleEffectBlock.cs" />
+    <Compile Include="vJ\vJoyConstants.cs" />
+    <Compile Include="vJ\vJoyPost.cs" />
+    <Compile Include="vJ\FFB\vJoyVibrate.cs" />
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -272,6 +273,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

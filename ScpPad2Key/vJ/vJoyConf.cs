@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ScpPad2vJoy.vJ.FFB;
 
 //TakenFrom https://github.com/Swizzy/vJoyConfNet/blob/master/vJoyConfNet/VJoyConf.cs
 //Taken from RC3 of vjoy 2.1.6
-namespace ScpPad2vJoy
+namespace ScpPad2vJoy.vJ
 {
     public class VJoyConf
     {

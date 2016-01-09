@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using vJoyInterfaceWrap;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect
 {
-    abstract class EnverlopeCabableBaseEffectBlack : BaseEffectBlock
+    abstract class EnverlopeCabableBaseEffectBlock : BaseEffectBlock
     {
         //Enverlope
         private vJoy.FFB_EFF_ENVLP envEffect;

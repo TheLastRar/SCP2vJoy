@@ -1,5 +1,6 @@
 ﻿using DisableDevice;
-using ScpPad2vJoy.VjoyEffect;
+using ScpPad2vJoy.vJ.FFB.Effect;
+using ScpPad2vJoy.vJ.FFB;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +10,7 @@ using System.Runtime.InteropServices;
 
 using vJoyInterfaceWrap;
 
-namespace ScpPad2vJoy
+namespace ScpPad2vJoy.vJ
 {
     class vJoyInstall
     {

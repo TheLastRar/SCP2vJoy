@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using vJoyInterfaceWrap;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect
 {
     abstract class BaseEffectBlock
     {

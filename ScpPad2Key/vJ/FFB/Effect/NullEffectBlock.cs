@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect
 {
     class NullEffectBlock : BaseEffectBlock
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using vJoyInterfaceWrap;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect
 {
-    class RampEffectBlock : EnverlopeCabableBaseEffectBlack
+    class RampEffectBlock : EnverlopeCabableBaseEffectBlock
     {
         private vJoy.FFB_EFF_RAMP rampEffect;
 

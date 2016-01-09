@@ -1,5 +1,5 @@
 ﻿
-namespace ScpPad2vJoy
+namespace ScpPad2vJoy.vJ.FFB
 {
     class HidFfbEffects
     {

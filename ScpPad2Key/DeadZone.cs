@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using vJoyInterfaceWrap;
+using ScpPad2vJoy.vJ;
 
 namespace ScpPad2vJoy
 {

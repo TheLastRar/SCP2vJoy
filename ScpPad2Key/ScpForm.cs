@@ -4,6 +4,7 @@ using ScpControl.Profiler;
 using System;
 using System.Reflection;
 using System.Windows.Forms;
+using ScpPad2vJoy.vJ;
 
 namespace ScpPad2vJoy
 {
@@ -150,7 +151,7 @@ namespace ScpPad2vJoy
             this.components.Remove(scpProxy);
             scpProxy.Dispose();
             scpProxy = new ScpProxy(this.components);
-            this.scpProxy.NativeFeedReceived += new System.EventHandler<ScpHidReport>(this.Parse);
+            this.scpProxy.NativeFeedReceived += this.Parse;
         }
 
         private void cbP1_CheckedChanged(object sender, EventArgs e)

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ScpPad2vJoy.vJ.FFB.Effect;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB
 {
     class FFBDevice
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect
 {
     struct EffectReturnValue
     {

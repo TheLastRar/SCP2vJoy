@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect.Periodic
 {
     class SawUpEffectBlock : PeriodBaseEffectBlock
     {

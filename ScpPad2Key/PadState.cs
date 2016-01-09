@@ -1,9 +1,8 @@
 ﻿using ScpControl;
-//using ScpControl.ScpCore;
+using ScpPad2vJoy.vJ;
 using ScpControl.Profiler;
-using ScpPad2vJoy.VjoyEffect;
+using ScpPad2vJoy.vJ.FFB.Effect;
 using System;
-using System.Collections.Generic;
 
 namespace ScpPad2vJoy
 {
@@ -308,7 +307,7 @@ namespace ScpPad2vJoy
                 //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + ScaleLargeMotor(e.MotorLeft));
             }
         }
-        protected Byte ScaleLargeMotor(float parLevel)
+        protected byte ScaleLargeMotor(float parLevel)
         {
             //Reflect negative values
             if (parLevel < 0)
@@ -343,7 +342,7 @@ namespace ScpPad2vJoy
 
             return (Byte)ret;
         }
-        protected Byte ScaleSmallMotor(float parLevel)
+        protected byte ScaleSmallMotor(float parLevel)
         {
             //return ScaleLargeMotor(parLevel);
             //Reflect negative values

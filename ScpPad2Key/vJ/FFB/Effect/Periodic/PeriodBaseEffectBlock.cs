@@ -1,9 +1,9 @@
 ﻿using System;
 using vJoyInterfaceWrap;
 
-namespace ScpPad2vJoy.VjoyEffect
+namespace ScpPad2vJoy.vJ.FFB.Effect.Periodic
 {
-    abstract class PeriodBaseEffectBlock : EnverlopeCabableBaseEffectBlack
+    abstract class PeriodBaseEffectBlock : EnverlopeCabableBaseEffectBlock
     {
         protected vJoy.FFB_EFF_PERIOD periodEffect;
         public override void PrimaryEffectData(object eff)

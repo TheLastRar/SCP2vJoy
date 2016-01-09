@@ -52,7 +52,7 @@ namespace ScpPad2vJoy
         }
     }
     #endregion
-    public class PadSettings
+    class PadSettings
     {
         //ForeFeedBack
         protected bool m_ffb = false;
@@ -134,6 +134,24 @@ namespace ScpPad2vJoy
             for (int Line = 0; Line < SettingsFile.Length; Line++)
             {
                 string[] Setting = SettingsFile[Line].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                #region Deadzone
+                //Deadzone is from 0-1
+                if (Setting[0] == "DEADZONE")
+                {
+                    string[] deadzonesettings = Setting[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    switch (deadzonesettings.Length)
+                    {
+                        case 2:
+                            //Normal DeadZone
+                            AssignAxialDeadZonePass1(deadzonesettings[0], double.Parse(deadzonesettings[1]));
+                            break;
+                        case 3:
+                            //Radial Deadzone
+                            AssignRadialDeadZonePass1(deadzonesettings[0], deadzonesettings[1], double.Parse(deadzonesettings[2]));
+                            break;
+                    }
+                }
+                #endregion
                 if (Setting.Length == 2)
                 {
                     switch (Setting[1])
@@ -325,9 +343,153 @@ namespace ScpPad2vJoy
                                 AssignAxisButton(ref m_aRRight, new DSAxis(Ds3Axis.Rx, Ds4Axis.Rx, true), Setting[0]);
                             }
                             break;
-                        #endregion
+                            #endregion
                     }
                 }
+            }
+            AssignDeadZonePass2();
+        }
+
+        protected HID_USAGES StringToHID(string parAxis)
+        {
+            switch (parAxis)
+            {
+                case "AX":
+                    {
+                        return HID_USAGES.HID_USAGE_X;
+                    }
+                case "AY":
+                    {
+                        return HID_USAGES.HID_USAGE_Y;
+                    }
+                case "AZ":
+                    {
+                        return HID_USAGES.HID_USAGE_Z;
+                    }
+                case "ARX":
+                    {
+                        return HID_USAGES.HID_USAGE_RX;
+                    }
+                case "ARY":
+                    {
+                        return HID_USAGES.HID_USAGE_RY;
+                    }
+                case "ARZ":
+                    {
+                        return HID_USAGES.HID_USAGE_RZ;
+                    }
+                case "ASL0":
+                    {
+                        return HID_USAGES.HID_USAGE_SL0;
+                    }
+                case "ASL1":
+                    {
+                        return HID_USAGES.HID_USAGE_SL1;
+                    }
+            }
+            return (HID_USAGES)(-1);
+        }
+
+        protected void AssignAxialDeadZonePass1(string parSourceAxis, double parDeadZone)
+        {
+            if ((parDeadZone < 0) | (parDeadZone > 1))
+            {
+                throw new ArgumentOutOfRangeException("parDeadZone", "DeadZone must be bettween 0-1");
+            }
+            HID_USAGES srcAxis = StringToHID(parSourceAxis);
+            if ((int)srcAxis == -1)
+            {
+                throw new ArgumentException("parSourceAxis", "Invalid Axis");
+            }
+
+            AxialDeadZone newDeadzone = new AxialDeadZone();
+            newDeadzone.Axis = srcAxis;
+            newDeadzone.DeadZone = parDeadZone;
+        }
+        protected void AssignRadialDeadZonePass1(string parSourceAxisA, string parSourceAxisB, double parDeadZone)
+        {
+            if ((parDeadZone < 0) | (parDeadZone > 1))
+            {
+                throw new ArgumentOutOfRangeException("parDeadZone", "DeadZone must be bettween 0-1");
+            }
+            HID_USAGES srcAxisA = StringToHID(parSourceAxisA);
+            HID_USAGES srcAxisB = StringToHID(parSourceAxisB);
+            if ((int)srcAxisA == -1)
+            {
+                throw new ArgumentException("parSourceAxisA", "Invalid Axis");
+            }
+            if ((int)srcAxisB == -1)
+            {
+                throw new ArgumentException("parSourceAxisB", "Invalid Axis");
+            }
+
+            RadialDeadZone newDeadzone = new RadialDeadZone();
+            newDeadzone.AxisX = srcAxisA;
+            newDeadzone.AxisY = srcAxisB;
+            newDeadzone.DeadZone = parDeadZone;
+        }
+        protected void AssignDeadZonePass2()
+        {
+            foreach (DeadZone deadzone in m_DeadZones)
+            {
+                Type dzType = deadzone.GetType();
+                #region Axial
+                if (dzType == typeof(AxialDeadZone))
+                {
+                    AxialDeadZone adz = (AxialDeadZone)deadzone;
+                    //Check if Axis is enabled
+                    int axisID = (int)adz.Axis - 48;
+                    if (!m_EnabledAxis[axisID])
+                    {
+                        throw new Exception("DeadZone on inactive axis");
+                    }
+                    if (m_AxisL2 == adz.Axis | m_AxisL2 == adz.Axis)
+                    {
+                        adz.AType = AxisType.Trigger;
+                    }
+                    else
+                    {
+                        adz.AType = AxisType.Stick;
+                    }
+                }
+                #endregion
+                #region Radial
+                else if (dzType == typeof(RadialDeadZone))
+                {
+                    RadialDeadZone rdz = (RadialDeadZone)deadzone;
+                    //Check if Axis is enabled
+                    int axisIDX = (int)rdz.AxisX - 48;
+                    int axisIDY = (int)rdz.AxisY - 48;
+                    if (!(m_EnabledAxis[axisIDX] & m_EnabledAxis[axisIDY]))
+                    {
+                        throw new Exception("DeadZone on inactive axis");
+                    }
+                    AxisType at;
+                    if (m_AxisL2 == rdz.AxisX | m_AxisL2 == rdz.AxisX)
+                    {
+                        at = AxisType.Trigger;
+                    }
+                    else
+                    {
+                        at = AxisType.Stick;
+                    }
+                    if (m_AxisL2 == rdz.AxisY | m_AxisL2 == rdz.AxisY)
+                    {
+                        if (at != AxisType.Trigger)
+                        {
+                            throw new Exception("Axis Types Must Match");
+                        }
+                    }
+                    else
+                    {
+                        if (at != AxisType.Stick)
+                        {
+                            throw new Exception("Axis Types Must Match");
+                        }
+                    }
+                    rdz.AType = at;
+                }
+                #endregion
             }
         }
 
@@ -501,6 +663,7 @@ namespace ScpPad2vJoy
         public bool[] enabledAxis { get { return m_EnabledAxis; } }
         public byte nButtons { get { return m_nButtons; } }
         public bool dpad { get { return m_dpad; } }
+        public List<DeadZone> deadzones { get { return m_DeadZones; } }
 
         //Axis
         public HID_USAGES axisL2 { get { return m_AxisL2; } }
