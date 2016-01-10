@@ -18,7 +18,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect.Periodic
             float UnitForce = (ApplyEnverlope() * gain);
 
             //Phase offset as a unit of time
-            Double effectTime = ((Double)periodEffect.Phase / vJoyConstants.EFFECT_MAX_PHASE) * periodEffect.Period;
+            double effectTime = ((double)periodEffect.Phase / vJoyConstants.EFFECT_MAX_PHASE) * periodEffect.Period;
             //When current cycle started
             long effectBaseTime = runTime / (long)periodEffect.Period;
             //Phase offset + time since current cycle started
@@ -28,7 +28,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect.Periodic
             //large time since current cycle started
             if (effectTime > periodEffect.Period)
             {
-                effectTime -= (Double)periodEffect.Period;
+                effectTime -= (double)periodEffect.Period;
             }
             //Get Periodic effect value
             UnitForce *= ComputePeriodicEffectMult(effectTime);
@@ -37,7 +37,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect.Periodic
             UnitForce += offsetValue;
             return UnitForce;
         }
-        protected abstract float ComputePeriodicEffectMult(Double phaseTime);
+        protected abstract float ComputePeriodicEffectMult(double phaseTime);
 
         protected override Int32 Magnitude()
         {

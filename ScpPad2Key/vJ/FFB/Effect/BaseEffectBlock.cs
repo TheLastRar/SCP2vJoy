@@ -6,10 +6,10 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
 {
     abstract class BaseEffectBlock
     {
-        private Boolean m_isPaused = true;
-        private Byte maxLoopCount = 1;
+        private bool m_isPaused = true;
+        private byte maxLoopCount = 1;
         protected vJoy.FFB_EFF_REPORT m_ffbHeader;
-        protected Single gain = 1.0F;
+        protected float gain = 1.0F;
         public FFBEType m_effectType;
 
         protected long m_runTime = 0;
@@ -56,7 +56,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
                 gain = value.Gain / vJoyConstants.EFFECT_MAX_GAIN;
             }
         }
-        public Boolean isPaused
+        public bool isPaused
         {
             get
             {
@@ -65,7 +65,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
         }
         #endregion
 
-        public void Start(Byte parLoopCount)
+        public void Start(byte parLoopCount)
         {
             maxLoopCount = parLoopCount;
             effectTimer.Restart();
@@ -112,11 +112,11 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
 
             if (m_ffbHeader.Polar)
             {
-                Double angleRad = ((Double)m_ffbHeader.Direction / vJoyConstants.EFFECT_DIRECTION_MAX_VALUE) * (2 * Math.PI);
+                double angleRad = ((double)m_ffbHeader.Direction / vJoyConstants.EFFECT_DIRECTION_MAX_VALUE) * (2 * Math.PI);
                 //Up(X) = 0/255
                 //Right(Y) = ~63
 
-                Double h = 1.0;
+                double h = 1.0;
 
                 DirXMult = (float)(h * Math.Cos(angleRad));
                 DirYMult = (float)(h * Math.Sin(angleRad));
@@ -133,7 +133,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
         }
         protected abstract float ComputeEffect();
 
-        private Boolean Tick()
+        private bool Tick()
         {
             if (m_ffbHeader.Duration != vJoyConstants.EFFECT_INF_DURATION)
             {
@@ -149,7 +149,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
         //Check if we have compleated a loop
         //Set runtime to amount of time spent
         //in current loop
-        private Boolean OverTick()
+        private bool OverTick()
         {
             long currRunTime = effectTimer.ElapsedMilliseconds;
             while (currRunTime > ((long)m_ffbHeader.Duration * (m_runLoops + 1)))

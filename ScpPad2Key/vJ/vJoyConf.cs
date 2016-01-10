@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
+using ScpPad2vJoy.vJ.FFB;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ScpPad2vJoy.vJ.FFB;
 
 //TakenFrom https://github.com/Swizzy/vJoyConfNet/blob/master/vJoyConfNet/VJoyConf.cs
 //Taken from RC3 of vjoy 2.1.6
@@ -38,31 +38,31 @@ namespace ScpPad2vJoy.vJ
             #region Header + Collection 1
 
             ret.AddRange(new byte[] {
-                HidToken.HIDP_GLOBAL_USAGE_PAGE_1,  //USAGE_PAGE(Generic Desktop)
-                HidUsage.HID_USAGE_PAGE_GENERIC, 
-                HidToken.HIDP_GLOBAL_LOG_MIN_1,     //LOGICAL_MINIMUM(0)
-                0x00, 
-                HidToken.HIDP_LOCAL_USAGE_1,  //USAGE(Joystick)
+                HidToken.HIDP_GLOBAL_USAGE_PAGE_1,      //USAGE_PAGE(Generic Desktop)
+                HidUsage.HID_USAGE_PAGE_GENERIC,
+                HidToken.HIDP_GLOBAL_LOG_MIN_1,         //LOGICAL_MINIMUM(0)
+                0x00,
+                HidToken.HIDP_LOCAL_USAGE_1,            //USAGE(Joystick)
                 HidUsage.HID_USAGE_GENERIC_JOYSTICK,
-                HidToken.HIDP_MAIN_COLLECTION,      //COLLECTION(Application)
-                HidToken.HIDP_MAIN_COLLECTION_APP, 
+                HidToken.HIDP_MAIN_COLLECTION,          //COLLECTION(Application)
+                HidToken.HIDP_MAIN_COLLECTION_APP,
 
-                HidToken.HIDP_GLOBAL_USAGE_PAGE_1,  //USAGE_PAGE(Generic Desktop)
-                HidUsage.HID_USAGE_PAGE_GENERIC, 
-                HidToken.HIDP_GLOBAL_REPORT_ID,     //REPORT_ID(x)
-                reportID, 
-                HidToken.HIDP_LOCAL_USAGE_1,        //USAGE(Pointer)
-                HidUsage.HID_USAGE_GENERIC_POINTER, 
-                HidToken.HIDP_GLOBAL_LOG_MIN_1,     //LOGICAL_MINIMUM(0)
-                0x00, 
-                HidToken.HIDP_GLOBAL_LOG_MAX_2,     //LOGICAL_MAXIMUM_2byte(32767)
+                HidToken.HIDP_GLOBAL_USAGE_PAGE_1,      //USAGE_PAGE(Generic Desktop)
+                HidUsage.HID_USAGE_PAGE_GENERIC,
+                HidToken.HIDP_GLOBAL_REPORT_ID,         //REPORT_ID(x)
+                reportID,
+                HidToken.HIDP_LOCAL_USAGE_1,            //USAGE(Pointer)
+                HidUsage.HID_USAGE_GENERIC_POINTER,
+                HidToken.HIDP_GLOBAL_LOG_MIN_1,         //LOGICAL_MINIMUM(0)
+                0x00,
+                HidToken.HIDP_GLOBAL_LOG_MAX_2,         //LOGICAL_MAXIMUM_2byte(32767)
                 0xFF, 0x7F,
-                HidToken.HIDP_GLOBAL_REPORT_SIZE,   //REPORT_SIZE(32)
-                0x20, 
-                HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(1)
+                HidToken.HIDP_GLOBAL_REPORT_SIZE,       //REPORT_SIZE(32)
+                0x20,
+                HidToken.HIDP_GLOBAL_REPORT_COUNT_1,    //REPORT_COUNT(1)
                 0x01,
-                HidToken.HIDP_MAIN_COLLECTION,      //COLLECTION(Physical)
-                0x00  
+                HidToken.HIDP_MAIN_COLLECTION,          //COLLECTION(Physical)
+                0x00
             });
             #endregion
 
@@ -71,15 +71,15 @@ namespace ScpPad2vJoy.vJ
             { // Loop axes
                 if (axes[i])
                 {
-                    ret.Add(HidToken.HIDP_LOCAL_USAGE_1); //USAGE(X+offset):
+                    ret.Add(HidToken.HIDP_LOCAL_USAGE_1);//USAGE(X+offset):
                     ret.Add((byte)(HidUsage.HID_USAGE_GENERIC_X + i));
 
-                    ret.Add(HidToken.HIDP_MAIN_INPUT_1); //INPUT(Data,Var,Abs)
+                    ret.Add(HidToken.HIDP_MAIN_INPUT_1);//INPUT(Data,Var,Abs)
                     ret.Add(0x02);
                 }
                 else
                 {
-                    ret.Add(HidToken.HIDP_MAIN_INPUT_1); //INPUT(Cnst,Ary,Abs)
+                    ret.Add(HidToken.HIDP_MAIN_INPUT_1);//INPUT(Cnst,Ary,Abs)
                     ret.Add(0x01);
                 }
             }
@@ -87,48 +87,48 @@ namespace ScpPad2vJoy.vJ
             { // Assume the remaining axes are not implemented
                 for (var i = 0; i < vJoyConstants.MAX_AXIS_COUNT - axes.Length; i++)
                 {
-                    ret.Add(HidToken.HIDP_MAIN_INPUT_1); //INPUT(Cnst,Ary,Abs)
+                    ret.Add(HidToken.HIDP_MAIN_INPUT_1);//INPUT(Cnst,Ary,Abs)
                     ret.Add(0x01);
                 }
             }
-            ret.Add(HidToken.HIDP_MAIN_ENDCOLLECTION); // End collection
+            ret.Add(HidToken.HIDP_MAIN_ENDCOLLECTION);  //End collection
             #endregion
 
             #region POV
             if (nPovHatsDir > 0)
             {
                 ret.AddRange(new byte[] {
-                    HidToken.HIDP_GLOBAL_LOG_MIN_1,      //LOGICAL_MINIMUM(0)
-                    0x00, 
-                    HidToken.HIDP_GLOBAL_LOG_MAX_1,      //LOGICAL_MAXIMUM(3)
-                    0x03, 
-                    HidToken.HIDP_GLOBAL_PHY_MIN_1,      //PHYSICAL_MINIMUM(0)
-                    0x00, 
-                    HidToken.HIDP_GLOBAL_PHY_MAX_2,      //PHYSICAL_MAXIMUM_2byte(270)
+                    HidToken.HIDP_GLOBAL_LOG_MIN_1,     //LOGICAL_MINIMUM(0)
+                    0x00,
+                    HidToken.HIDP_GLOBAL_LOG_MAX_1,     //LOGICAL_MAXIMUM(3)
+                    0x03,
+                    HidToken.HIDP_GLOBAL_PHY_MIN_1,     //PHYSICAL_MINIMUM(0)
+                    0x00,
+                    HidToken.HIDP_GLOBAL_PHY_MAX_2,     //PHYSICAL_MAXIMUM_2byte(270)
                     0x0E, 0x01,
-                    HidToken.HIDP_GLOBAL_UNIT_1,         //UNIT (Eng Rot:Angular Pos)
+                    HidToken.HIDP_GLOBAL_UNIT_1,        //UNIT (Eng Rot:Angular Pos)
                     0x14, 
                     //One 4-bit data  + 31 4-bit padding
-                    HidToken.HIDP_GLOBAL_REPORT_SIZE,    //REPORT_SIZE(4)
-                    0x04, 
-                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(1)
-                    0x01, 
+                    HidToken.HIDP_GLOBAL_REPORT_SIZE,   //REPORT_SIZE(4)
+                    0x04,
+                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(1)
+                    0x01,
                 });
 
                 // Insert 1-4 5-state POVs
                 for (var i = 0; i < nPovHatsDir; i++)
                 {
                     ret.AddRange(new byte[] {
-                        HidToken.HIDP_LOCAL_USAGE_1, //USAGE(Hat switch)
-                        HidUsage.HID_USAGE_GENERIC_HATSWITCH, 
-                        HidToken.HIDP_MAIN_INPUT_1,  //INPUT(Data,Var,Abs)
-                        0x02  
+                        HidToken.HIDP_LOCAL_USAGE_1,    //USAGE(Hat switch)
+                        HidUsage.HID_USAGE_GENERIC_HATSWITCH,
+                        HidToken.HIDP_MAIN_INPUT_1,     //INPUT(Data,Var,Abs)
+                        0x02
                     });
                 }
                 //Insert 5-state POV place holders
                 ret.AddRange(new byte[] {
-                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(31)
-                    (byte)(0x20 - nPovHatsDir), 
+                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(31)
+                    (byte)(0x20 - nPovHatsDir),
                     HidToken.HIDP_MAIN_INPUT_1,
                     0x01  //INPUT(Cnst,Ary,Abs)
                 });
@@ -137,50 +137,50 @@ namespace ScpPad2vJoy.vJ
             else if (nPovHatsCont > 0)
             {
                 ret.AddRange(new byte[] {
-                    HidToken.HIDP_GLOBAL_LOG_MIN_1, //LOGICAL_MINIMUM(0)
-                    0x00, 
-                    HidToken.HIDP_GLOBAL_LOG_MAX_4,      //LOGICAL_MAXIMUM_4byte(35900)
-                    0x3c, 0x8c, 0x00, 0x00, 
-                    HidToken.HIDP_GLOBAL_PHY_MIN_1,      //PHYSICAL_MINIMUM(0)
-                    0x00, 
-                    HidToken.HIDP_GLOBAL_PHY_MAX_4,      //PHYSICAL_MAXIMUM_4byte(35900)
+                    HidToken.HIDP_GLOBAL_LOG_MIN_1,     //LOGICAL_MINIMUM(0)
+                    0x00,
+                    HidToken.HIDP_GLOBAL_LOG_MAX_4,     //LOGICAL_MAXIMUM_4byte(35900)
                     0x3c, 0x8c, 0x00, 0x00,
-                    HidToken.HIDP_GLOBAL_UNIT_1,         //UNIT (Eng Rot:Angular Pos)
+                    HidToken.HIDP_GLOBAL_PHY_MIN_1,     //PHYSICAL_MINIMUM(0)
+                    0x00,
+                    HidToken.HIDP_GLOBAL_PHY_MAX_4,     //PHYSICAL_MAXIMUM_4byte(35900)
+                    0x3c, 0x8c, 0x00, 0x00,
+                    HidToken.HIDP_GLOBAL_UNIT_1,        //UNIT (Eng Rot:Angular Pos)
                     0x14, 
                     //
-                    HidToken.HIDP_GLOBAL_REPORT_SIZE,    //REPORT_SIZE(32)
-                    0x20, 
-                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(1)
-                    0x01, 
+                    HidToken.HIDP_GLOBAL_REPORT_SIZE,   //REPORT_SIZE(32)
+                    0x20,
+                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(1)
+                    0x01,
                 });
                 // Insert 1-4 continuous POVs
                 for (var i = 0; i < nPovHatsCont; i++)
                 {
                     ret.AddRange(new byte[] {
-                        HidToken.HIDP_LOCAL_USAGE_1,//USAGE(Hat switch)
+                        HidToken.HIDP_LOCAL_USAGE_1,    //USAGE(Hat switch)
                         HidUsage.HID_USAGE_GENERIC_HATSWITCH,
-                        HidToken.HIDP_MAIN_INPUT_1, //INPUT(Data,Var,Abs)
+                        HidToken.HIDP_MAIN_INPUT_1,     //INPUT(Data,Var,Abs)
                         0x02
                     });
                 }
                 // Insert 1-3 continuous POV place holders
                 ret.AddRange(new byte[] {
-                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(3)
+                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(3)
                     (byte)(0x04-nPovHatsCont),
-                    HidToken.HIDP_MAIN_INPUT_1,          //INPUT(Cnst,Ary,Abs)
-                    0x01  
+                    HidToken.HIDP_MAIN_INPUT_1,         //INPUT(Cnst,Ary,Abs)
+                    0x01
                 });
             }
             else
             {
                 // Sixteen 4-bit padding
                 ret.AddRange(new byte[] {
-                    HidToken.HIDP_GLOBAL_REPORT_SIZE,    //REPORT_SIZE(32)
-                    0x20, 
-                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(4)
-                    0x04, 
-                    HidToken.HIDP_MAIN_INPUT_1,          //INPUT(Cnst,Ary,Abs)
-                    0x01, 
+                    HidToken.HIDP_GLOBAL_REPORT_SIZE,   //REPORT_SIZE(32)
+                    0x20,
+                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(4)
+                    0x04,
+                    HidToken.HIDP_MAIN_INPUT_1,         //INPUT(Cnst,Ary,Abs)
+                    0x01,
                 });
             }
             #endregion
@@ -188,37 +188,37 @@ namespace ScpPad2vJoy.vJ
             #region Buttons
 
             ret.AddRange(new byte[] {
-                HidToken.HIDP_GLOBAL_USAGE_PAGE_1,   //USAGE_PAGE(Buttons)
-                HidUsage.HID_USAGE_PAGE_BUTTON, 
-                HidToken.HIDP_GLOBAL_LOG_MIN_1,      //LOGICAL_MINIMUM(0)
-                0x00, 
-                HidToken.HIDP_GLOBAL_LOG_MAX_1,      //LOGICAL_MAXIMUM(0)
-                0x01, 
-                HidToken.HIDP_GLOBAL_UNIT_EXP_1,     //UNIT_EXPONENT(0)
-                0x00, 
-                HidToken.HIDP_GLOBAL_UNIT_1,         //UNIT (None)
-                0x00, 
-                HidToken.HIDP_LOCAL_USAGE_MIN_1,     //USAGE_MINIMUM(1)
-                0x01, 
-                HidToken.HIDP_LOCAL_USAGE_MAX_1,     //USAGE_MAXIMUM(nButtons)
-                nButtons, 
-                HidToken.HIDP_GLOBAL_REPORT_SIZE,    //REPORT_SIZE(1)
-                0x01, 
-                HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(nButtons)
-                nButtons, 
-                HidToken.HIDP_MAIN_INPUT_1,          //INPUT(Data,Var,Abs)
-                0x02 
+                HidToken.HIDP_GLOBAL_USAGE_PAGE_1,      //USAGE_PAGE(Buttons)
+                HidUsage.HID_USAGE_PAGE_BUTTON,
+                HidToken.HIDP_GLOBAL_LOG_MIN_1,         //LOGICAL_MINIMUM(0)
+                0x00,
+                HidToken.HIDP_GLOBAL_LOG_MAX_1,         //LOGICAL_MAXIMUM(0)
+                0x01,
+                HidToken.HIDP_GLOBAL_UNIT_EXP_1,        //UNIT_EXPONENT(0)
+                0x00,
+                HidToken.HIDP_GLOBAL_UNIT_1,            //UNIT (None)
+                0x00,
+                HidToken.HIDP_LOCAL_USAGE_MIN_1,        //USAGE_MINIMUM(1)
+                0x01,
+                HidToken.HIDP_LOCAL_USAGE_MAX_1,        //USAGE_MAXIMUM(nButtons)
+                nButtons,
+                HidToken.HIDP_GLOBAL_REPORT_SIZE,       //REPORT_SIZE(1)
+                0x01,
+                HidToken.HIDP_GLOBAL_REPORT_COUNT_1,    //REPORT_COUNT(nButtons)
+                nButtons,
+                HidToken.HIDP_MAIN_INPUT_1,             //INPUT(Data,Var,Abs)
+                0x02
             });
             // Padding, if there are less than 32 buttons
             if (nButtons < vJoyConstants.MAX_BUTTON_COUNT)
             {
                 ret.AddRange(new byte[] {
-                    HidToken.HIDP_GLOBAL_REPORT_SIZE,    //REPORT_SIZE(x)
-                    (byte)(vJoyConstants.MAX_BUTTON_COUNT - nButtons), 
-                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1, //REPORT_COUNT(1)
-                    0x01, 
-                    HidToken.HIDP_MAIN_INPUT_1,          //INPUT(Cnst,Ary,Abs)
-                    0x01, 
+                    HidToken.HIDP_GLOBAL_REPORT_SIZE,   //REPORT_SIZE(x)
+                    (byte)(vJoyConstants.MAX_BUTTON_COUNT - nButtons),
+                    HidToken.HIDP_GLOBAL_REPORT_COUNT_1,//REPORT_COUNT(1)
+                    0x01,
+                    HidToken.HIDP_MAIN_INPUT_1,         //INPUT(Cnst,Ary,Abs)
+                    0x01,
                 });
             }
             #endregion
@@ -232,7 +232,7 @@ namespace ScpPad2vJoy.vJ
             }
             #endregion
 
-            ret.Add(HidToken.HIDP_MAIN_ENDCOLLECTION); // End collection
+            ret.Add(HidToken.HIDP_MAIN_ENDCOLLECTION);  //End collection
             return ret.ToArray();
         }
 
@@ -285,25 +285,25 @@ namespace ScpPad2vJoy.vJ
         private void CreateFfbDesc(List<byte> buffer, byte ReportId)
         {
             byte[] vars = {
-                (byte)(HidReportDescFfb.HID_ID_STATE + 0x10 * ReportId), //  Report ID 2
-                (byte)(FFBPType.PT_EFFREP + 0x10 * ReportId),            //  Report ID 1
-                (byte)(FFBPType.PT_ENVREP + 0x10 * ReportId),            //  Report ID 2
-                (byte)(FFBPType.PT_CONDREP + 0x10 * ReportId),           //  Report ID 3
-                (byte)(FFBPType.PT_PRIDREP + 0x10 * ReportId),           //  Report ID 4
-                (byte)(FFBPType.PT_CONSTREP + 0x10 * ReportId),          //  Report ID 5
-                (byte)(FFBPType.PT_RAMPREP + 0x10 * ReportId),           //  Report ID 6
-                (byte)(FFBPType.PT_CSTMREP + 0x10 * ReportId),           //  Report ID 7
-                (byte)(FFBPType.PT_SMPLREP + 0x10 * ReportId),           //  Report ID 8
-                (byte)(FFBPType.PT_EFOPREP + 0x10 * ReportId),           //  Report ID Ah (10d)
-                (byte)(FFBPType.PT_BLKFRREP + 0x10 * ReportId),          //  Report ID Bh (11d)
-                (byte)(FFBPType.PT_CTRLREP + 0x10 * ReportId),           //  Report ID Ch (12d)
-                (byte)(FFBPType.PT_GAINREP + 0x10 * ReportId),           //  Report ID Dh (13d)
-                (byte)(FFBPType.PT_SETCREP + 0x10 * ReportId),           //  Report ID Eh (14d)
+                (byte)(HidReportDescFfb.HID_ID_STATE + 0x10 * ReportId),//  Report ID 2
+                (byte)(FFBPType.PT_EFFREP + 0x10 * ReportId),           //  Report ID 1
+                (byte)(FFBPType.PT_ENVREP + 0x10 * ReportId),           //  Report ID 2
+                (byte)(FFBPType.PT_CONDREP + 0x10 * ReportId),          //  Report ID 3
+                (byte)(FFBPType.PT_PRIDREP + 0x10 * ReportId),          //  Report ID 4
+                (byte)(FFBPType.PT_CONSTREP + 0x10 * ReportId),         //  Report ID 5
+                (byte)(FFBPType.PT_RAMPREP + 0x10 * ReportId),          //  Report ID 6
+                (byte)(FFBPType.PT_CSTMREP + 0x10 * ReportId),          //  Report ID 7
+                (byte)(FFBPType.PT_SMPLREP + 0x10 * ReportId),          //  Report ID 8
+                (byte)(FFBPType.PT_EFOPREP + 0x10 * ReportId),          //  Report ID Ah (10d)
+                (byte)(FFBPType.PT_BLKFRREP + 0x10 * ReportId),         //  Report ID Bh (11d)
+                (byte)(FFBPType.PT_CTRLREP + 0x10 * ReportId),          //  Report ID Ch (12d)
+                (byte)(FFBPType.PT_GAINREP + 0x10 * ReportId),          //  Report ID Dh (13d)
+                (byte)(FFBPType.PT_SETCREP + 0x10 * ReportId),          //  Report ID Eh (14d)
                 //Note Wrapper adds 0x10 to these values
                 //But the config dosn't
-                (byte)(FFBPType.PT_NEWEFREP - 0x10 + 0x10 * ReportId),//  Report ID 1
-                (byte)(FFBPType.PT_BLKLDREP - 0x10 + 0x10 * ReportId),//  Report ID 2
-                (byte)(FFBPType.PT_POOLREP - 0x10 + 0x10 * ReportId), //  Report ID 3
+                (byte)(FFBPType.PT_NEWEFREP - 0x10 + 0x10 * ReportId),  //  Report ID 1
+                (byte)(FFBPType.PT_BLKLDREP - 0x10 + 0x10 * ReportId),  //  Report ID 2
+                (byte)(FFBPType.PT_POOLREP - 0x10 + 0x10 * ReportId),   //  Report ID 3
             };
             // Replace the first byte of each sub vector with the corresponding varible (exclude first sub vector)
             // Append modified sub vector to buffer

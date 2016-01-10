@@ -20,10 +20,10 @@ namespace ScpPad2vJoy.vJ
         public const float EFFECT_MAX_VALUE = 10000;
         public const float EFFECT_MAX_GAIN = 255;
         public const ushort EFFECT_INF_DURATION = 0xFFFF;
-        public const Byte EFFECT_MAX_LOOP_COUNT = 255;
-        public const Byte EFFECT_NULL_TRIGGER_BTN = 255;
-        public const Double EFFECT_MAX_PHASE = 35999 + 1;
+        public const byte EFFECT_MAX_LOOP_COUNT = 255;
+        public const byte EFFECT_NULL_TRIGGER_BTN = 255;
+        public const double EFFECT_MAX_PHASE = 35999 + 1;
 
-        public const Double EFFECT_DIRECTION_MAX_VALUE = 255;
+        public const double EFFECT_DIRECTION_MAX_VALUE = 255;
     }
 }

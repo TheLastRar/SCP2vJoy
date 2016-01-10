@@ -37,7 +37,7 @@ namespace ScpPad2vJoy
 
             ManagementObjectCollection objCollection = objSearcher.Get();
 
-            List<String> objdeviceids = new List<String>();
+            List<string> objdeviceids = new List<string>();
             foreach (ManagementObject cobj in objCollection)
             {
                 string Local = (string)cobj["Location"];
@@ -59,7 +59,7 @@ namespace ScpPad2vJoy
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
 
 
-                foreach (String objdeviceid in objdeviceids)
+                foreach (string objdeviceid in objdeviceids)
                 {
                     if (objdeviceid != "")
                     {

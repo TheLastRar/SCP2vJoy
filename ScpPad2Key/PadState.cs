@@ -1,6 +1,6 @@
 ﻿using ScpControl;
+using ScpControl.Shared.Core;
 using ScpPad2vJoy.vJ;
-using ScpControl.Profiler;
 using ScpPad2vJoy.vJ.FFB.Effect;
 using System;
 
@@ -31,7 +31,7 @@ namespace ScpPad2vJoy
                 switch (Data.Model)
                 {
                     #region DS3
-                    case ScpControl.ScpCore.DsModel.DS3:
+                    case DsModel.DS3:
                         {
                             #region Gryo
                             //Data.Orientation
@@ -91,7 +91,7 @@ namespace ScpPad2vJoy
                         break;
                     #endregion
                     #region DS4
-                    case ScpControl.ScpCore.DsModel.DS4:
+                    case DsModel.DS4:
                         {
                             #region ThouchPad
                             //These are Int values
@@ -155,7 +155,7 @@ namespace ScpPad2vJoy
                             #endregion
                         }
                         break;
-                    #endregion
+                        #endregion
                 }
                 //List<DeadZone> DeadZones = new List<DeadZone>();
                 //RadialDeadZone adz = new RadialDeadZone();
@@ -166,7 +166,7 @@ namespace ScpPad2vJoy
                 //adz.DeadZone = 0.1;
 
                 //DeadZones.Add(adz);
-                //vJPad.ApplyDeadzone(DeadZones, dsID);
+                vJPad.ApplyDeadzone(config.deadzones, dsID);
                 vJPad.JoySubmit(dsID);
             }
         }
@@ -225,7 +225,7 @@ namespace ScpPad2vJoy
 
         private bool CheckDpadDs3(ScpHidReport Data, DSButton parButton)
         {
-            if (parButton.DS3 != Ds3Button.None)
+            if (parButton.DS3 != null)
             {
                 return Data[parButton.DS3].IsPressed;
             }
@@ -236,7 +236,7 @@ namespace ScpPad2vJoy
         }
         private bool CheckDpadDs4(ScpHidReport Data, DSButton parButton)
         {
-            if (parButton.DS4 != Ds4Button.None)
+            if (parButton.DS4 != null)
             {
                 return Data[parButton.DS4].IsPressed;
             }
@@ -247,7 +247,7 @@ namespace ScpPad2vJoy
         }
         private bool CheckDpadDs3AxisAsButton(ScpHidReport Data, DSAxis parAxis)
         {
-            if (parAxis.DS3 != Ds3Axis.None)
+            if (parAxis.DS3 != null)
             {
                 return CheckDpadAxisAsButton(Data[parAxis.DS3].Value, parAxis.triggerHigh);
             }
@@ -258,7 +258,7 @@ namespace ScpPad2vJoy
         }
         private bool CheckDpadDs4AxisAsButton(ScpHidReport Data, DSAxis parAxis)
         {
-            if (parAxis.DS4 != Ds4Axis.None)
+            if (parAxis.DS4 != null & parAxis.DS4 != Ds4Axis.None)
             {
                 return CheckDpadAxisAsButton(Data[parAxis.DS4].Value, parAxis.triggerHigh);
             }
@@ -303,7 +303,7 @@ namespace ScpPad2vJoy
         {
             if (m_VibProxy != null)
             {
-                Proxy.Rumble((ScpControl.ScpCore.DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), ScaleSmallMotor(e.MotorRight)); //large moter + small moter
+                Proxy.Rumble((DsPadId)(parDsID - 1), ScaleLargeMotor(e.MotorLeft), ScaleSmallMotor(e.MotorRight)); //large moter + small moter
                 //Trace.WriteLine("Dev(" + parDsID + "), Vibration Left : " + ScaleLargeMotor(e.MotorLeft));
             }
         }
@@ -332,7 +332,7 @@ namespace ScpPad2vJoy
                 //vibration
                 //instead of a value of 50
                 ret = 0;
-            } 
+            }
             else
             {
                 float verIn = parLevel / vJoyConstants.EFFECT_MAX_VALUE;
@@ -340,7 +340,7 @@ namespace ScpPad2vJoy
             }
 
 
-            return (Byte)ret;
+            return (byte)ret;
         }
         protected byte ScaleSmallMotor(float parLevel)
         {
@@ -370,7 +370,7 @@ namespace ScpPad2vJoy
             float verIn = parLevel / vJoyConstants.EFFECT_MAX_VALUE;
             float ret = (OUT_MIN + verIn * OUT_RANGE);
 
-            return (Byte)ret;
+            return (byte)ret;
         }
     }
 }

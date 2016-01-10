@@ -1,10 +1,8 @@
-﻿using DisableDevice;
+﻿using ScpPad2vJoy.vJ.FFB;
 using ScpPad2vJoy.vJ.FFB.Effect;
-using ScpPad2vJoy.vJ.FFB;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Management;
 using System.Runtime.InteropServices;
 //using ScpControl;
 
@@ -80,7 +78,7 @@ namespace ScpPad2vJoy.vJ
             }
             else
             {
-                Trace.WriteLine(String.Format("Vendor : {0}\nProduct: {1}\nVersion: {2}\n",
+                Trace.WriteLine(string.Format("Vendor : {0}\nProduct: {1}\nVersion: {2}\n",
                 joystick.GetvJoyManufacturerString(),
                 joystick.GetvJoyProductString(),
                 joystick.GetvJoySerialNumberString()));
@@ -89,15 +87,15 @@ namespace ScpPad2vJoy.vJ
                 bool match = joystick.DriverMatch(ref DllVer, ref DrvVer);
                 if (match)
                 {
-                    Trace.WriteLine(String.Format("Version of Driver Matches DLL Version ({0:X})", DllVer));
-                    Trace.WriteLine(String.Format("Version of vJoyInterfaceWrap.dll is ({0})",
+                    Trace.WriteLine(string.Format("Version of Driver Matches DLL Version ({0:X})", DllVer));
+                    Trace.WriteLine(string.Format("Version of vJoyInterfaceWrap.dll is ({0})",
                         typeof(vJoy).Assembly.GetName().Version));
-                    Trace.WriteLine(String.Format("Version of ScpControl.dll is ({0})\n",
+                    Trace.WriteLine(string.Format("Version of ScpControl.dll is ({0})\n",
                         typeof(ScpControl.ScpProxy).Assembly.GetName().Version));
                 }
                 else
                 {
-                    Trace.WriteLine(String.Format("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer));
+                    Trace.WriteLine(string.Format("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer));
                     Stop(parSelectedPads, devManLevel);
                     return false;
                 }
@@ -121,17 +119,17 @@ namespace ScpPad2vJoy.vJ
                     VjdStat status = joystick.GetVJDStatus(id);
                     if ((status == VjdStat.VJD_STAT_OWN) || ((status == VjdStat.VJD_STAT_FREE) && (!joystick.AcquireVJD(id))))
                     {
-                        Trace.WriteLine(String.Format("Failed to acquire vJoy device number {0}.", id));
+                        Trace.WriteLine(string.Format("Failed to acquire vJoy device number {0}.", id));
                         Stop(parSelectedPads, devManLevel);
                         return false;
                     }
                     else
                     {
-                        Trace.WriteLine(String.Format("Acquired vJoy device number {0}.", id));
+                        Trace.WriteLine(string.Format("Acquired vJoy device number {0}.", id));
                     }
-                    Trace.WriteLine(String.Format("Buttons : {0}.", joystick.GetVJDButtonNumber(id)));
-                    Trace.WriteLine(String.Format("DiscPov : {0}.", joystick.GetVJDDiscPovNumber(id)));
-                    Trace.WriteLine(String.Format("ContPov : {0}.", joystick.GetVJDContPovNumber(id)));
+                    Trace.WriteLine(string.Format("Buttons : {0}.", joystick.GetVJDButtonNumber(id)));
+                    Trace.WriteLine(string.Format("DiscPov : {0}.", joystick.GetVJDDiscPovNumber(id)));
+                    Trace.WriteLine(string.Format("ContPov : {0}.", joystick.GetVJDContPovNumber(id)));
                     //FFB
                     if (config.ffb)
                     {
@@ -302,11 +300,11 @@ namespace ScpPad2vJoy.vJ
             }
         }
 
-        public void ApplyDeadzone(List<DeadZone> deadzones, uint parDSid)
+        public void ApplyDeadzone(List<DeadZone> parDeadzones, uint parDSid)
         {
             uint id = GetvjFromDS(parDSid);
 
-            foreach(DeadZone dz in deadzones)
+            foreach (DeadZone dz in parDeadzones)
             {
                 dz.Apply(ref joyReport[id - 1]);
             }

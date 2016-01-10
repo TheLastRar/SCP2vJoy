@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ScpPad2vJoy.vJ;
+using System;
 using vJoyInterfaceWrap;
-using ScpPad2vJoy.vJ;
 
 namespace ScpPad2vJoy
 {

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using vJoyInterfaceWrap;
 
-using System.Runtime.InteropServices;
-
 namespace ScpPad2vJoy.vJ.FFB
 {
     //A dead lev=ft over API function?
@@ -14,7 +12,7 @@ namespace ScpPad2vJoy.vJ.FFB
     //{
     //    [DllImport("vJoyInterface.dll", EntryPoint = "FfbGetEffect")]
     //    private static extern FFBEType _FfbGetEffect();
-    
+
     //    public static FFBEType FfbGetEffect() { return _FfbGetEffect(); }
     //}
 
@@ -30,7 +28,7 @@ namespace ScpPad2vJoy.vJ.FFB
 
         //Threading
         object vibThreadSentry = new object();
-        volatile private Boolean HaltVibThread = false;
+        volatile private bool HaltVibThread = false;
         System.Threading.Thread eTh = null;
 
         public vJoyVibrate(vJoy parVJoy)
@@ -51,7 +49,7 @@ namespace ScpPad2vJoy.vJ.FFB
             Trace.WriteLine("");
             //Trace.WriteLine(vJoy_Extra.FfbGetEffect());
             const int ERROR_SUCCESS = 0;
-            Trace.WriteLine(String.Format("Got FFB Packet"));
+            Trace.WriteLine(string.Format("Got FFB Packet"));
             int id = -1;
             FFBPType type = (FFBPType)0;
             Int32 effectBlockIndex = -1;
@@ -80,7 +78,7 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Effect Param");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Got Effect Param on EBI: {0}", effectParam.EffectBlockIndex));
+                    Trace.WriteLine(string.Format("Got Effect Param on EBI: {0}", effectParam.EffectBlockIndex));
                     //Trace.WriteLine(String.Format("EffectType: {0}", effectParam.EffectType.ToString()));
                     //Trace.WriteLine(String.Format("Duration  : {0}", effectParam.Duration));
                     //Trace.WriteLine(String.Format("TrigerRpt : {0}", effectParam.TrigerRpt));
@@ -95,10 +93,10 @@ namespace ScpPad2vJoy.vJ.FFB
                     int len = 0;
                     uint transfertype = 0;
                     joystick.Ffb_h_Packet(data, ref transfertype, ref len, ref rawP);
-                    Trace.WriteLine(String.Format("TypeSpecificBlockOffset1 : {0}", BitConverter.ToUInt16(rawP, len - 4)));
-                    Trace.WriteLine(String.Format("TypeSpecificBlockOffset2 : {0}", BitConverter.ToUInt16(rawP, len - 2)));
+                    Trace.WriteLine(string.Format("TypeSpecificBlockOffset1 : {0}", BitConverter.ToUInt16(rawP, len - 4)));
+                    Trace.WriteLine(string.Format("TypeSpecificBlockOffset2 : {0}", BitConverter.ToUInt16(rawP, len - 2)));
 
-                    srcDevice.EffectBlocks[(Byte)effectBlockIndex].ffbHeader = effectParam;
+                    srcDevice.EffectBlocks[(byte)effectBlockIndex].ffbHeader = effectParam;
                     break;
 
                 case FFBPType.PT_ENVREP:
@@ -108,8 +106,8 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Envelope Effect");
                         return;
                     }
-                    srcDevice.EffectBlocks[(Byte)effectBlockIndex].SecondaryEffectData(envEffect);
-                    Trace.WriteLine(String.Format("Got Envelope Effect on EBI: {0}", envEffect.EffectBlockIndex));
+                    srcDevice.EffectBlocks[(byte)effectBlockIndex].SecondaryEffectData(envEffect);
+                    Trace.WriteLine(string.Format("Got Envelope Effect on EBI: {0}", envEffect.EffectBlockIndex));
                     //Trace.WriteLine(String.Format("Start : {0}", envEffect.AttackLevel));
                     //Trace.WriteLine(String.Format("STime : {0}", envEffect.AttackTime));
                     //Trace.WriteLine(String.Format("End   : {0}", envEffect.FadeLevel));
@@ -123,7 +121,7 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Conditional Effect");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Got Conditional Effect on EBI (Not Supported): {0}", effectBlockIndex));
+                    Trace.WriteLine(string.Format("Got Conditional Effect on EBI (Not Supported): {0}", effectBlockIndex));
                     break;
 
                 case FFBPType.PT_PRIDREP:
@@ -133,12 +131,12 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Periodic Effect");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Got Periodic Effect on EBI: {0}", perEffect.EffectBlockIndex));
+                    Trace.WriteLine(string.Format("Got Periodic Effect on EBI: {0}", perEffect.EffectBlockIndex));
                     //Trace.WriteLine(String.Format("Magnitude : {0}", perEffect.Magnitude));
                     //Trace.WriteLine(String.Format("Offset    : {0}", perEffect.Offset));
                     //Trace.WriteLine(String.Format("Phase     : {0}", perEffect.Phase));
                     //Trace.WriteLine(String.Format("Period    : {0}", perEffect.Period));
-                    srcDevice.EffectBlocks[(Byte)effectBlockIndex].PrimaryEffectData(perEffect);
+                    srcDevice.EffectBlocks[(byte)effectBlockIndex].PrimaryEffectData(perEffect);
                     break;
 
                 case FFBPType.PT_CONSTREP:
@@ -148,9 +146,9 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Constant Effect");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Got Const Effect on EBI : {0}", constEffect.EffectBlockIndex));
+                    Trace.WriteLine(string.Format("Got Const Effect on EBI : {0}", constEffect.EffectBlockIndex));
                     //Trace.WriteLine(String.Format("Magnitude : {0}", constEffect.Magnitude));
-                    srcDevice.EffectBlocks[(Byte)effectBlockIndex].PrimaryEffectData(constEffect);
+                    srcDevice.EffectBlocks[(byte)effectBlockIndex].PrimaryEffectData(constEffect);
                     break;
 
                 case FFBPType.PT_RAMPREP:
@@ -160,10 +158,10 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Ramp Effect");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Got Ramp Effect on EBI (Not Tested): {0}", rampEffect.EffectBlockIndex));
+                    Trace.WriteLine(string.Format("Got Ramp Effect on EBI (Not Tested): {0}", rampEffect.EffectBlockIndex));
                     //Trace.WriteLine(String.Format("Start : {0}", rampEffect.Start));
                     //Trace.WriteLine(String.Format("End   : {0}", rampEffect.End));
-                    srcDevice.EffectBlocks[(Byte)effectBlockIndex].PrimaryEffectData(rampEffect);
+                    srcDevice.EffectBlocks[(byte)effectBlockIndex].PrimaryEffectData(rampEffect);
                     break;
 
                 case FFBPType.PT_CSTMREP:
@@ -181,7 +179,7 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Effect OP");
                         return;
                     }
-                    Trace.WriteLine(String.Format("Effect Command : {0}, Loops : {1}, EBI : {2} ", effect_OP.EffectOp.ToString(), effect_OP.LoopCount, effect_OP.EffectBlockIndex));
+                    Trace.WriteLine(string.Format("Effect Command : {0}, Loops : {1}, EBI : {2} ", effect_OP.EffectOp.ToString(), effect_OP.LoopCount, effect_OP.EffectBlockIndex));
                     switch (effect_OP.EffectOp)
                     {
                         case FFBOP.EFF_START:
@@ -208,7 +206,7 @@ namespace ScpPad2vJoy.vJ.FFB
                     Trace.WriteLine("Free Block");
                     lock (vibThreadSentry)
                     {
-                        srcDevice.RemoveBlock((Byte)effectBlockIndex);
+                        srcDevice.RemoveBlock((byte)effectBlockIndex);
                     }
                     break;
 
@@ -277,8 +275,8 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read Dev Gain Command");
                         return;
                     }
-                    Trace.WriteLine((String.Format("Gain Set : {0}", gain)));
-                    srcDevice.DeviceGain = (Single)gain / vJoyConstants.EFFECT_MAX_GAIN;
+                    Trace.WriteLine((string.Format("Gain Set : {0}", gain)));
+                    srcDevice.DeviceGain = (float)gain / vJoyConstants.EFFECT_MAX_GAIN;
                     break;
 
                 case FFBPType.PT_SETCREP:
@@ -293,7 +291,7 @@ namespace ScpPad2vJoy.vJ.FFB
                         Trace.WriteLine("Error: Unable read new effect");
                         return;
                     }
-                    Trace.WriteLine((String.Format("Incomming Effect : {0}", nextEffect.ToString())));
+                    Trace.WriteLine((string.Format("Incomming Effect : {0}", nextEffect.ToString())));
                     //Add + Load Block
                     //Use effecct type as an index
                     byte free_ebi = srcDevice.NextKey();
@@ -331,11 +329,11 @@ namespace ScpPad2vJoy.vJ.FFB
                             case FFBEType.ET_FRCTN:
                                 Trace.WriteLine("Unsupported Conditinal Effect");
                                 newBlock = new NullEffectBlock();
-                                break;    
+                                break;
                             case FFBEType.ET_CSTM: //Custom (need test case)
                                 Trace.WriteLine("Unsupported Custom Effect");
                                 newBlock = new NullEffectBlock();
-                                break;    
+                                break;
                             default:
                                 Trace.WriteLine("Unkown Effect");
                                 newBlock = new NullEffectBlock();
@@ -450,7 +448,7 @@ namespace ScpPad2vJoy.vJ.FFB
                 DeactivateIfNeeded((uint)x + 1);
             }
         }
-        private Boolean DeactivateIfNeeded(uint id)
+        private bool DeactivateIfNeeded(uint id)
         {
             if (devices[id - 1].DeviceActive == FFBDevice.DeviceState.AwaitingDeactivation)
             {

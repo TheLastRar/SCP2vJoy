@@ -1,10 +1,9 @@
 ﻿using ScpControl;
-using ScpControl.ScpCore;
-using ScpControl.Profiler;
+using ScpControl.Shared.Core;
+using ScpPad2vJoy.vJ;
 using System;
 using System.Reflection;
 using System.Windows.Forms;
-using ScpPad2vJoy.vJ;
 
 namespace ScpPad2vJoy
 {
@@ -23,7 +22,7 @@ namespace ScpPad2vJoy
         {
             //try
             //{
-                InitializeComponent();
+            InitializeComponent();
             //}
             //catch (Exception e)
             //{

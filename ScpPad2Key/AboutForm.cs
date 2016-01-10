@@ -117,9 +117,9 @@ namespace ScpPad2vJoy
             CreateHeader(startX + parmWidth, currentY - 20, "Description", parDestination);
             CreateHeader(startX + parmWidth + descWidth, currentY - 20, "Type", parDestination);
             //Create Table
-            foreach (String line in parData)
+            foreach (string line in parData)
             {
-                List<String> entry = PraseCSVLine(line);
+                List<string> entry = PraseCSVLine(line);
                 if (entry.Count == 1)
                     continue;
                 CreateTextBox(startX, currentY, parmWidth, entry[0], parDestination);
@@ -139,13 +139,13 @@ namespace ScpPad2vJoy
             }
         }
 
-        private List<String> PraseCSVLine(String line)
+        private List<string> PraseCSVLine(string line)
         {
-            List<String> entry = new List<String>();
-            String temp = "";
+            List<string> entry = new List<string>();
+            string temp = "";
             const char Comma = ',';
             const char DoubleQuote = '"';
-            Boolean isEscaped = false;
+            bool isEscaped = false;
             for (int i = 0; i < line.Length; i++)
             {
                 //Comma
@@ -176,7 +176,7 @@ namespace ScpPad2vJoy
             return entry;
         }
 
-        private TextBox CreateTextBox(int x, int y, int width, String text, TabPage parDestination)
+        private TextBox CreateTextBox(int x, int y, int width, string text, TabPage parDestination)
         {
             MouseTransparentTextBox boxParam = new MouseTransparentTextBox();
             boxParam.ReadOnly = true;
@@ -187,7 +187,7 @@ namespace ScpPad2vJoy
             parDestination.Controls.Add(boxParam);
             return boxParam;
         }
-        private void CreateHeader(int x, int y, String text, TabPage parDestination)
+        private void CreateHeader(int x, int y, string text, TabPage parDestination)
         {
             Label paramHeader = new Label();
             paramHeader.Text = text;

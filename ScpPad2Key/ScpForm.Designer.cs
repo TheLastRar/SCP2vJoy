@@ -46,7 +46,7 @@
             // 
             // scpProxy
             // 
-            this.scpProxy.NativeFeedReceived += new System.EventHandler<ScpControl.Profiler.ScpHidReport>(this.Parse);
+            this.scpProxy.NativeFeedReceived += new System.EventHandler<ScpControl.Shared.Core.ScpHidReport>(this.Parse);
             // 
             // btnStop
             // 
@@ -73,7 +73,7 @@
             // 
             // gbX
             // 
-            this.gbX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.gbX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbX.Controls.Add(this.cbP4);
             this.gbX.Controls.Add(this.cbP3);

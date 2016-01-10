@@ -1,7 +1,6 @@
-﻿using System;
+﻿using ScpPad2vJoy.vJ.FFB.Effect;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ScpPad2vJoy.vJ.FFB.Effect;
 
 namespace ScpPad2vJoy.vJ.FFB
 {
@@ -13,16 +12,16 @@ namespace ScpPad2vJoy.vJ.FFB
             AwaitingDeactivation,
             Active
         }
-        private const Byte MAX_BLOCKS = 255;//(2^7) - 1; //7bits for EBI
+        private const byte MAX_BLOCKS = 255;//(2^7) - 1; //7bits for EBI
 
         public volatile DeviceState DeviceActive = DeviceState.Deactivated;
-        public Dictionary<Byte, BaseEffectBlock> EffectBlocks = new Dictionary<Byte, BaseEffectBlock>();
-        public volatile Single DeviceGain = 1.0F;
-        public volatile Boolean DevicePaused = false;
-        public Boolean[] LoadedBlocks = new Boolean[MAX_BLOCKS];
+        public Dictionary<byte, BaseEffectBlock> EffectBlocks = new Dictionary<byte, BaseEffectBlock>();
+        public volatile float DeviceGain = 1.0F;
+        public volatile bool DevicePaused = false;
+        public bool[] LoadedBlocks = new bool[MAX_BLOCKS];
         //Block ID Managment
         #region "BlockManagement"
-        public void AddBlock(Byte index, BaseEffectBlock anObj)
+        public void AddBlock(byte index, BaseEffectBlock anObj)
         {
             if (EffectBlocks.ContainsKey(1))
             {
@@ -50,7 +49,7 @@ namespace ScpPad2vJoy.vJ.FFB
         //    }
         //    return newKey;
         //}
-        public void RemoveBlock(Byte index)
+        public void RemoveBlock(byte index)
         {
             if (EffectBlocks.ContainsKey((byte)index))
             {
@@ -61,15 +60,15 @@ namespace ScpPad2vJoy.vJ.FFB
         public void ClearBlocks()
         {
             EffectBlocks.Clear();
-            LoadedBlocks = new Boolean[MAX_BLOCKS];
+            LoadedBlocks = new bool[MAX_BLOCKS];
             LoadedBlocks[0] = true; //Never use 0 as it is for failed allocations
         }
         public byte NextKey()
         {
             Trace.WriteLine("Hack, Setting Block to 1");
             return 1;
-            Byte newKey = 0;
-            for (Byte i = 1; i < MAX_BLOCKS; i++)
+            byte newKey = 0;
+            for (byte i = 1; i < MAX_BLOCKS; i++)
             {
                 if (!LoadedBlocks[i])
                 {

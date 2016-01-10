@@ -1,14 +1,13 @@
-﻿using System;
-
+﻿
 namespace ScpPad2vJoy.vJ.FFB.Effect.Periodic
 {
     class SquareEffectBlock : PeriodBaseEffectBlock
     {
-        protected override float ComputePeriodicEffectMult(Double phaseTime)
+        protected override float ComputePeriodicEffectMult(double phaseTime)
         {
             //Effect starts at +Magnitude
             //becomes -Magnitude by half phase
-            if (phaseTime < ((Double)periodEffect.Period / 2.0))
+            if (phaseTime < ((double)periodEffect.Period / 2.0))
             {
                 //+Mag
                 return 1;

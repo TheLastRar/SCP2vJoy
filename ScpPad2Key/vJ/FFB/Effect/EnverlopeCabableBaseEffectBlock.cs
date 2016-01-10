@@ -8,7 +8,7 @@ namespace ScpPad2vJoy.vJ.FFB.Effect
     {
         //Enverlope
         private vJoy.FFB_EFF_ENVLP envEffect;
-        private Boolean hasEnvelope = false;
+        private bool hasEnvelope = false;
 
         public override void PrimaryEffectData(object eff)
         {

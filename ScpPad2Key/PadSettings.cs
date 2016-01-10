@@ -1,4 +1,4 @@
-﻿using ScpControl.Profiler;
+﻿using ScpControl.Shared.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -405,6 +405,7 @@ namespace ScpPad2vJoy
             AxialDeadZone newDeadzone = new AxialDeadZone();
             newDeadzone.Axis = srcAxis;
             newDeadzone.DeadZone = parDeadZone;
+            m_DeadZones.Add(newDeadzone);
         }
         protected void AssignRadialDeadZonePass1(string parSourceAxisA, string parSourceAxisB, double parDeadZone)
         {
@@ -427,6 +428,7 @@ namespace ScpPad2vJoy
             newDeadzone.AxisX = srcAxisA;
             newDeadzone.AxisY = srcAxisB;
             newDeadzone.DeadZone = parDeadZone;
+            m_DeadZones.Add(newDeadzone);
         }
         protected void AssignDeadZonePass2()
         {

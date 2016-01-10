@@ -35,7 +35,7 @@ namespace ScpPad2vJoy
             RegistryKey _regKey = _baseKey.OpenSubKey(VJOYKEY_PATH, false);
             if (_regKey != null)
             {
-                Boolean is64 = Environment.Is64BitProcess;
+                bool is64 = Environment.Is64BitProcess;
                 if (is64 == true)
                 {
                     file = (string)_regKey.GetValue("DllX64Location");
