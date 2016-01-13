@@ -1,0 +1,4 @@
+DEADZONE,Specifies a deadzone (0 (no deadzone) to 1) on either a single axis (Axial) or a pair of axes (Radial (i.e. for a thumbstick)).
+ ,
+...Axial,"DEADZONE=[vJoyAxis],[Deadzone]"
+...Radial,"DEADZONE=[vJoyAxis1],[vJoyAxis2],[Deadzone]"

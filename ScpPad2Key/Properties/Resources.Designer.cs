@@ -87,6 +87,16 @@ namespace ScpPad2vJoy.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DEADZONE,Specifies a deadzone (from 0-1) on either a a single axis or a pair of axes.
+        ///.
+        /// </summary>
+        public static string ExtraParams {
+            get {
+                return ResourceManager.GetString("ExtraParams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon Scp_All {

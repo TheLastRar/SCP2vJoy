@@ -22,14 +22,14 @@ namespace ScpPad2vJoy
         {
             //try
             //{
-            InitializeComponent();
+                InitializeComponent();
             //}
             //catch (Exception e)
             //{
             //    Console.WriteLine("HELP");
             //}
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text += ver.Major + "." + ver.Minor;
+            Text += ver.Major + "." + ver.Minor;
         }
 
         protected void Form_Load(object sender, EventArgs e)

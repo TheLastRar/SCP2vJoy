@@ -16,6 +16,7 @@ namespace ScpPad2vJoy
             DoContConfigPage();
             DoDSParamPage();
             DovJoyParamPage();
+            DoExtraOpPage();
             //Resize
             int neededTabWidth = tableEdgePadding * 2 + parmWidth + descWidth + typeWidth + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
             int neededtabControlWidth = neededTabWidth + 8;
@@ -102,11 +103,17 @@ namespace ScpPad2vJoy
             DrawTable(vJTable, tabvJoyParam);
         }
 
+        public void DoExtraOpPage()
+        {
+            string[] ExTable = Properties.Resources.ExtraParams.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            DrawTable(ExTable, tabExtra, false);
+        }
+
         const int tableEdgePadding = 4;
         const int parmWidth = 100;
         const int descWidth = 225;
         const int typeWidth = 75;
-        private void DrawTable(string[] parData, TabPage parDestination)
+        private void DrawTable(string[] parData, TabPage parDestination, bool par3Tabs = true)
         {
             const int textBoxHeight = 20;
             TextBox pastDescTextBox = null;
@@ -115,7 +122,10 @@ namespace ScpPad2vJoy
             //Create Headers
             CreateHeader(startX, currentY - 20, "Option", parDestination);
             CreateHeader(startX + parmWidth, currentY - 20, "Description", parDestination);
-            CreateHeader(startX + parmWidth + descWidth, currentY - 20, "Type", parDestination);
+            if (par3Tabs)
+            {
+                CreateHeader(startX + parmWidth + descWidth, currentY - 20, "Type", parDestination);
+            }
             //Create Table
             foreach (string line in parData)
             {
@@ -125,7 +135,14 @@ namespace ScpPad2vJoy
                 CreateTextBox(startX, currentY, parmWidth, entry[0], parDestination);
                 if (entry[1] != "")
                 {
-                    pastDescTextBox = CreateTextBox(startX + parmWidth, currentY, descWidth, entry[1], parDestination);
+                    if (par3Tabs)
+                    {
+                        pastDescTextBox = CreateTextBox(startX + parmWidth, currentY, descWidth, entry[1], parDestination);
+                    }
+                    else
+                    {
+                        pastDescTextBox = CreateTextBox(startX + parmWidth, currentY, descWidth + typeWidth, entry[1], parDestination);
+                    }
                     pastDescTextBox.Multiline = true;
                     pastDescTextBox.WordWrap = true;
                     pastDescTextBox.TextAlign = HorizontalAlignment.Center;
@@ -134,7 +151,10 @@ namespace ScpPad2vJoy
                 {
                     pastDescTextBox.Height += textBoxHeight;
                 }
-                CreateTextBox(startX + parmWidth + descWidth, currentY, typeWidth, entry[2], parDestination);
+                if (par3Tabs)
+                {
+                    CreateTextBox(startX + parmWidth + descWidth, currentY, typeWidth, entry[2], parDestination);
+                }
                 currentY += textBoxHeight;
             }
         }
