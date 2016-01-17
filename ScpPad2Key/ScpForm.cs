@@ -11,6 +11,8 @@ namespace ScpPad2vJoy
     {
         protected DXPadState gps;
 
+        protected ScpProxy scpProxy;
+
         protected vJoyPost vJP = new vJoyPost();
         protected X360_InputLocker dxLocker;
 
@@ -36,6 +38,13 @@ namespace ScpPad2vJoy
 
         protected void Form_Load(object sender, EventArgs e)
         {
+            if (components == null)
+            {
+                components = new System.ComponentModel.Container();
+            }
+            scpProxy = new ScpProxy(components);
+            scpProxy.NativeFeedReceived += new EventHandler<ScpHidReport>(Parse);
+
             Icon = Properties.Resources.Scp_All;
             //if DefaultConfig.txt exits in working directory, use that
             if (System.IO.File.Exists("Default_vjConfig.txt"))

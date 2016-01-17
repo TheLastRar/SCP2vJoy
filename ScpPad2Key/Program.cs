@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -10,6 +11,7 @@ namespace ScpPad2vJoy
     static class Program
     {
         const string VJOYKEY_PATH = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{8E31F76F-74C3-47F1-9550-E041EEDC5FBB}_is1";
+        const string SCPKEY_PATH = @"SOFTWARE\Nefarius Software Solutions\ScpToolkit";
 
         /// <summary>
         /// The main entry point for the application.
@@ -18,10 +20,14 @@ namespace ScpPad2vJoy
         static void Main()
         {
             SetupLoggin();
-            string file = GetvJoyPath();
+            Console.WriteLine(System.Threading.Thread.CurrentThread.CurrentCulture.Name);
 
             //ClearFromOldInstall();
+
+            string file = GetvJoyPath();
             SetDllDirectory(file);
+
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveSCP;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -52,21 +58,38 @@ namespace ScpPad2vJoy
             return file;
         }
 
+        static string GetSCPPath()
+        {
+            string file = "";
+            //Key is in 32bit regs
+            RegistryKey _baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            RegistryKey _regKey = _baseKey.OpenSubKey(SCPKEY_PATH, false);
+            if (_regKey != null)
+            {
+                file = (string)_regKey.GetValue("Path");
+            }
+            if (_regKey != null)
+                _regKey.Close();
+            if (_baseKey != null)
+                _baseKey.Close();
+            return file;
+        }
+
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool SetDllDirectory(string lpPathName);
 
-        static void ClearFromOldInstall()
-        {
-            //The dll search path searches the application directory 1st
-            //before searching the directory specified in SetDllDirectory
-            //To ensure we get the vJoyInterface that matches the installed
-            //driver, we delete the vJoyInterface.dll that was bundled in 
-            //older versions
-            if (File.Exists("vJoyInterface.dll"))
-            {
-                File.Delete("vJoyInterface.dll");
-            }
-        }
+        //static void ClearFromOldInstall()
+        //{
+        //    //The dll search path searches the application directory 1st
+        //    //before searching the directory specified in SetDllDirectory
+        //    //To ensure we get the vJoyInterface that matches the installed
+        //    //driver, we delete the vJoyInterface.dll that was bundled in 
+        //    //older versions
+        //    if (File.Exists("vJoyInterface.dll"))
+        //    {
+        //        File.Delete("vJoyInterface.dll");
+        //    }
+        //}
 
         static void SetupLoggin()
         {
@@ -90,6 +113,56 @@ namespace ScpPad2vJoy
             Trace.AutoFlush = true;
 
             Trace.WriteLine("Trace Active");
+        }
+
+        private static Assembly ResolveSCP(object sender, ResolveEventArgs args)
+        {
+            AssemblyName aName = new AssemblyName(args.Name);
+
+            string file = GetSCPPath();
+
+            switch (aName.Name)
+            {
+                case "ScpControl":
+                case "ScpControl.Shared":
+
+                case "CSScriptLibrary":
+
+                case "DBreeze":
+
+                case "HidSharp":
+                case "Libarius":
+                case "log4net":
+                case "MadMilkman.Ini":
+
+                case "Mono.CSharp":
+                case "Newtonsoft.Json":
+
+                case "ReactiveSockets":
+                case "System.Reactive.Core":
+                case "System.Reactive.Interfaces":
+                case "System.Reactive.Linq":
+                case "System.Reactive.PlatformServices": 
+
+                case "Trinet.Core.IO.Ntfs":
+                case "WindowsInput":
+                      
+                    return Assembly.LoadFile(file + aName.Name + ".dll");
+
+                case "System.Reactive.Debugger":
+                    if (File.Exists(file + aName.Name + ".dll"))
+                    {
+                        return Assembly.LoadFile(file + aName.Name + ".dll");
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                case "ScpPad2vJoy.resources":
+                    return null;
+            }
+            
+            return null;
         }
     }
 }

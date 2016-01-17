@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.scpProxy = new ScpControl.ScpProxy(this.components);
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.gbX = new System.Windows.Forms.GroupBox();
@@ -43,10 +41,6 @@
             this.cbVib = new System.Windows.Forms.CheckBox();
             this.gbX.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // scpProxy
-            // 
-            this.scpProxy.NativeFeedReceived += new System.EventHandler<ScpControl.Shared.Core.ScpHidReport>(this.Parse);
             // 
             // btnStop
             // 
@@ -73,7 +67,7 @@
             // 
             // gbX
             // 
-            this.gbX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.gbX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbX.Controls.Add(this.cbP4);
             this.gbX.Controls.Add(this.cbP3);
@@ -194,8 +188,6 @@
         }
 
         #endregion
-
-        private ScpControl.ScpProxy scpProxy;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.GroupBox gbX;
