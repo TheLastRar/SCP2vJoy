@@ -87,7 +87,7 @@ namespace ScpPad2vJoy
 
                 foreach (DeviceInstance cdevice in devicelist)
                 {
-                    if (cdevice.InstanceName == XINPUT_NAME)
+                    if (cdevice.InstanceName.Trim('\0') == XINPUT_NAME)
                     {
                         var joystick = new Joystick(directInput, cdevice.InstanceGuid);
                         joystick.Acquire();
