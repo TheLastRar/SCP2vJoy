@@ -74,7 +74,9 @@ namespace ScpPad2vJoy
 
         //Axis
         protected HID_USAGES m_AxisL2 = 0;
+        protected bool m_InvertAxL2 = false;
         protected HID_USAGES m_AxisR2 = 0;
+        protected bool m_InvertAxR2 = false;
 
         protected HID_USAGES m_AxisLX = 0;
         protected bool m_InvertLX = false;//Invert axis is a global setting
@@ -157,6 +159,12 @@ namespace ScpPad2vJoy
                     switch (Setting[1])
                     {
                         #region Triggers
+                        case "-L2":
+                            {
+                                m_InvertAxL2 = true;
+                                AssignAxis(ref m_AxisL2, Setting[0]);
+                            }
+                            break;
                         case "L2":
                             {
                                 if (Setting[0].StartsWith("A"))//Using triggers as axis
@@ -167,6 +175,12 @@ namespace ScpPad2vJoy
                                 {
                                     AssignButton(ref m_L2, new DSButton(Ds3Button.L2, Ds4Button.L2), Setting[0]);
                                 }
+                            }
+                            break;
+                        case "-R2":
+                            {
+                                m_InvertAxR2 = true;
+                                AssignAxis(ref m_AxisR2, Setting[0]);
                             }
                             break;
                         case "R2":
@@ -669,7 +683,9 @@ namespace ScpPad2vJoy
 
         //Axis
         public HID_USAGES axisL2 { get { return m_AxisL2; } }
+        public bool invertAxL2 { get { return m_InvertAxL2; } }
         public HID_USAGES axisR2 { get { return m_AxisR2; } }
+        public bool invertAxR2 { get { return m_InvertAxR2; } }
 
         public HID_USAGES axisLX { get { return m_AxisLX; } }
         public bool invertLX { get { return m_InvertLX; } }
