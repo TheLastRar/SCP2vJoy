@@ -33,6 +33,9 @@ namespace ScpPad2vJoy.vJ
         protected const Int32 AXIS_SCALE = (vJoyConstants.MAX_AXIS_VALUE + 1) / (SCPConstants.MAX_SCP_AXIS + 1); //(+1 the max values to give interger scale)
         protected const Int32 AXIS_SCALE_OFFSET = AXIS_SCALE / 2; //Offset needs to be applied to account for us adding 1 the max values
 
+        protected const Int32 ACCEL_SCALE = (vJoyConstants.MAX_AXIS_VALUE + 1) / (SCPConstants.MAX_ACCEL_AXIS + 1); //(+1 the max values to give interger scale)
+        protected const Int32 ACCEL_SCALE_OFFSET = ACCEL_SCALE / 2; //Offset needs to be applied to account for us adding 1 the max values
+
         //Events
         public event vJoyVibrate.VibrationEventHandler VibrationCommand;
         private void VibEventProxy(uint parvjid, EffectReturnValue e)
@@ -216,7 +219,7 @@ namespace ScpPad2vJoy.vJ
             }
         }
 
-        public void JoyAxis(HID_USAGES parAxis, Int32 parValue, uint parDSid)
+        public void JoyAxis255(HID_USAGES parAxis, int parValue, uint parDSid)
         {
             if (parAxis != 0)
             {
@@ -226,33 +229,48 @@ namespace ScpPad2vJoy.vJ
                 //this gives pratical limits of (64-32704)
                 int JoyValue = (int)((parValue + 1) * AXIS_SCALE) - AXIS_SCALE_OFFSET;
 
-                switch (parAxis)
-                {
-                    case HID_USAGES.HID_USAGE_X:
-                        joyReport[parDSid - 1].AxisX = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_Y:
-                        joyReport[parDSid - 1].AxisY = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_Z:
-                        joyReport[parDSid - 1].AxisZ = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_RX:
-                        joyReport[parDSid - 1].AxisXRot = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_RY:
-                        joyReport[parDSid - 1].AxisYRot = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_RZ:
-                        joyReport[parDSid - 1].AxisZRot = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_SL0:
-                        joyReport[parDSid - 1].Slider = JoyValue;
-                        break;
-                    case HID_USAGES.HID_USAGE_SL1:
-                        joyReport[parDSid - 1].Dial = JoyValue;
-                        break;
-                }
+                JoyAxis(parAxis, JoyValue, parDSid);
+            }
+        }
+        public void JoyAxis1023(HID_USAGES parAxis, int parValue, uint parDSid)
+        {
+            if (parAxis != 0)
+            {
+                //See above function for comment about scaling
+                int JoyValue = (int)((parValue + 1) * ACCEL_SCALE) - ACCEL_SCALE_OFFSET;
+
+                JoyAxis(parAxis, JoyValue, parDSid);
+            }
+        }
+
+        private void JoyAxis(HID_USAGES parAxis, int parJoyValue, uint parDSid)
+        {
+            switch (parAxis)
+            {
+                case HID_USAGES.HID_USAGE_X:
+                    joyReport[parDSid - 1].AxisX = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_Y:
+                    joyReport[parDSid - 1].AxisY = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_Z:
+                    joyReport[parDSid - 1].AxisZ = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_RX:
+                    joyReport[parDSid - 1].AxisXRot = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_RY:
+                    joyReport[parDSid - 1].AxisYRot = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_RZ:
+                    joyReport[parDSid - 1].AxisZRot = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_SL0:
+                    joyReport[parDSid - 1].Slider = parJoyValue;
+                    break;
+                case HID_USAGES.HID_USAGE_SL1:
+                    joyReport[parDSid - 1].Dial = parJoyValue;
+                    break;
             }
         }
 

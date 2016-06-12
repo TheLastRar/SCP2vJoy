@@ -69,7 +69,19 @@ namespace ScpPad2vJoy
         protected HID_USAGES m_AxisTP1X = 0;
         protected HID_USAGES m_AxisTP1Y = 0;
 
-        //Gryo/Motion
+        //Accel
+        //Left/Right
+        protected HID_USAGES m_AxisAX = 0;
+        protected bool m_InvertAX = false;
+        //Forward/Backward
+        protected HID_USAGES m_AxisAY = 0;
+        protected bool m_InvertAY = false;
+        //Vertical
+        protected HID_USAGES m_AxisAZ = 0;
+        protected bool m_InvertAZ = false;
+        //TODO Scale?
+
+        //Gryo
         //TODO
 
         //Axis
@@ -235,6 +247,36 @@ namespace ScpPad2vJoy
                         case "RY":
                             {
                                 AssignAxis(ref m_AxisRY, Setting[0]);
+                            }
+                            break;
+                        case "-AX":
+                            {
+                                m_InvertAX = true;
+                                goto case "AX";
+                            }
+                        case "AX":
+                            {
+                                AssignAxis(ref m_AxisAX, Setting[0]);
+                            }
+                            break;
+                        case "-AY":
+                            {
+                                m_InvertAY = true;
+                                goto case "AY";
+                            }
+                        case "AY":
+                            {
+                                AssignAxis(ref m_AxisAY, Setting[0]);
+                            }
+                            break;
+                        case "-AZ":
+                            {
+                                m_InvertAZ = true;
+                                goto case "AZ";
+                            }
+                        case "AZ":
+                            {
+                                AssignAxis(ref m_AxisAZ, Setting[0]);
                             }
                             break;
                         #endregion
@@ -696,6 +738,13 @@ namespace ScpPad2vJoy
         public bool invertRX { get { return m_InvertRX; } }
         public HID_USAGES axisRY { get { return m_AxisRY; } }
         public bool invertRY { get { return m_InvertRY; } }
+
+        public HID_USAGES axisAX { get { return m_AxisAX; } }
+        public bool invertAX { get { return m_InvertAX; } }
+        public HID_USAGES axisAY { get { return m_AxisAY; } }
+        public bool invertAY { get { return m_InvertAY; } }
+        public HID_USAGES axisAZ { get { return m_AxisAZ; } }
+        public bool invertAZ { get { return m_InvertAZ; } }
 
         //Buttons
         public uint cross { get { return m_Cross; } }
